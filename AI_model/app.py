@@ -1,20 +1,29 @@
 """Simple Streamlit frontend for the MedVision chest X-ray model."""
 
 import hashlib
+import importlib
+import inspect
 import json
 
 import pandas as pd
 import streamlit as st
 
-from clinical_schema import ClinicalSchemaError, build_case_payload
-from hermes_report import (
-    HermesReportError,
-    MISSING_LABS_MODE,
-    WITH_LABS_MODE,
-    WORKFLOW_MODES,
-    generate_hermes_report,
-    get_hermes_status,
-)
+import hermes_report as _hermes_report
+from clinical_schema import build_case_payload
+
+# Streamlit reloads app.py after an edit but imported modules can remain cached.
+# Refresh only when the cached Hermes bridge predates the canonical payload API.
+if "case_payload" not in inspect.signature(
+    _hermes_report.generate_hermes_report
+).parameters:
+    _hermes_report = importlib.reload(_hermes_report)
+
+HermesReportError = _hermes_report.HermesReportError
+MISSING_LABS_MODE = _hermes_report.MISSING_LABS_MODE
+WITH_LABS_MODE = _hermes_report.WITH_LABS_MODE
+WORKFLOW_MODES = _hermes_report.WORKFLOW_MODES
+generate_hermes_report = _hermes_report.generate_hermes_report
+get_hermes_status = _hermes_report.get_hermes_status
 from inference import (
     CACHE_IMAGE_MODE,
     EXTERNAL_IMAGE_MODE,
@@ -717,6 +726,8 @@ if analysis is not None and analysis["file_hash"] == current_hash:
     ).hexdigest()
 
     if generate_clicked:
+        # A failed new attempt must not leave an older report looking current.
+        st.session_state.hermes_report = None
         try:
             with st.spinner("Hermes đang tổng hợp bằng chứng và soạn báo cáo nháp..."):
                 report = generate_hermes_report(
@@ -736,8 +747,10 @@ if analysis is not None and analysis["file_hash"] == current_hash:
             st.session_state[f"doctor_report_editor_{current_hash}"] = report
             st.toast("Đã tạo báo cáo nháp", icon="✅")
         except HermesReportError as exc:
+            st.session_state.hermes_report = None
             st.error(str(exc))
         except Exception as exc:
+            st.session_state.hermes_report = None
             st.error(f"Lỗi không mong đợi khi gọi Hermes: {exc}")
 
     saved_report = st.session_state.hermes_report

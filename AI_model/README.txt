@@ -80,6 +80,10 @@ AI_model (không dùng môi trường Hermes):
    cd AI_model
    .\.venv\Scripts\python.exe -m streamlit run app.py
 
+Nếu ứng dụng đã chạy trong lúc source code Hermes được cập nhật, chỉ cần tải lại
+trang. App sẽ phát hiện bridge cũ trong bộ nhớ và reload module. Nếu vẫn gặp lỗi
+module cache, dừng tiến trình bằng Ctrl+C rồi chạy lại lệnh trên.
+
 MedVision gọi Hermes CLI với toolset giới hạn và không lưu API key. Không nhập
 thông tin định danh người bệnh vào phần bối cảnh lâm sàng. Findings và nội dung
 được nhập sẽ được gửi tới provider LLM đã cấu hình trong Hermes. Cần xem chính
