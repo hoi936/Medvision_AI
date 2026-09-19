@@ -27,6 +27,7 @@ Output
 - Grad-CAM class-specific riêng cho từng finding POSITIVE
 - Pseudo bbox suy ra từ connected components của từng Grad-CAM
 - Tải bảng kết quả dưới dạng CSV
+- Hermes Agent tổng hợp findings và bối cảnh lâm sàng thành báo cáo nháp
 
 Thao tác
 --------
@@ -38,6 +39,8 @@ Thao tác
 5. Điều chỉnh CAM threshold/min area ratio nếu cần.
 6. Bật "Debug mode" ở sidebar để xem model input, class_id, raw score,
    threshold, số pseudo box và diện tích từng box.
+7. Nhập bối cảnh lâm sàng không định danh, xác nhận điều khoản và chọn
+   "Tạo báo cáo nháp với Hermes". Bác sĩ phải kiểm tra trước khi sử dụng.
 
 Cài đặt và chạy trên Windows
 ----------------------------
@@ -56,6 +59,28 @@ Cài đặt và chạy trên Windows
 
 Nếu máy không có GPU/CUDA tương thích, ứng dụng tự động sử dụng CPU.
 
+Cấu hình Hermes Agent trên Windows
+----------------------------------
+Hermes được clone tại thư mục hermes-agent và cài trong môi trường riêng
+.hermes-runtime ở thư mục gốc dự án. Tại PowerShell ở thư mục gốc, chạy:
+
+   .\.hermes-runtime\Scripts\hermes.exe setup
+   .\.hermes-runtime\Scripts\hermes.exe model
+   .\.hermes-runtime\Scripts\hermes.exe doctor
+
+Sau khi cấu hình provider/model/API key, chạy ứng dụng bằng môi trường của
+AI_model (không dùng môi trường Hermes):
+
+   cd AI_model
+   .\.venv\Scripts\python.exe -m streamlit run app.py
+
+MedVision gọi Hermes CLI với toolset giới hạn và không lưu API key. Không nhập
+thông tin định danh người bệnh vào phần bối cảnh lâm sàng. Findings và nội dung
+được nhập sẽ được gửi tới provider LLM đã cấu hình trong Hermes. Cần xem chính
+sách lưu trữ/xử lý dữ liệu của provider trước khi dùng dữ liệu thật. Nếu muốn
+thay model hoặc provider cho một lần tạo báo cáo, mở mục cấu hình Hermes trong
+giao diện; không nhập API key tại đó.
+
 Các file bắt buộc phải nằm cạnh app.py
 --------------------------------------
 - model.pth
@@ -68,6 +93,10 @@ Lưu ý
 Model score là đầu ra sigmoid và chưa phải xác suất lâm sàng đã được
 calibration. Ứng dụng chỉ phục vụ nghiên cứu/demo, không sử dụng kết quả
 để thay thế chẩn đoán của bác sĩ.
+
+Báo cáo Hermes là bản nháp hỗ trợ tổng hợp bằng chứng. Nội dung không phải chẩn
+đoán xác định, không được dùng để tự điều trị hoặc kê đơn và chỉ có giá trị sau
+khi bác sĩ có chuyên môn kiểm tra, chỉnh sửa và phê duyệt.
 
 Pseudo bbox được tạo từ vùng attention của Grad-CAM và chỉ mang tính minh
 họa. Đây không phải Doctor bbox, ground-truth hay annotation chuẩn của

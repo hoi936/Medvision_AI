@@ -11,6 +11,10 @@ env/
 .agents/
 .codex/
 
+# Third-party Hermes checkout and its isolated runtime
+hermes-agent/
+.hermes-runtime/
+
 # Editors and operating systems
 .vscode/
 .idea/

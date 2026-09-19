@@ -5,6 +5,14 @@ import hashlib
 import pandas as pd
 import streamlit as st
 
+from hermes_report import (
+    HermesReportError,
+    MISSING_LABS_MODE,
+    WITH_LABS_MODE,
+    WORKFLOW_MODES,
+    generate_hermes_report,
+    get_hermes_status,
+)
 from inference import (
     CACHE_IMAGE_MODE,
     EXTERNAL_IMAGE_MODE,
@@ -226,6 +234,8 @@ if "analysis" not in st.session_state:
     st.session_state.analysis = None
 if "finding_visuals" not in st.session_state:
     st.session_state.finding_visuals = {}
+if "hermes_report" not in st.session_state:
+    st.session_state.hermes_report = None
 
 current_hash = None
 if uploaded_file is not None:
@@ -253,10 +263,12 @@ if analyze_clicked and uploaded_file is not None:
             "input_tensor": input_tensor,
         }
         st.session_state.finding_visuals = {}
+        st.session_state.hermes_report = None
         st.toast("Phân tích hoàn tất", icon="✅")
     except Exception as exc:
         st.session_state.analysis = None
         st.session_state.finding_visuals = {}
+        st.session_state.hermes_report = None
         show_error(exc, "Lỗi xử lý: ")
 
 analysis = st.session_state.analysis
@@ -454,6 +466,188 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 debug_mode=debug_enabled,
                 expanded=index == 0,
             )
+
+    st.divider()
+    st.subheader("5. Hermes Agent — tạo báo cáo hỗ trợ")
+    st.warning(
+        "Hermes chỉ tạo **báo cáo nháp hỗ trợ bác sĩ**, không đưa ra chẩn đoán "
+        "cuối cùng. Không nhập họ tên, địa chỉ, số điện thoại, mã bệnh án hoặc "
+        "thông tin có thể nhận diện người bệnh."
+    )
+
+    hermes_status = get_hermes_status()
+    if hermes_status.installed:
+        st.info(hermes_status.message)
+    else:
+        st.error(hermes_status.message)
+
+    with st.container(border=True):
+        workflow_mode = st.radio(
+            "Chế độ tổng hợp",
+            options=WORKFLOW_MODES,
+            horizontal=True,
+            help=(
+                "Khi thiếu xét nghiệm, Hermes chỉ tạo đánh giá ban đầu và nêu "
+                "dữ liệu cần bổ sung để bác sĩ xem xét."
+            ),
+        )
+        context_left, context_right = st.columns(2)
+        with context_left:
+            demographics = st.text_input(
+                "Thông tin chung không định danh",
+                placeholder="Ví dụ: nam, nhóm tuổi 50–59",
+                max_chars=500,
+            )
+            symptoms = st.text_area(
+                "Triệu chứng và thời gian xuất hiện",
+                placeholder="Ví dụ: ho khan 5 ngày, sốt, khó thở khi gắng sức...",
+                max_chars=4000,
+                height=120,
+            )
+        with context_right:
+            history = st.text_area(
+                "Tiền sử và yếu tố nguy cơ liên quan",
+                placeholder="Ví dụ: tiền sử hút thuốc, bệnh tim phổi...",
+                max_chars=4000,
+                height=120,
+            )
+            laboratory = st.text_area(
+                "Xét nghiệm / dấu hiệu sinh tồn liên quan",
+                placeholder="Ví dụ: SpO2, CRP, bạch cầu... kèm đơn vị nếu có",
+                max_chars=4000,
+                height=120,
+            )
+            if workflow_mode == WITH_LABS_MODE and not laboratory.strip():
+                st.warning(
+                    "Đang chọn chế độ đã có xét nghiệm nhưng chưa nhập kết quả. "
+                    "Hermes sẽ phải đánh dấu dữ liệu không đầy đủ."
+                )
+            elif workflow_mode == MISSING_LABS_MODE:
+                st.caption(
+                    "Có thể để trống. Hermes sẽ đề xuất dữ liệu cần bổ sung để "
+                    "bác sĩ cân nhắc."
+                )
+
+        with st.expander("Cấu hình model Hermes (tùy chọn)"):
+            st.caption(
+                "Để trống để dùng model/provider mặc định đã cấu hình bằng "
+                "Hermes CLI. API key không được nhập hoặc lưu tại màn hình này."
+            )
+            config_left, config_right = st.columns(2)
+            hermes_model = config_left.text_input(
+                "Model override",
+                placeholder="Để trống = model mặc định",
+            )
+            hermes_provider = config_right.text_input(
+                "Provider override",
+                placeholder="Để trống = provider mặc định",
+            )
+
+        privacy_confirmed = st.checkbox(
+            "Tôi xác nhận dữ liệu nhập không chứa thông tin định danh người bệnh "
+            "và hiểu rằng findings cùng nội dung này sẽ được gửi đến provider LLM "
+            "đã cấu hình; báo cáo phải được bác sĩ duyệt."
+        )
+        generate_clicked = st.button(
+            "🤖 Tạo báo cáo nháp với Hermes",
+            type="primary",
+            use_container_width=True,
+            disabled=not (privacy_confirmed and hermes_status.installed),
+        )
+
+    if generate_clicked:
+        try:
+            with st.spinner("Hermes đang tổng hợp bằng chứng và soạn báo cáo nháp..."):
+                report = generate_hermes_report(
+                    results=results,
+                    symptoms=symptoms,
+                    history=history,
+                    laboratory=laboratory,
+                    demographics=demographics,
+                    workflow_mode=workflow_mode,
+                    model=hermes_model,
+                    provider=hermes_provider,
+                )
+            st.session_state.hermes_report = {
+                "file_hash": current_hash,
+                "content": report,
+                "workflow_mode": workflow_mode,
+                "review_status": "PENDING",
+            }
+            st.session_state[f"doctor_report_editor_{current_hash}"] = report
+            st.toast("Đã tạo báo cáo nháp", icon="✅")
+        except HermesReportError as exc:
+            st.error(str(exc))
+        except Exception as exc:
+            st.error(f"Lỗi không mong đợi khi gọi Hermes: {exc}")
+
+    saved_report = st.session_state.hermes_report
+    if saved_report and saved_report.get("file_hash") == current_hash:
+        st.markdown("#### Bản nháp do Hermes tạo")
+        st.markdown(saved_report["content"])
+        st.error(
+            "Báo cáo do AI hỗ trợ soạn thảo, không phải chẩn đoán và chỉ có "
+            "giá trị sau khi bác sĩ duyệt."
+        )
+        st.markdown("#### Cổng bác sĩ duyệt (bản demo)")
+        st.caption(
+            "Có thể sửa nội dung trước khi đánh dấu duyệt. Bản demo chưa có "
+            "xác thực bác sĩ, chữ ký số, lưu database hoặc audit log."
+        )
+        editor_key = f"doctor_report_editor_{current_hash}"
+        if editor_key not in st.session_state:
+            st.session_state[editor_key] = saved_report["content"]
+        edited_report = st.text_area(
+            "Nội dung sau chỉnh sửa",
+            height=420,
+            key=editor_key,
+        )
+        reviewer_confirmed = st.checkbox(
+            "Tôi xác nhận đây chỉ là thao tác mô phỏng duyệt của bác sĩ và đã "
+            "tự kiểm tra lại ảnh, dữ liệu lâm sàng cùng nội dung báo cáo.",
+            key=f"review_confirm_{current_hash}",
+        )
+        approve_col, reject_col = st.columns(2)
+        approve_clicked = approve_col.button(
+            "✅ Đánh dấu đã duyệt (demo)",
+            use_container_width=True,
+            disabled=not reviewer_confirmed,
+        )
+        reject_clicked = reject_col.button(
+            "❌ Từ chối bản nháp",
+            use_container_width=True,
+        )
+        if approve_clicked:
+            saved_report["review_status"] = "APPROVED_DEMO"
+            saved_report["final_content"] = edited_report
+        if reject_clicked:
+            saved_report["review_status"] = "REJECTED"
+            saved_report.pop("final_content", None)
+
+        review_status = saved_report.get("review_status", "PENDING")
+        if review_status == "APPROVED_DEMO":
+            st.success("Trạng thái: ĐÃ ĐÁNH DẤU DUYỆT TRONG BẢN DEMO")
+            download_content = saved_report.get("final_content", edited_report)
+            download_name = "medvision_report_reviewed_demo.md"
+            download_label = "⬇️ Tải báo cáo đã chỉnh sửa (demo)"
+        elif review_status == "REJECTED":
+            st.error("Trạng thái: BẢN NHÁP ĐÃ BỊ TỪ CHỐI")
+            download_content = saved_report["content"]
+            download_name = "medvision_hermes_report_rejected_draft.md"
+            download_label = "⬇️ Tải bản nháp bị từ chối"
+        else:
+            st.info("Trạng thái: ĐANG CHỜ BÁC SĨ DUYỆT")
+            download_content = saved_report["content"]
+            download_name = "medvision_hermes_report_draft.md"
+            download_label = "⬇️ Tải báo cáo nháp Markdown"
+
+        st.download_button(
+            download_label,
+            data=download_content.encode("utf-8"),
+            file_name=download_name,
+            mime="text/markdown",
+            use_container_width=True,
+        )
 
 elif uploaded_file is not None:
     st.info("Ảnh đã sẵn sàng. Nhấn **Phân tích ảnh** để xem kết quả.")
