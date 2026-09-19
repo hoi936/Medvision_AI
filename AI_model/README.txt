@@ -107,6 +107,9 @@ Sau khi clone dự án trên một máy mới, chạy một lần tại thư m�
 cáo và chỉ bật toolset `clarify`; không cấp terminal, file hoặc web tools cho
 phiên xử lý ca bệnh.
 
+Kiến trúc Hermes, schema chuẩn hóa, kết quả kiểm thử và báo cáo mẫu acceptance
+case được mô tả trong HERMES_IMPLEMENTATION.md.
+
 Các file bắt buộc phải nằm cạnh app.py
 --------------------------------------
 - model.pth

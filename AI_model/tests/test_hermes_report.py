@@ -13,7 +13,9 @@ from hermes_report import (
     HermesStatus,
     build_report_prompt,
     generate_hermes_report,
+    validate_generated_report,
 )
+from acceptance_case import build_acceptance_case
 
 
 SAMPLE_RESULTS = [
@@ -42,16 +44,13 @@ class HermesReportTests(TestCase):
             demographics="Nhóm tuổi 50–59",
         )
 
-        self.assertIn("model_score=0.8200", prompt)
-        self.assertIn("decision_threshold=0.6100", prompt)
-        self.assertIn("KHÔNG phải xác suất lâm sàng", prompt)
-        self.assertIn("không phải chẩn đoán", prompt.lower())
-        self.assertIn("dữ liệu không đáng tin cậy", prompt)
-        self.assertIn("<workflow_code>MISSING_LABS</workflow_code>", prompt)
-        self.assertIn('symptoms="true"', prompt)
-        self.assertIn('history="true"', prompt)
-        self.assertIn('laboratory="true"', prompt)
-        self.assertIn("## Ma trận bằng chứng", prompt)
+        self.assertIn('"score": 0.82', prompt)
+        self.assertIn('"threshold": 0.61', prompt)
+        self.assertIn('"workflow_mode": "MISSING_LABS"', prompt)
+        self.assertIn('"provided": true', prompt)
+        self.assertIn('"verified": false', prompt)
+        self.assertIn("không phải xác suất mắc bệnh", prompt)
+        self.assertIn("## 4. Tích hợp bằng chứng", prompt)
         self.assertIn("requires_doctor_review: true", prompt)
 
     def test_empty_findings_are_rejected(self):
@@ -62,13 +61,21 @@ class HermesReportTests(TestCase):
         with self.assertRaisesRegex(HermesReportError, "không hợp lệ"):
             build_report_prompt(SAMPLE_RESULTS, "", "", "", "", "UNKNOWN")
 
+    def test_acceptance_case_prompt_contains_canonical_reasoning_inputs(self):
+        prompt = build_report_prompt(case_payload=build_acceptance_case())
+
+        self.assertIn('"confidence_band": "NEAR_THRESHOLD_NEGATIVE"', prompt)
+        self.assertIn('"Chest CT"', prompt)
+        self.assertIn('"source": "VITAL_SIGN"', prompt)
+        self.assertIn('"source": "LAB"', prompt)
+        self.assertIn("không phải xác suất mắc bệnh", prompt)
+
     def test_missing_fields_are_explicitly_marked_absent(self):
         prompt = build_report_prompt(SAMPLE_RESULTS, "Khó thở", "", "", "")
 
-        self.assertIn('symptoms="true"', prompt)
-        self.assertIn('history="false"', prompt)
-        self.assertIn('laboratory="false"', prompt)
-        self.assertIn('demographics="false"', prompt)
+        self.assertIn('"symptoms": {', prompt)
+        self.assertIn('"name": "Khó thở"', prompt)
+        self.assertNotIn("Chưa có triệu chứng", prompt)
 
     @patch("hermes_report.subprocess.run")
     @patch("hermes_report.get_hermes_status")
@@ -76,16 +83,25 @@ class HermesReportTests(TestCase):
         self, status_mock, run_mock
     ):
         status_mock.return_value = HermesStatus(True, Path("hermes"), "ready")
-        run_mock.return_value = CompletedProcess([], 0, "# Báo cáo nháp", "")
+        valid_report = """# Bản nháp
+## 2. Findings từ mô hình ảnh
+## 4. Tích hợp bằng chứng
+## 5. Chẩn đoán phân biệt
+## 8. Safety flags
+## 9. Giới hạn
+review_status: PENDING_CLINICIAN_REVIEW
+requires_doctor_review: true"""
+        run_mock.return_value = CompletedProcess([], 0, valid_report, "")
 
         report = generate_hermes_report(SAMPLE_RESULTS)
 
-        self.assertEqual(report, "# Báo cáo nháp")
+        self.assertEqual(report, valid_report)
         command = run_mock.call_args.args[0]
         self.assertIn("--ignore-rules", command)
         self.assertEqual(command[command.index("-t") + 1], "clarify")
         self.assertEqual(
-            command[command.index("--skills") + 1], "medvision-disease-analysis"
+            command[command.index("--skills") + 1],
+            "medvision-evidence-fusion,medvision-safety-check,medvision-disease-analysis",
         )
         self.assertFalse(run_mock.call_args.kwargs["shell"])
 
@@ -97,3 +113,9 @@ class HermesReportTests(TestCase):
 
         with self.assertRaisesRegex(HermesReportError, "hermes setup"):
             generate_hermes_report(SAMPLE_RESULTS)
+
+    def test_report_contract_rejects_missing_review_gate(self):
+        missing = validate_generated_report("## 2. Findings từ mô hình ảnh")
+
+        self.assertIn("requires_doctor_review: true", missing)
+        self.assertIn("review_status: PENDING_CLINICIAN_REVIEW", missing)

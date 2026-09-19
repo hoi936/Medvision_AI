@@ -1,10 +1,12 @@
 """Simple Streamlit frontend for the MedVision chest X-ray model."""
 
 import hashlib
+import json
 
 import pandas as pd
 import streamlit as st
 
+from clinical_schema import ClinicalSchemaError, build_case_payload
 from hermes_report import (
     HermesReportError,
     MISSING_LABS_MODE,
@@ -77,6 +79,9 @@ def clear_clinical_context() -> None:
         st.session_state[key] = ""
     st.session_state["clinical_source_confirmed"] = False
     st.session_state["privacy_confirmed"] = False
+    st.session_state["clinical_form_version"] = (
+        st.session_state.get("clinical_form_version", 0) + 1
+    )
     st.session_state.hermes_report = None
 
 
@@ -253,6 +258,8 @@ if "finding_visuals" not in st.session_state:
     st.session_state.finding_visuals = {}
 if "hermes_report" not in st.session_state:
     st.session_state.hermes_report = None
+if "clinical_form_version" not in st.session_state:
+    st.session_state.clinical_form_version = 0
 for clinical_key in CLINICAL_FIELD_KEYS:
     if clinical_key not in st.session_state:
         st.session_state[clinical_key] = ""
@@ -529,51 +536,124 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 "dữ liệu cần bổ sung để bác sĩ xem xét."
             ),
         )
-        context_left, context_right = st.columns(2)
-        with context_left:
-            demographics = st.text_input(
-                "Thông tin chung không định danh",
-                placeholder="Ví dụ: nam, nhóm tuổi 50–59",
-                max_chars=500,
-                key="clinical_demographics",
+        form_version = st.session_state.clinical_form_version
+        st.markdown("##### A. Thông tin chung")
+        demo_a, demo_b = st.columns(2)
+        age_text = demo_a.text_input(
+            "Tuổi (không bắt buộc)",
+            placeholder="Ví dụ: 67",
+            key=f"clinical_age_{form_version}",
+        )
+        sex = demo_b.selectbox(
+            "Giới tính được ghi nhận",
+            ["Không cung cấp", "Nữ", "Nam", "Khác/không xác định"],
+            key=f"clinical_sex_{form_version}",
+        )
+
+        st.markdown("##### B. Triệu chứng (bắt buộc)")
+        symptoms_table = st.data_editor(
+            pd.DataFrame(
+                [{"name": "", "duration": "", "severity": ""}],
+                columns=["name", "duration", "severity"],
+            ),
+            num_rows="dynamic",
+            hide_index=True,
+            use_container_width=True,
+            key=f"symptoms_editor_{form_version}",
+            column_config={
+                "name": st.column_config.TextColumn("Triệu chứng"),
+                "duration": st.column_config.TextColumn("Thời gian"),
+                "severity": st.column_config.TextColumn("Diễn tiến/mức độ"),
+            },
+        )
+        symptom_items = [
+            {
+                "name": str(row.get("name") or "").strip(),
+                "duration": str(row.get("duration") or "").strip() or None,
+                "severity": str(row.get("severity") or "").strip() or None,
+                "source": "USER_PROVIDED",
+                "verified": False,
+            }
+            for row in symptoms_table.to_dict("records")
+            if str(row.get("name") or "").strip()
+        ]
+        if not symptom_items:
+            st.warning(
+                "Cần nhập ít nhất một triệu chứng thực tế; nếu không có, thêm "
+                "một dòng “Không ghi nhận triệu chứng”."
             )
-            symptoms = st.text_area(
-                "Triệu chứng thực tế và thời gian xuất hiện (bắt buộc)",
-                placeholder="Ví dụ: ho khan 5 ngày, sốt, khó thở khi gắng sức...",
-                max_chars=4000,
-                height=120,
-                key="clinical_symptoms",
-            )
-            if not symptoms.strip():
-                st.warning(
-                    "Cần nhập triệu chứng thực tế. Nếu người bệnh không có triệu "
-                    "chứng, hãy ghi rõ “Không ghi nhận triệu chứng”."
-                )
-        with context_right:
-            history = st.text_area(
-                "Tiền sử và yếu tố nguy cơ liên quan",
-                placeholder="Ví dụ: tiền sử hút thuốc, bệnh tim phổi...",
-                max_chars=4000,
-                height=120,
-                key="clinical_history",
-            )
-            laboratory = st.text_area(
-                "Xét nghiệm / dấu hiệu sinh tồn liên quan",
-                placeholder="Ví dụ: SpO2, CRP, bạch cầu... kèm đơn vị nếu có",
-                max_chars=4000,
-                height=120,
-                key="clinical_laboratory",
-            )
-            if workflow_mode == WITH_LABS_MODE and not laboratory.strip():
-                st.warning(
-                    "Đang chọn chế độ đã có xét nghiệm nhưng chưa nhập kết quả. "
-                    "Hermes sẽ phải đánh dấu dữ liệu không đầy đủ."
-                )
-            elif workflow_mode == MISSING_LABS_MODE:
-                st.caption(
-                    "Có thể để trống. Hermes sẽ đề xuất dữ liệu cần bổ sung để "
-                    "bác sĩ cân nhắc."
-                )
+
+        st.markdown("##### C–D. Tiền sử và yếu tố nguy cơ")
+        history_col, risk_col = st.columns(2)
+        history = history_col.text_area(
+            "Tiền sử bệnh (mỗi dòng một mục)",
+            key=f"clinical_history_{form_version}",
+            height=110,
+        )
+        risk_factors = risk_col.text_area(
+            "Yếu tố nguy cơ (mỗi dòng một mục)",
+            key=f"clinical_risk_{form_version}",
+            height=110,
+        )
+
+        st.markdown("##### E. Dấu hiệu sinh tồn")
+        vital_cols = st.columns(5)
+        spo2 = vital_cols[0].text_input("SpO₂ (%)", key=f"spo2_{form_version}")
+        rr = vital_cols[1].text_input("RR (/min)", key=f"rr_{form_version}")
+        hr = vital_cols[2].text_input("HR (/min)", key=f"hr_{form_version}")
+        bp = vital_cols[3].text_input("BP (mmHg)", key=f"bp_{form_version}")
+        temperature = vital_cols[4].text_input("Nhiệt độ (°C)", key=f"temp_{form_version}")
+        vitals = {}
+        if spo2.strip():
+            vitals["spo2"] = {"value": spo2.strip(), "unit": "%", "context": "room air nếu được ghi nhận"}
+        if rr.strip():
+            vitals["respiratory_rate"] = {"value": rr.strip(), "unit": "/min"}
+        if hr.strip():
+            vitals["heart_rate"] = {"value": hr.strip(), "unit": "/min"}
+        if bp.strip():
+            vitals["blood_pressure"] = {"value": bp.strip(), "unit": "mmHg"}
+        if temperature.strip():
+            vitals["temperature"] = {"value": temperature.strip(), "unit": "C"}
+
+        st.markdown("##### F. Kết quả xét nghiệm")
+        laboratory_table = st.data_editor(
+            pd.DataFrame(
+                [{"name": "", "value": "", "unit": "", "reference_range": "", "timestamp": ""}],
+                columns=["name", "value", "unit", "reference_range", "timestamp"],
+            ),
+            num_rows="dynamic",
+            hide_index=True,
+            use_container_width=True,
+            key=f"laboratory_editor_{form_version}",
+        )
+        laboratory_results = [
+            {
+                "name": str(row.get("name") or "").strip(),
+                "value": str(row.get("value") or "").strip(),
+                "unit": str(row.get("unit") or "").strip() or None,
+                "reference_range": str(row.get("reference_range") or "").strip() or None,
+                "timestamp": str(row.get("timestamp") or "").strip() or None,
+                "source": "LAB",
+                "verified": False,
+            }
+            for row in laboratory_table.to_dict("records")
+            if str(row.get("name") or "").strip()
+        ]
+        if workflow_mode == WITH_LABS_MODE and not laboratory_results:
+            st.warning("Đã chọn WITH_LABS nhưng chưa nhập kết quả xét nghiệm.")
+
+        st.markdown("##### G. Dữ liệu thiếu và yêu cầu của bác sĩ")
+        missing_col, request_col = st.columns(2)
+        missing_tests_text = missing_col.text_area(
+            "Xét nghiệm/hình ảnh chưa có (mỗi dòng một mục)",
+            key=f"missing_tests_{form_version}",
+            height=90,
+        )
+        clinician_request = request_col.text_area(
+            "Yêu cầu/câu hỏi của bác sĩ (không dùng làm bằng chứng)",
+            key=f"clinician_request_{form_version}",
+            height=90,
+        )
 
         with st.expander("Cấu hình model Hermes (tùy chọn)"):
             st.caption(
@@ -606,38 +686,44 @@ if analysis is not None and analysis["file_hash"] == current_hash:
             type="primary",
             use_container_width=True,
             disabled=not (
-                symptoms.strip()
+                symptom_items
                 and clinical_source_confirmed
                 and privacy_confirmed
                 and hermes_status.installed
             ),
         )
 
+    workflow_code = "WITH_LABS" if workflow_mode == WITH_LABS_MODE else "MISSING_LABS"
+    general_info = {}
+    if age_text.strip():
+        general_info["age"] = age_text.strip()
+    if sex != "Không cung cấp":
+        general_info["sex"] = sex
+    case_payload = build_case_payload(
+        workflow_mode=workflow_code,
+        general_info=general_info,
+        symptoms=symptom_items,
+        history=history.splitlines(),
+        risk_factors=risk_factors.splitlines(),
+        vitals=vitals,
+        laboratory_results=laboratory_results,
+        missing_tests=missing_tests_text.splitlines(),
+        clinician_request=clinician_request,
+        model_results=results,
+        input_type=analysis["input_mode"],
+    )
     report_input_hash = hashlib.sha256(
-        "\x1f".join(
-            [
-                current_hash or "",
-                workflow_mode,
-                demographics,
-                symptoms,
-                history,
-                laboratory,
-            ]
-        ).encode("utf-8")
+        ((current_hash or "") + json.dumps(case_payload, ensure_ascii=False, sort_keys=True)).encode("utf-8")
     ).hexdigest()
 
     if generate_clicked:
         try:
             with st.spinner("Hermes đang tổng hợp bằng chứng và soạn báo cáo nháp..."):
                 report = generate_hermes_report(
-                    results=results,
-                    symptoms=symptoms,
-                    history=history,
-                    laboratory=laboratory,
-                    demographics=demographics,
                     workflow_mode=workflow_mode,
                     model=hermes_model,
                     provider=hermes_provider,
+                    case_payload=case_payload,
                 )
             st.session_state.hermes_report = {
                 "file_hash": current_hash,
@@ -645,21 +731,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 "workflow_mode": workflow_mode,
                 "review_status": "PENDING",
                 "input_hash": report_input_hash,
-                "input_snapshot": {
-                    "workflow_mode": workflow_mode,
-                    "demographics": demographics or "Không được cung cấp",
-                    "symptoms": symptoms,
-                    "history": history or "Không được cung cấp",
-                    "laboratory": laboratory or "Không được cung cấp",
-                    "positive_findings": [
-                        {
-                            "finding": item["finding"],
-                            "model_score": round(float(item["score"]), 4),
-                            "threshold": round(float(item["threshold"]), 4),
-                        }
-                        for item in positive_results
-                    ],
-                },
+                "input_snapshot": case_payload,
             }
             st.session_state[f"doctor_report_editor_{current_hash}"] = report
             st.toast("Đã tạo báo cáo nháp", icon="✅")

@@ -8,7 +8,7 @@ metadata:
   platforms: [linux, macos, windows]
   hermes:
     tags: [healthcare, chest-xray, evidence, clinical-decision-support]
-    related_skills: []
+    related_skills: [medvision-evidence-fusion, medvision-safety-check]
 ---
 
 # MedVision Disease Analysis Skill
@@ -101,18 +101,20 @@ record numbers, or other direct identifiers.
 
 ## Report Contract
 
-Return Markdown without a code fence and use these sections:
+Consume the evidence matrix and safety status from the companion skills. Return
+Markdown without a code fence and use these sections:
 
-1. `# BÁO CÁO HỖ TRỢ LÂM SÀNG — BẢN NHÁP`
-2. `## Phạm vi và chất lượng dữ liệu`
-3. `## Findings từ mô hình ảnh`
-4. `## Ma trận bằng chứng`
-5. `## Đối chiếu và mâu thuẫn lâm sàng`
-6. `## Nhận định và chẩn đoán phân biệt`
-7. `## Dữ liệu còn thiếu / độ bất định`
-8. `## Khuyến nghị để bác sĩ xem xét`
-9. `## Dấu hiệu cần đánh giá kịp thời`
-10. `## Cảnh báo an toàn`
+1. `# BÁO CÁO HỖ TRỢ QUYẾT ĐỊNH LÂM SÀNG — BẢN NHÁP`
+2. `## 1. Dữ liệu hiện có`
+3. `## 2. Findings từ mô hình ảnh`
+4. `## 3. Bằng chứng lâm sàng`
+5. `## 4. Tích hợp bằng chứng`
+6. `## 5. Chẩn đoán phân biệt`
+7. `## 6. Thông tin còn thiếu`
+8. `## 7. Bước xác nhận để bác sĩ cân nhắc`
+9. `## 8. Safety flags`
+10. `## 9. Giới hạn`
+11. `## 10. Trạng thái duyệt`
 
 End with these machine-readable lines:
 
