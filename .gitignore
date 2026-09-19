@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Streamlit and local tooling
+.streamlit/secrets.toml
+.agents/
+.codex/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+~$*
