@@ -81,6 +81,26 @@ sách lưu trữ/xử lý dữ liệu của provider trước khi dùng dữ li�
 thay model hoặc provider cho một lần tạo báo cáo, mở mục cấu hình Hermes trong
 giao diện; không nhập API key tại đó.
 
+Skill phân tích bệnh của Hermes
+-------------------------------
+Skill project-local nằm tại:
+
+   .hermes\skills\medvision-disease-analysis\SKILL.md
+
+Skill thực hiện kiểm tra chất lượng dữ liệu, ma trận bằng chứng, đối chiếu mâu
+thuẫn, chẩn đoán phân biệt có giới hạn, phát hiện dữ liệu thiếu và bắt buộc cổng
+bác sĩ duyệt. Skill không chẩn đoán xác định, kê đơn hoặc biến model score thành
+xác suất bệnh.
+
+Sau khi clone dự án trên một máy mới, chạy một lần tại thư mục gốc:
+
+   .\.hermes-runtime\Scripts\hermes.exe skills trust .
+   .\.hermes-runtime\Scripts\hermes.exe skills list --source local
+
+Ứng dụng nạp tường minh skill `medvision-disease-analysis` cho mỗi lần tạo báo
+cáo và chỉ bật toolset `clarify`; không cấp terminal, file hoặc web tools cho
+phiên xử lý ca bệnh.
+
 Các file bắt buộc phải nằm cạnh app.py
 --------------------------------------
 - model.pth

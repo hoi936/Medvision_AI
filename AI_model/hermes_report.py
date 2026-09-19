@@ -12,6 +12,7 @@ from typing import Any, Iterable
 
 MAX_CLINICAL_FIELD_LENGTH = 4_000
 DEFAULT_TIMEOUT_SECONDS = 180
+HERMES_SKILL_NAME = "medvision-disease-analysis"
 WITH_LABS_MODE = "Đã có kết quả xét nghiệm"
 MISSING_LABS_MODE = "Chưa có / thiếu kết quả xét nghiệm"
 WORKFLOW_MODES = (WITH_LABS_MODE, MISSING_LABS_MODE)
@@ -54,13 +55,25 @@ def get_hermes_status() -> HermesStatus:
                 "hướng dẫn trong README.txt."
             ),
         )
+    skill_file = (
+        Path(__file__).resolve().parent.parent
+        / ".hermes"
+        / "skills"
+        / HERMES_SKILL_NAME
+        / "SKILL.md"
+    )
+    if not skill_file.is_file():
+        return HermesStatus(
+            installed=False,
+            executable=executable,
+            message=f"Thiếu Hermes skill `{HERMES_SKILL_NAME}` trong dự án.",
+        )
     return HermesStatus(
         installed=True,
         executable=executable,
         message=(
-            "Hermes CLI đã được cài đặt. Cần cấu hình provider/model một lần "
-            "bằng `hermes setup`; API key do Hermes quản lý, không lưu trong "
-            "MedVision."
+            f"Hermes CLI và skill `{HERMES_SKILL_NAME}` đã được cài đặt. "
+            "Provider/model do Hermes quản lý; API key không lưu trong MedVision."
         ),
     )
 
@@ -116,6 +129,9 @@ def build_report_prompt(
         else "Chỉ đưa đánh giá ban đầu; ưu tiên chỉ ra bằng chứng/xét nghiệm còn "
         "thiếu để bác sĩ xem xét, không cố kết luận cuối cùng."
     )
+    workflow_code = (
+        "WITH_LABS" if workflow_mode == WITH_LABS_MODE else "MISSING_LABS"
+    )
 
     return f"""Bạn là trợ lý soạn thảo báo cáo hỗ trợ bác sĩ đọc X-quang ngực.
 
@@ -137,6 +153,7 @@ QUY TẮC AN TOÀN BẮT BUỘC
 9. Không suy đoán danh tính bệnh nhân và không lặp lại dữ liệu định danh cá nhân.
 
 DATA_BLOCK
+<workflow_code>{workflow_code}</workflow_code>
 <workflow_mode>{workflow_mode}</workflow_mode>
 <workflow_instruction>{mode_instruction}</workflow_instruction>
 <demographics>{demographics}</demographics>
@@ -152,14 +169,19 @@ Chỉ trả về Markdown, không dùng code fence, theo đúng cấu trúc:
 # BÁO CÁO HỖ TRỢ LÂM SÀNG — BẢN NHÁP
 ## Phạm vi và chất lượng dữ liệu
 ## Findings từ mô hình ảnh
-## Đối chiếu bối cảnh lâm sàng
+## Ma trận bằng chứng
+## Đối chiếu và mâu thuẫn lâm sàng
 ## Nhận định và chẩn đoán phân biệt
 ## Dữ liệu còn thiếu / độ bất định
-## Khuyến nghị cho bác sĩ duyệt
+## Khuyến nghị để bác sĩ xem xét
+## Dấu hiệu cần đánh giá kịp thời
 ## Cảnh báo an toàn
 
 Trong Cảnh báo an toàn phải có nguyên văn ý sau: “Báo cáo do AI hỗ trợ soạn
 thảo, không phải chẩn đoán và chỉ có giá trị sau khi bác sĩ duyệt.”
+Kết thúc bằng đúng hai dòng:
+review_status: PENDING_CLINICIAN_REVIEW
+requires_doctor_review: true
 """
 
 
@@ -193,6 +215,8 @@ def generate_hermes_report(
         "--ignore-rules",
         "-t",
         "clarify",
+        "--skills",
+        HERMES_SKILL_NAME,
     ]
     if model.strip():
         command.extend(["-m", model.strip()])

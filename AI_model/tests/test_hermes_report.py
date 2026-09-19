@@ -47,10 +47,17 @@ class HermesReportTests(TestCase):
         self.assertIn("KHÔNG phải xác suất lâm sàng", prompt)
         self.assertIn("không phải chẩn đoán", prompt.lower())
         self.assertIn("dữ liệu không đáng tin cậy", prompt)
+        self.assertIn("<workflow_code>MISSING_LABS</workflow_code>", prompt)
+        self.assertIn("## Ma trận bằng chứng", prompt)
+        self.assertIn("requires_doctor_review: true", prompt)
 
     def test_empty_findings_are_rejected(self):
         with self.assertRaises(HermesReportError):
             build_report_prompt([], "", "", "", "")
+
+    def test_unknown_workflow_mode_is_rejected(self):
+        with self.assertRaisesRegex(HermesReportError, "không hợp lệ"):
+            build_report_prompt(SAMPLE_RESULTS, "", "", "", "", "UNKNOWN")
 
     @patch("hermes_report.subprocess.run")
     @patch("hermes_report.get_hermes_status")
@@ -66,6 +73,9 @@ class HermesReportTests(TestCase):
         command = run_mock.call_args.args[0]
         self.assertIn("--ignore-rules", command)
         self.assertEqual(command[command.index("-t") + 1], "clarify")
+        self.assertEqual(
+            command[command.index("--skills") + 1], "medvision-disease-analysis"
+        )
         self.assertFalse(run_mock.call_args.kwargs["shell"])
 
     @patch("hermes_report.subprocess.run")
