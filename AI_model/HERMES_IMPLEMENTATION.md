@@ -111,7 +111,7 @@ Structured frontend / legacy adapter
 
 ## G–H. Tests and regression result
 
-Ten deterministic unit tests pass. They verify:
+Fifteen deterministic unit tests pass. They verify:
 
 - legacy `field_presence` compatibility;
 - separation of `provided` and `verified`;
@@ -121,7 +121,14 @@ Ten deterministic unit tests pass. They verify:
 - thresholds are unchanged;
 - clinical and image provenance is retained;
 - the prompt contains canonical JSON and mandatory review status;
-- Hermes receives only the `clarify` toolset and all three clinical skills.
+- Hermes receives only the `clarify,vision` toolsets and all three clinical
+  skills when visual evidence is present. It receives the original preprocessed
+  radiograph plus finding-specific Grad-CAM, overlay, and pseudo-bbox PNGs via a
+  temporary manifest. Temporary files are removed after the Hermes subprocess.
+- Report exports are self-contained Markdown, PDF, or Word documents with the
+  same frozen visual evidence appended; changing Grad-CAM inputs makes an older
+  report stale.
+- Export regression tests generate real PNG, Markdown, PDF, and Word bytes.
 
 All three project-local skills pass the skill validator. Streamlit smoke testing
 completed with zero exceptions. A live acceptance run requires configured LLM

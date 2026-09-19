@@ -6,6 +6,8 @@ import json
 import os
 import shutil
 import subprocess
+import tempfile
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -93,6 +95,7 @@ def build_report_prompt(
     workflow_mode: str = MISSING_LABS_MODE,
     *,
     case_payload: dict[str, Any] | None = None,
+    visual_manifest: list[dict[str, Any]] | None = None,
 ) -> str:
     """Normalize once and expose only the canonical JSON to reasoning skills."""
     if case_payload is None:
@@ -119,6 +122,20 @@ def build_report_prompt(
     warnings = [*normalized.warnings, *validation_warnings]
     canonical_json = json.dumps(normalized.payload, ensure_ascii=False, indent=2)
     warnings_json = json.dumps(warnings, ensure_ascii=False)
+
+    manifest_json = json.dumps(visual_manifest or [], ensure_ascii=False, indent=2)
+    visual_instructions = """
+VISUAL_EVIDENCE chứa đường dẫn cục bộ đến ảnh PNG. Bắt buộc dùng vision_analyze
+để xem từng đường dẫn ảnh duy nhất trước khi tổng hợp. Ảnh original có thể dùng
+chung cho nhiều finding: chỉ xem đường dẫn đó một lần, không gọi lặp. Với mỗi finding, xem ảnh gốc
+và các ảnh diễn giải đi kèm. Ảnh gốc là bằng chứng hình ảnh chính; heatmap,
+overlay và pseudo_bbox đều được suy ra từ cùng một model nên không phải ba bằng
+chứng độc lập. Không coi Grad-CAM/pseudo bbox là annotation, segmentation hoặc
+ground truth của bác sĩ; không suy ra bên, vị trí, kích thước hay số lượng nếu
+không nhìn thấy chắc chắn và không được dữ liệu chuẩn hóa xác nhận. Trong phần 2
+hãy nêu ngắn gọn mức độ tương hợp/mâu thuẫn giữa ảnh gốc và vùng chú ý của model,
+đồng thời giữ nguyên score/threshold/decision từ CASE_DATA.
+""" if visual_manifest else "Không có pixel ảnh được cung cấp cho lần chạy này."
 
     return f"""Bạn là Hermes Clinical Reasoning, trợ lý hỗ trợ quyết định cho bác sĩ.
 
@@ -151,6 +168,13 @@ Không bịa nguồn. Kết thúc bằng đúng hai dòng:
 review_status: PENDING_CLINICIAN_REVIEW
 requires_doctor_review: true
 
+VISUAL_ANALYSIS_RULES
+{visual_instructions}
+
+VISUAL_EVIDENCE
+{manifest_json}
+END_VISUAL_EVIDENCE
+
 NORMALIZATION_WARNINGS
 {warnings_json}
 
@@ -158,6 +182,40 @@ CASE_DATA
 {canonical_json}
 END_CASE_DATA
 """
+
+
+def _write_visual_evidence(
+    directory: Path, visual_evidence: Iterable[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Materialize immutable PNG bytes for Hermes and return a safe manifest."""
+    manifest: list[dict[str, Any]] = []
+    written_by_digest: dict[str, str] = {}
+    for finding_index, item in enumerate(visual_evidence, start=1):
+        images = item.get("images") or {}
+        manifest_images: dict[str, str] = {}
+        for image_kind, png_bytes in images.items():
+            if not isinstance(png_bytes, (bytes, bytearray)) or not png_bytes:
+                raise HermesReportError(f"Ảnh {image_kind} của finding không hợp lệ.")
+            digest = hashlib.sha256(png_bytes).hexdigest()
+            path_string = written_by_digest.get(digest)
+            if path_string is None:
+                safe_kind = "".join(c for c in str(image_kind) if c.isalnum() or c in "_-")
+                image_path = directory / f"finding_{finding_index:02d}_{safe_kind}.png"
+                image_path.write_bytes(bytes(png_bytes))
+                path_string = str(image_path.resolve())
+                written_by_digest[digest] = path_string
+            manifest_images[str(image_kind)] = path_string
+        manifest.append(
+            {
+                "finding": str(item.get("finding", "")),
+                "class_id": item.get("class_id"),
+                "decision": item.get("decision"),
+                "score": item.get("score"),
+                "threshold": item.get("threshold"),
+                "images": manifest_images,
+            }
+        )
+    return manifest
 
 
 def validate_generated_report(report: str) -> list[str]:
@@ -186,49 +244,55 @@ def generate_hermes_report(
     provider: str = "",
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
     case_payload: dict[str, Any] | None = None,
+    visual_evidence: list[dict[str, Any]] | None = None,
 ) -> str:
     status = get_hermes_status()
     if not status.installed or status.executable is None:
         raise HermesReportError(status.message)
-    prompt = build_report_prompt(
-        results=results,
-        symptoms=symptoms,
-        history=history,
-        laboratory=laboratory,
-        demographics=demographics,
-        workflow_mode=workflow_mode,
-        case_payload=case_payload,
-    )
-    command = [
-        str(status.executable),
-        "--ignore-rules",
-        "-t",
-        "clarify",
-        "--skills",
-        ",".join(HERMES_SKILL_NAMES),
-    ]
-    if model.strip():
-        command.extend(["-m", model.strip()])
-    if provider.strip():
-        command.extend(["--provider", provider.strip()])
-    command.extend(["-z", prompt])
-    try:
-        completed = subprocess.run(
-            command,
-            cwd=Path(__file__).resolve().parent,
-            env=os.environ.copy(),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            timeout=timeout_seconds,
-            check=False,
-            shell=False,
+    with tempfile.TemporaryDirectory(prefix="medvision_hermes_") as temp_name:
+        visual_manifest = _write_visual_evidence(
+            Path(temp_name), visual_evidence or []
         )
-    except subprocess.TimeoutExpired as exc:
-        raise HermesReportError(f"Hermes không phản hồi sau {timeout_seconds} giây.") from exc
-    except OSError as exc:
-        raise HermesReportError(f"Không thể chạy Hermes CLI: {exc}") from exc
+        prompt = build_report_prompt(
+            results=results,
+            symptoms=symptoms,
+            history=history,
+            laboratory=laboratory,
+            demographics=demographics,
+            workflow_mode=workflow_mode,
+            case_payload=case_payload,
+            visual_manifest=visual_manifest,
+        )
+        command = [
+            str(status.executable),
+            "--ignore-rules",
+            "-t",
+            "clarify,vision" if visual_manifest else "clarify",
+            "--skills",
+            ",".join(HERMES_SKILL_NAMES),
+        ]
+        if model.strip():
+            command.extend(["-m", model.strip()])
+        if provider.strip():
+            command.extend(["--provider", provider.strip()])
+        command.extend(["-z", prompt])
+        try:
+            completed = subprocess.run(
+                command,
+                cwd=Path(__file__).resolve().parent,
+                env=os.environ.copy(),
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=timeout_seconds,
+                check=False,
+                shell=False,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise HermesReportError(f"Hermes không phản hồi sau {timeout_seconds} giây.") from exc
+        except OSError as exc:
+            raise HermesReportError(f"Không thể chạy Hermes CLI: {exc}") from exc
     output = completed.stdout.strip()
     if completed.returncode != 0:
         detail = completed.stderr.strip() or output or "Không có chi tiết lỗi."

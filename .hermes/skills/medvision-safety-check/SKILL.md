@@ -28,7 +28,8 @@ urgent assessment and disposition decisions with qualified professionals.
    severe hypoxemia, hemodynamic instability, altered consciousness, severe
    chest pain, or other explicit emergency features.
 2. Evaluate image findings only in combination with clinical state. A high model
-   score alone never creates an emergency alert.
+   score, conspicuous attention map, or pseudo box alone never creates an
+   emergency alert.
 3. Set safety status to `POSSIBLE_FLAG`, `NO_FLAG_IN_SUPPLIED_DATA`, or
    `CANNOT_ASSESS`. Name the exact evidence and missing data behind the status.
 4. For `POSSIBLE_FLAG`, advise prompt direct assessment through an appropriate

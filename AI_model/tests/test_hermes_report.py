@@ -114,6 +114,49 @@ requires_doctor_review: true"""
         with self.assertRaisesRegex(HermesReportError, "hermes setup"):
             generate_hermes_report(SAMPLE_RESULTS)
 
+    @patch("hermes_report.subprocess.run")
+    @patch("hermes_report.get_hermes_status")
+    def test_visual_evidence_enables_vision_and_materializes_all_views(
+        self, status_mock, run_mock
+    ):
+        status_mock.return_value = HermesStatus(True, Path("hermes"), "ready")
+        valid_report = """# Bản nháp
+## 2. Findings từ mô hình ảnh
+## 4. Tích hợp bằng chứng
+## 5. Chẩn đoán phân biệt
+## 8. Safety flags
+## 9. Giới hạn
+review_status: PENDING_CLINICIAN_REVIEW
+requires_doctor_review: true"""
+        run_mock.return_value = CompletedProcess([], 0, valid_report, "")
+        visual_evidence = [
+            {
+                "finding": "Cardiomegaly",
+                "class_id": 3,
+                "decision": "POSITIVE",
+                "score": 0.82,
+                "threshold": 0.61,
+                "images": {
+                    "original": b"original-png",
+                    "heatmap": b"heatmap-png",
+                    "overlay": b"overlay-png",
+                    "pseudo_bbox": b"bbox-png",
+                },
+            }
+        ]
+
+        generate_hermes_report(SAMPLE_RESULTS, visual_evidence=visual_evidence)
+
+        command = run_mock.call_args.args[0]
+        self.assertEqual(command[command.index("-t") + 1], "clarify,vision")
+        prompt = command[command.index("-z") + 1]
+        self.assertIn("Bắt buộc dùng vision_analyze", prompt)
+        for image_kind in ("original", "heatmap", "overlay", "pseudo_bbox"):
+            self.assertIn(f'"{image_kind}":', prompt)
+        self.assertIn("không phải ba bằng", prompt)
+        self.assertIn("chứng độc lập", prompt)
+        self.assertFalse(run_mock.call_args.kwargs["shell"])
+
     def test_report_contract_rejects_missing_review_gate(self):
         missing = validate_generated_report("## 2. Findings từ mô hình ảnh")
 

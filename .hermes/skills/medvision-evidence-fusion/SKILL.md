@@ -33,6 +33,12 @@ band, localization fields, and provenance. A score is not disease probability.
 `NEAR_THRESHOLD_*` is uncertainty around the configured decision threshold and
 must not change the official binary decision.
 
+When a visual evidence manifest is present, inspect every listed image with
+`vision_analyze` before fusion. The original preprocessed radiograph is the
+primary visual input. Heatmap, overlay, and pseudo bounding box are dependent
+interpretability views derived from that same image and model output; never
+count them as independent corroborating observations.
+
 ## Procedure
 
 1. Inventory usable evidence by source: `USER_PROVIDED`, `EHR`, `LAB`,
@@ -48,6 +54,9 @@ must not change the official binary decision.
    Each evidence item includes source, evidence, and strength.
 5. Use negative evidence to reduce support, never as absolute exclusion unless
    an independently verified record explicitly establishes exclusion.
+6. Compare the original radiograph with each finding-specific attention view.
+   Record only broad concordance, conflict, or inability to assess. Do not infer
+   laterality, anatomy, lesion count, size, or severity from an attention map.
 
 ## Overlap Rules
 
@@ -63,6 +72,8 @@ must not change the official binary decision.
 
 - Never invent laterality, zone, size, lesion count, or precise location.
 - Grad-CAM and pseudo boxes are interpretability aids, not segmentation.
+- A bright Grad-CAM region, overlay, and its pseudo box are three renderings of
+  one dependent signal, not three votes for a finding.
 - Without a laboratory reference range, report the raw value and supplied unit;
   avoid declaring high/low unless safely supported.
 - Do not assume imaging, vitals, and labs were measured simultaneously.

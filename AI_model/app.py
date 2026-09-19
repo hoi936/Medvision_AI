@@ -4,6 +4,7 @@ import hashlib
 import importlib
 import inspect
 import json
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
@@ -13,9 +14,9 @@ from clinical_schema import build_case_payload
 
 # Streamlit reloads app.py after an edit but imported modules can remain cached.
 # Refresh only when the cached Hermes bridge predates the canonical payload API.
-if "case_payload" not in inspect.signature(
-    _hermes_report.generate_hermes_report
-).parameters:
+if not {"case_payload", "visual_evidence"}.issubset(
+    inspect.signature(_hermes_report.generate_hermes_report).parameters
+):
     _hermes_report = importlib.reload(_hermes_report)
 
 HermesReportError = _hermes_report.HermesReportError
@@ -24,6 +25,12 @@ WITH_LABS_MODE = _hermes_report.WITH_LABS_MODE
 WORKFLOW_MODES = _hermes_report.WORKFLOW_MODES
 generate_hermes_report = _hermes_report.generate_hermes_report
 get_hermes_status = _hermes_report.get_hermes_status
+from report_export import (
+    IMAGE_LABELS,
+    build_visual_evidence,
+    export_report,
+    visual_evidence_digest,
+)
 from inference import (
     CACHE_IMAGE_MODE,
     EXTERNAL_IMAGE_MODE,
@@ -434,6 +441,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         "Mỗi finding sử dụng một Grad-CAM class-specific riêng; các heatmap không "
         "được cộng, trung bình hoặc chồng với finding khác."
     )
+    current_visual_pairs = []
 
     if not positive_results:
         st.info("Không có finding POSITIVE nên không tạo Grad-CAM hoặc pseudo bbox.")
@@ -499,6 +507,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
             if visualization["class_id"] != item["class_id"]:
                 st.error(f"Phát hiện cache Grad-CAM sai class cho {item['finding']}.")
                 continue
+            current_visual_pairs.append((item, visualization))
             render_positive_finding_card(
                 item=item,
                 original_image=gray,
@@ -508,6 +517,10 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 debug_mode=debug_enabled,
                 expanded=index == 0,
             )
+
+    visual_evidence_ready = (
+        not positive_results or len(current_visual_pairs) == len(positive_results)
+    )
 
     st.divider()
     st.subheader("5. Hermes Agent — tạo báo cáo hỗ trợ")
@@ -522,6 +535,11 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         st.info(hermes_status.message)
     else:
         st.error(hermes_status.message)
+    if not visual_evidence_ready:
+        st.error(
+            "Chưa tạo đủ bộ ảnh cho mọi finding POSITIVE. Báo cáo Hermes bị khóa "
+            "để tránh gửi bộ bằng chứng hình ảnh không đầy đủ."
+        )
 
     with st.container(border=True):
         instruction_col, clear_col = st.columns([4, 1])
@@ -686,8 +704,9 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         )
         privacy_confirmed = st.checkbox(
             "Tôi xác nhận dữ liệu nhập không chứa thông tin định danh người bệnh "
-            "và hiểu rằng findings cùng nội dung này sẽ được gửi đến provider LLM "
-            "đã cấu hình; báo cáo phải được bác sĩ duyệt.",
+            "và hiểu rằng ảnh X-quang đã preprocess, Grad-CAM, overlay, pseudo bbox, "
+            "findings cùng nội dung này sẽ được gửi đến provider LLM đã cấu hình; "
+            "báo cáo phải được bác sĩ duyệt.",
             key="privacy_confirmed",
         )
         generate_clicked = st.button(
@@ -699,6 +718,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 and clinical_source_confirmed
                 and privacy_confirmed
                 and hermes_status.installed
+                and visual_evidence_ready
             ),
         )
 
@@ -708,6 +728,16 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         general_info["age"] = age_text.strip()
     if sex != "Không cung cấp":
         general_info["sex"] = sex
+    visual_class_ids = {
+        int(item["class_id"]) for item, _visual in current_visual_pairs
+    }
+    model_results_for_report = [
+        {
+            **item,
+            "gradcam_available": int(item["class_id"]) in visual_class_ids,
+        }
+        for item in results
+    ]
     case_payload = build_case_payload(
         workflow_mode=workflow_code,
         general_info=general_info,
@@ -718,11 +748,20 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         laboratory_results=laboratory_results,
         missing_tests=missing_tests_text.splitlines(),
         clinician_request=clinician_request,
-        model_results=results,
+        model_results=model_results_for_report,
         input_type=analysis["input_mode"],
     )
+    visual_evidence = build_visual_evidence(
+        original=gray,
+        findings=current_visual_pairs,
+    )
+    visual_digest = visual_evidence_digest(visual_evidence)
     report_input_hash = hashlib.sha256(
-        ((current_hash or "") + json.dumps(case_payload, ensure_ascii=False, sort_keys=True)).encode("utf-8")
+        (
+            (current_hash or "")
+            + visual_digest
+            + json.dumps(case_payload, ensure_ascii=False, sort_keys=True)
+        ).encode("utf-8")
     ).hexdigest()
 
     if generate_clicked:
@@ -735,6 +774,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                     model=hermes_model,
                     provider=hermes_provider,
                     case_payload=case_payload,
+                    visual_evidence=visual_evidence,
                 )
             st.session_state.hermes_report = {
                 "file_hash": current_hash,
@@ -743,6 +783,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 "review_status": "PENDING",
                 "input_hash": report_input_hash,
                 "input_snapshot": case_payload,
+                "visual_evidence": visual_evidence,
             }
             st.session_state[f"doctor_report_editor_{current_hash}"] = report
             st.toast("Đã tạo báo cáo nháp", icon="✅")
@@ -765,6 +806,26 @@ if analysis is not None and analysis["file_hash"] == current_hash:
             st.json(saved_report.get("input_snapshot", {}))
         st.markdown("#### Bản nháp do Hermes tạo")
         st.markdown(saved_report["content"])
+        with st.expander("Phụ lục hình ảnh đã gửi cho Hermes", expanded=True):
+            st.caption(
+                "Đây là đúng bộ ảnh được đóng băng tại thời điểm tạo báo cáo. "
+                "Grad-CAM và pseudo bbox không phải annotation của bác sĩ."
+            )
+            for evidence_item in saved_report.get("visual_evidence", []):
+                st.markdown(f"##### {evidence_item['finding']}")
+                evidence_images = list(evidence_item.get("images", {}).items())
+                if not evidence_images:
+                    st.caption("Không có ảnh đính kèm.")
+                    continue
+                image_columns = st.columns(len(evidence_images))
+                for column, (image_kind, png_bytes) in zip(
+                    image_columns, evidence_images
+                ):
+                    column.image(
+                        png_bytes,
+                        caption=IMAGE_LABELS.get(image_kind, image_kind),
+                        use_container_width=True,
+                    )
         st.error(
             "Báo cáo do AI hỗ trợ soạn thảo, không phải chẩn đoán và chỉ có "
             "giá trị sau khi bác sĩ duyệt."
@@ -819,15 +880,35 @@ if analysis is not None and analysis["file_hash"] == current_hash:
             st.info("Trạng thái: ĐANG CHỜ BÁC SĨ DUYỆT")
             download_content = saved_report["content"]
             download_name = "medvision_hermes_report_draft.md"
-            download_label = "⬇️ Tải báo cáo nháp Markdown"
+            download_label = "⬇️ Tải báo cáo nháp"
 
-        st.download_button(
-            download_label,
-            data=download_content.encode("utf-8"),
-            file_name=download_name,
-            mime="text/markdown",
-            use_container_width=True,
+        st.markdown("#### Xuất báo cáo kèm hình ảnh")
+        export_format = st.selectbox(
+            "Định dạng",
+            ("Markdown (.md)", "PDF (.pdf)", "Word (.docx)"),
+            key=f"report_export_format_{current_hash}",
         )
+        st.caption(
+            "File xuất bao gồm ảnh X-quang gốc và, với mỗi finding POSITIVE, "
+            "Grad-CAM, overlay và pseudo bbox đã dùng khi tạo báo cáo."
+        )
+        try:
+            export_basename = Path(download_name).stem if "." in download_name else download_name
+            exported = export_report(
+                download_content,
+                saved_report.get("visual_evidence", []),
+                export_format,
+                filename=export_basename,
+            )
+            st.download_button(
+                download_label,
+                data=exported.data,
+                file_name=exported.filename,
+                mime=exported.mime,
+                use_container_width=True,
+            )
+        except (RuntimeError, ValueError) as exc:
+            st.error(f"Không thể tạo file {export_format}: {exc}")
 
 elif uploaded_file is not None:
     st.info("Ảnh đã sẵn sàng. Nhấn **Phân tích ảnh** để xem kết quả.")

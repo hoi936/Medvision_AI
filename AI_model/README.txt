@@ -28,6 +28,8 @@ Output
 - Pseudo bbox suy ra từ connected components của từng Grad-CAM
 - Tải bảng kết quả dưới dạng CSV
 - Hermes Agent tổng hợp findings và bối cảnh lâm sàng thành báo cáo nháp
+- Hermes xem ảnh gốc cùng Grad-CAM, overlay và pseudo bbox của từng finding
+- Xuất báo cáo kèm ảnh ở Markdown (.md), PDF (.pdf) hoặc Word (.docx)
 
 Thao tác
 --------
@@ -41,6 +43,7 @@ Thao tác
    threshold, số pseudo box và diện tích từng box.
 7. Nhập bối cảnh lâm sàng không định danh, xác nhận điều khoản và chọn
    "Tạo báo cáo nháp với Hermes". Bác sĩ phải kiểm tra trước khi sử dụng.
+8. Chọn Markdown, PDF hoặc Word tại mục "Xuất báo cáo kèm hình ảnh".
 
 Các ô triệu chứng, tiền sử và xét nghiệm chỉ nhận dữ liệu thực tế do người bệnh
 cung cấp hoặc nhân viên y tế ghi nhận. Không dán câu hỏi, đề xuất xét nghiệm hay
@@ -84,9 +87,11 @@ Nếu ứng dụng đã chạy trong lúc source code Hermes được cập nh�
 trang. App sẽ phát hiện bridge cũ trong bộ nhớ và reload module. Nếu vẫn gặp lỗi
 module cache, dừng tiến trình bằng Ctrl+C rồi chạy lại lệnh trên.
 
-MedVision gọi Hermes CLI với toolset giới hạn và không lưu API key. Không nhập
+MedVision gọi Hermes CLI với toolset giới hạn (`clarify,vision`) và không lưu
+API key. Không nhập
 thông tin định danh người bệnh vào phần bối cảnh lâm sàng. Findings và nội dung
-được nhập sẽ được gửi tới provider LLM đã cấu hình trong Hermes. Cần xem chính
+được nhập, ảnh X-quang đã preprocess, Grad-CAM, overlay và pseudo bbox sẽ được
+gửi tới provider LLM đã cấu hình trong Hermes. Cần xem chính
 sách lưu trữ/xử lý dữ liệu của provider trước khi dùng dữ liệu thật. Nếu muốn
 thay model hoặc provider cho một lần tạo báo cáo, mở mục cấu hình Hermes trong
 giao diện; không nhập API key tại đó.
@@ -108,8 +113,9 @@ Sau khi clone dự án trên một máy mới, chạy một lần tại thư m�
    .\.hermes-runtime\Scripts\hermes.exe skills list --source local
 
 Ứng dụng nạp tường minh skill `medvision-disease-analysis` cho mỗi lần tạo báo
-cáo và chỉ bật toolset `clarify`; không cấp terminal, file hoặc web tools cho
-phiên xử lý ca bệnh.
+cáo và chỉ bật toolset `clarify,vision`; không cấp terminal, file hoặc web tools
+cho phiên xử lý ca bệnh. Ảnh tạm dùng cho Hermes được xóa ngay sau khi tiến
+trình tạo báo cáo kết thúc.
 
 Kiến trúc Hermes, schema chuẩn hóa, kết quả kiểm thử và báo cáo mẫu acceptance
 case được mô tả trong HERMES_IMPLEMENTATION.md.
