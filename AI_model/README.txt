@@ -42,6 +42,12 @@ Thao tác
 7. Nhập bối cảnh lâm sàng không định danh, xác nhận điều khoản và chọn
    "Tạo báo cáo nháp với Hermes". Bác sĩ phải kiểm tra trước khi sử dụng.
 
+Các ô triệu chứng, tiền sử và xét nghiệm chỉ nhận dữ liệu thực tế do người bệnh
+cung cấp hoặc nhân viên y tế ghi nhận. Không dán câu hỏi, đề xuất xét nghiệm hay
+nội dung báo cáo do AI tạo vào các ô này. Triệu chứng thực tế là bắt buộc; nếu
+không ghi nhận triệu chứng, nhập rõ "Không ghi nhận triệu chứng". Dùng nút
+"Xóa dữ liệu ca" trước khi chuyển sang người bệnh/ảnh khác.
+
 Cài đặt và chạy trên Windows
 ----------------------------
 1. Mở PowerShell hoặc Command Prompt tại thư mục AI_model.

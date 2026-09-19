@@ -63,6 +63,23 @@ def show_error(exc: Exception, prefix: str = "") -> None:
     st.error(message)
 
 
+CLINICAL_FIELD_KEYS = (
+    "clinical_demographics",
+    "clinical_symptoms",
+    "clinical_history",
+    "clinical_laboratory",
+)
+
+
+def clear_clinical_context() -> None:
+    """Clear case-specific text so it cannot leak into another image/case."""
+    for key in CLINICAL_FIELD_KEYS:
+        st.session_state[key] = ""
+    st.session_state["clinical_source_confirmed"] = False
+    st.session_state["privacy_confirmed"] = False
+    st.session_state.hermes_report = None
+
+
 def render_positive_finding_card(
     item,
     original_image,
@@ -236,6 +253,9 @@ if "finding_visuals" not in st.session_state:
     st.session_state.finding_visuals = {}
 if "hermes_report" not in st.session_state:
     st.session_state.hermes_report = None
+for clinical_key in CLINICAL_FIELD_KEYS:
+    if clinical_key not in st.session_state:
+        st.session_state[clinical_key] = ""
 
 current_hash = None
 if uploaded_file is not None:
@@ -253,6 +273,12 @@ if analyze_clicked and uploaded_file is not None:
                 model=model,
                 device=device,
             )
+        previous_analysis = st.session_state.analysis
+        if (
+            previous_analysis is not None
+            and previous_analysis.get("file_hash") != current_hash
+        ):
+            clear_clinical_context()
         st.session_state.analysis = {
             "file_hash": current_hash,
             "filename": uploaded_file.name,
@@ -482,6 +508,18 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         st.error(hermes_status.message)
 
     with st.container(border=True):
+        instruction_col, clear_col = st.columns([4, 1])
+        instruction_col.info(
+            "Chỉ nhập dữ liệu thực tế do người bệnh cung cấp hoặc nhân viên y tế "
+            "đo/ghi nhận. Không dán câu hỏi, đề xuất hoặc nội dung do AI tạo vào "
+            "các ô này. Ảnh X-quang không tự cho biết triệu chứng."
+        )
+        clear_col.button(
+            "🗑️ Xóa dữ liệu ca",
+            on_click=clear_clinical_context,
+            use_container_width=True,
+            help="Xóa toàn bộ dữ liệu lâm sàng đang lưu trong phiên này.",
+        )
         workflow_mode = st.radio(
             "Chế độ tổng hợp",
             options=WORKFLOW_MODES,
@@ -497,25 +535,34 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 "Thông tin chung không định danh",
                 placeholder="Ví dụ: nam, nhóm tuổi 50–59",
                 max_chars=500,
+                key="clinical_demographics",
             )
             symptoms = st.text_area(
-                "Triệu chứng và thời gian xuất hiện",
+                "Triệu chứng thực tế và thời gian xuất hiện (bắt buộc)",
                 placeholder="Ví dụ: ho khan 5 ngày, sốt, khó thở khi gắng sức...",
                 max_chars=4000,
                 height=120,
+                key="clinical_symptoms",
             )
+            if not symptoms.strip():
+                st.warning(
+                    "Cần nhập triệu chứng thực tế. Nếu người bệnh không có triệu "
+                    "chứng, hãy ghi rõ “Không ghi nhận triệu chứng”."
+                )
         with context_right:
             history = st.text_area(
                 "Tiền sử và yếu tố nguy cơ liên quan",
                 placeholder="Ví dụ: tiền sử hút thuốc, bệnh tim phổi...",
                 max_chars=4000,
                 height=120,
+                key="clinical_history",
             )
             laboratory = st.text_area(
                 "Xét nghiệm / dấu hiệu sinh tồn liên quan",
                 placeholder="Ví dụ: SpO2, CRP, bạch cầu... kèm đơn vị nếu có",
                 max_chars=4000,
                 height=120,
+                key="clinical_laboratory",
             )
             if workflow_mode == WITH_LABS_MODE and not laboratory.strip():
                 st.warning(
@@ -543,17 +590,41 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 placeholder="Để trống = provider mặc định",
             )
 
+        clinical_source_confirmed = st.checkbox(
+            "Tôi xác nhận các nội dung trên là dữ liệu thực tế của ca đang xem, "
+            "không phải câu hỏi hoặc đề xuất do AI tạo.",
+            key="clinical_source_confirmed",
+        )
         privacy_confirmed = st.checkbox(
             "Tôi xác nhận dữ liệu nhập không chứa thông tin định danh người bệnh "
             "và hiểu rằng findings cùng nội dung này sẽ được gửi đến provider LLM "
-            "đã cấu hình; báo cáo phải được bác sĩ duyệt."
+            "đã cấu hình; báo cáo phải được bác sĩ duyệt.",
+            key="privacy_confirmed",
         )
         generate_clicked = st.button(
             "🤖 Tạo báo cáo nháp với Hermes",
             type="primary",
             use_container_width=True,
-            disabled=not (privacy_confirmed and hermes_status.installed),
+            disabled=not (
+                symptoms.strip()
+                and clinical_source_confirmed
+                and privacy_confirmed
+                and hermes_status.installed
+            ),
         )
+
+    report_input_hash = hashlib.sha256(
+        "\x1f".join(
+            [
+                current_hash or "",
+                workflow_mode,
+                demographics,
+                symptoms,
+                history,
+                laboratory,
+            ]
+        ).encode("utf-8")
+    ).hexdigest()
 
     if generate_clicked:
         try:
@@ -573,6 +644,22 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 "content": report,
                 "workflow_mode": workflow_mode,
                 "review_status": "PENDING",
+                "input_hash": report_input_hash,
+                "input_snapshot": {
+                    "workflow_mode": workflow_mode,
+                    "demographics": demographics or "Không được cung cấp",
+                    "symptoms": symptoms,
+                    "history": history or "Không được cung cấp",
+                    "laboratory": laboratory or "Không được cung cấp",
+                    "positive_findings": [
+                        {
+                            "finding": item["finding"],
+                            "model_score": round(float(item["score"]), 4),
+                            "threshold": round(float(item["threshold"]), 4),
+                        }
+                        for item in positive_results
+                    ],
+                },
             }
             st.session_state[f"doctor_report_editor_{current_hash}"] = report
             st.toast("Đã tạo báo cáo nháp", icon="✅")
@@ -583,6 +670,14 @@ if analysis is not None and analysis["file_hash"] == current_hash:
 
     saved_report = st.session_state.hermes_report
     if saved_report and saved_report.get("file_hash") == current_hash:
+        report_is_stale = saved_report.get("input_hash") != report_input_hash
+        if report_is_stale:
+            st.warning(
+                "Dữ liệu lâm sàng đã thay đổi sau khi tạo báo cáo. Hãy nhấn "
+                "**Tạo báo cáo nháp với Hermes** lại trước khi duyệt."
+            )
+        with st.expander("Dữ liệu đầu vào đã dùng để tạo báo cáo"):
+            st.json(saved_report.get("input_snapshot", {}))
         st.markdown("#### Bản nháp do Hermes tạo")
         st.markdown(saved_report["content"])
         st.error(
@@ -611,7 +706,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         approve_clicked = approve_col.button(
             "✅ Đánh dấu đã duyệt (demo)",
             use_container_width=True,
-            disabled=not reviewer_confirmed,
+            disabled=not reviewer_confirmed or report_is_stale,
         )
         reject_clicked = reject_col.button(
             "❌ Từ chối bản nháp",

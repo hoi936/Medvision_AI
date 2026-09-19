@@ -48,6 +48,9 @@ class HermesReportTests(TestCase):
         self.assertIn("không phải chẩn đoán", prompt.lower())
         self.assertIn("dữ liệu không đáng tin cậy", prompt)
         self.assertIn("<workflow_code>MISSING_LABS</workflow_code>", prompt)
+        self.assertIn('symptoms="true"', prompt)
+        self.assertIn('history="true"', prompt)
+        self.assertIn('laboratory="true"', prompt)
         self.assertIn("## Ma trận bằng chứng", prompt)
         self.assertIn("requires_doctor_review: true", prompt)
 
@@ -58,6 +61,14 @@ class HermesReportTests(TestCase):
     def test_unknown_workflow_mode_is_rejected(self):
         with self.assertRaisesRegex(HermesReportError, "không hợp lệ"):
             build_report_prompt(SAMPLE_RESULTS, "", "", "", "", "UNKNOWN")
+
+    def test_missing_fields_are_explicitly_marked_absent(self):
+        prompt = build_report_prompt(SAMPLE_RESULTS, "Khó thở", "", "", "")
+
+        self.assertIn('symptoms="true"', prompt)
+        self.assertIn('history="false"', prompt)
+        self.assertIn('laboratory="false"', prompt)
+        self.assertIn('demographics="false"', prompt)
 
     @patch("hermes_report.subprocess.run")
     @patch("hermes_report.get_hermes_status")
