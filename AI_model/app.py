@@ -1,10 +1,36 @@
 """Simple Streamlit frontend for the MedVision chest X-ray model."""
 
 import hashlib
+import importlib
+import inspect
+import json
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 
+import hermes_report as _hermes_report
+from clinical_schema import build_case_payload
+
+# Streamlit reloads app.py after an edit but imported modules can remain cached.
+# Refresh only when the cached Hermes bridge predates the canonical payload API.
+if not {"case_payload", "visual_evidence"}.issubset(
+    inspect.signature(_hermes_report.generate_hermes_report).parameters
+):
+    _hermes_report = importlib.reload(_hermes_report)
+
+HermesReportError = _hermes_report.HermesReportError
+MISSING_LABS_MODE = _hermes_report.MISSING_LABS_MODE
+WITH_LABS_MODE = _hermes_report.WITH_LABS_MODE
+WORKFLOW_MODES = _hermes_report.WORKFLOW_MODES
+generate_hermes_report = _hermes_report.generate_hermes_report
+get_hermes_status = _hermes_report.get_hermes_status
+from report_export import (
+    IMAGE_LABELS,
+    build_visual_evidence,
+    export_report,
+    visual_evidence_digest,
+)
 from inference import (
     CACHE_IMAGE_MODE,
     EXTERNAL_IMAGE_MODE,
@@ -53,6 +79,26 @@ def get_cached_model():
 def show_error(exc: Exception, prefix: str = "") -> None:
     message = str(exc) if isinstance(exc, MedVisionError) else f"{prefix}{exc}"
     st.error(message)
+
+
+CLINICAL_FIELD_KEYS = (
+    "clinical_demographics",
+    "clinical_symptoms",
+    "clinical_history",
+    "clinical_laboratory",
+)
+
+
+def clear_clinical_context() -> None:
+    """Clear case-specific text so it cannot leak into another image/case."""
+    for key in CLINICAL_FIELD_KEYS:
+        st.session_state[key] = ""
+    st.session_state["clinical_source_confirmed"] = False
+    st.session_state["privacy_confirmed"] = False
+    st.session_state["clinical_form_version"] = (
+        st.session_state.get("clinical_form_version", 0) + 1
+    )
+    st.session_state.hermes_report = None
 
 
 def render_positive_finding_card(
@@ -226,6 +272,13 @@ if "analysis" not in st.session_state:
     st.session_state.analysis = None
 if "finding_visuals" not in st.session_state:
     st.session_state.finding_visuals = {}
+if "hermes_report" not in st.session_state:
+    st.session_state.hermes_report = None
+if "clinical_form_version" not in st.session_state:
+    st.session_state.clinical_form_version = 0
+for clinical_key in CLINICAL_FIELD_KEYS:
+    if clinical_key not in st.session_state:
+        st.session_state[clinical_key] = ""
 
 current_hash = None
 if uploaded_file is not None:
@@ -243,6 +296,12 @@ if analyze_clicked and uploaded_file is not None:
                 model=model,
                 device=device,
             )
+        previous_analysis = st.session_state.analysis
+        if (
+            previous_analysis is not None
+            and previous_analysis.get("file_hash") != current_hash
+        ):
+            clear_clinical_context()
         st.session_state.analysis = {
             "file_hash": current_hash,
             "filename": uploaded_file.name,
@@ -253,10 +312,12 @@ if analyze_clicked and uploaded_file is not None:
             "input_tensor": input_tensor,
         }
         st.session_state.finding_visuals = {}
+        st.session_state.hermes_report = None
         st.toast("Phân tích hoàn tất", icon="✅")
     except Exception as exc:
         st.session_state.analysis = None
         st.session_state.finding_visuals = {}
+        st.session_state.hermes_report = None
         show_error(exc, "Lỗi xử lý: ")
 
 analysis = st.session_state.analysis
@@ -380,6 +441,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         "Mỗi finding sử dụng một Grad-CAM class-specific riêng; các heatmap không "
         "được cộng, trung bình hoặc chồng với finding khác."
     )
+    current_visual_pairs = []
 
     if not positive_results:
         st.info("Không có finding POSITIVE nên không tạo Grad-CAM hoặc pseudo bbox.")
@@ -445,6 +507,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
             if visualization["class_id"] != item["class_id"]:
                 st.error(f"Phát hiện cache Grad-CAM sai class cho {item['finding']}.")
                 continue
+            current_visual_pairs.append((item, visualization))
             render_positive_finding_card(
                 item=item,
                 original_image=gray,
@@ -454,6 +517,398 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 debug_mode=debug_enabled,
                 expanded=index == 0,
             )
+
+    visual_evidence_ready = (
+        not positive_results or len(current_visual_pairs) == len(positive_results)
+    )
+
+    st.divider()
+    st.subheader("5. Hermes Agent — tạo báo cáo hỗ trợ")
+    st.warning(
+        "Hermes chỉ tạo **báo cáo nháp hỗ trợ bác sĩ**, không đưa ra chẩn đoán "
+        "cuối cùng. Không nhập họ tên, địa chỉ, số điện thoại, mã bệnh án hoặc "
+        "thông tin có thể nhận diện người bệnh."
+    )
+
+    hermes_status = get_hermes_status()
+    if hermes_status.installed:
+        st.info(hermes_status.message)
+    else:
+        st.error(hermes_status.message)
+    if not visual_evidence_ready:
+        st.error(
+            "Chưa tạo đủ bộ ảnh cho mọi finding POSITIVE. Báo cáo Hermes bị khóa "
+            "để tránh gửi bộ bằng chứng hình ảnh không đầy đủ."
+        )
+
+    with st.container(border=True):
+        instruction_col, clear_col = st.columns([4, 1])
+        instruction_col.info(
+            "Chỉ nhập dữ liệu thực tế do người bệnh cung cấp hoặc nhân viên y tế "
+            "đo/ghi nhận. Không dán câu hỏi, đề xuất hoặc nội dung do AI tạo vào "
+            "các ô này. Ảnh X-quang không tự cho biết triệu chứng."
+        )
+        clear_col.button(
+            "🗑️ Xóa dữ liệu ca",
+            on_click=clear_clinical_context,
+            use_container_width=True,
+            help="Xóa toàn bộ dữ liệu lâm sàng đang lưu trong phiên này.",
+        )
+        workflow_mode = st.radio(
+            "Chế độ tổng hợp",
+            options=WORKFLOW_MODES,
+            horizontal=True,
+            help=(
+                "Khi thiếu xét nghiệm, Hermes chỉ tạo đánh giá ban đầu và nêu "
+                "dữ liệu cần bổ sung để bác sĩ xem xét."
+            ),
+        )
+        form_version = st.session_state.clinical_form_version
+        st.markdown("##### A. Thông tin chung")
+        demo_a, demo_b = st.columns(2)
+        age_text = demo_a.text_input(
+            "Tuổi (không bắt buộc)",
+            placeholder="Ví dụ: 67",
+            key=f"clinical_age_{form_version}",
+        )
+        sex = demo_b.selectbox(
+            "Giới tính được ghi nhận",
+            ["Không cung cấp", "Nữ", "Nam", "Khác/không xác định"],
+            key=f"clinical_sex_{form_version}",
+        )
+
+        st.markdown("##### B. Triệu chứng (bắt buộc)")
+        symptoms_table = st.data_editor(
+            pd.DataFrame(
+                [{"name": "", "duration": "", "severity": ""}],
+                columns=["name", "duration", "severity"],
+            ),
+            num_rows="dynamic",
+            hide_index=True,
+            use_container_width=True,
+            key=f"symptoms_editor_{form_version}",
+            column_config={
+                "name": st.column_config.TextColumn("Triệu chứng"),
+                "duration": st.column_config.TextColumn("Thời gian"),
+                "severity": st.column_config.TextColumn("Diễn tiến/mức độ"),
+            },
+        )
+        symptom_items = [
+            {
+                "name": str(row.get("name") or "").strip(),
+                "duration": str(row.get("duration") or "").strip() or None,
+                "severity": str(row.get("severity") or "").strip() or None,
+                "source": "USER_PROVIDED",
+                "verified": False,
+            }
+            for row in symptoms_table.to_dict("records")
+            if str(row.get("name") or "").strip()
+        ]
+        if not symptom_items:
+            st.warning(
+                "Cần nhập ít nhất một triệu chứng thực tế; nếu không có, thêm "
+                "một dòng “Không ghi nhận triệu chứng”."
+            )
+
+        st.markdown("##### C–D. Tiền sử và yếu tố nguy cơ")
+        history_col, risk_col = st.columns(2)
+        history = history_col.text_area(
+            "Tiền sử bệnh (mỗi dòng một mục)",
+            key=f"clinical_history_{form_version}",
+            height=110,
+        )
+        risk_factors = risk_col.text_area(
+            "Yếu tố nguy cơ (mỗi dòng một mục)",
+            key=f"clinical_risk_{form_version}",
+            height=110,
+        )
+
+        st.markdown("##### E. Dấu hiệu sinh tồn")
+        vital_cols = st.columns(5)
+        spo2 = vital_cols[0].text_input("SpO₂ (%)", key=f"spo2_{form_version}")
+        rr = vital_cols[1].text_input("RR (/min)", key=f"rr_{form_version}")
+        hr = vital_cols[2].text_input("HR (/min)", key=f"hr_{form_version}")
+        bp = vital_cols[3].text_input("BP (mmHg)", key=f"bp_{form_version}")
+        temperature = vital_cols[4].text_input("Nhiệt độ (°C)", key=f"temp_{form_version}")
+        vitals = {}
+        if spo2.strip():
+            vitals["spo2"] = {"value": spo2.strip(), "unit": "%", "context": "room air nếu được ghi nhận"}
+        if rr.strip():
+            vitals["respiratory_rate"] = {"value": rr.strip(), "unit": "/min"}
+        if hr.strip():
+            vitals["heart_rate"] = {"value": hr.strip(), "unit": "/min"}
+        if bp.strip():
+            vitals["blood_pressure"] = {"value": bp.strip(), "unit": "mmHg"}
+        if temperature.strip():
+            vitals["temperature"] = {"value": temperature.strip(), "unit": "C"}
+
+        st.markdown("##### F. Kết quả xét nghiệm")
+        laboratory_table = st.data_editor(
+            pd.DataFrame(
+                [{"name": "", "value": "", "unit": "", "reference_range": "", "timestamp": ""}],
+                columns=["name", "value", "unit", "reference_range", "timestamp"],
+            ),
+            num_rows="dynamic",
+            hide_index=True,
+            use_container_width=True,
+            key=f"laboratory_editor_{form_version}",
+        )
+        laboratory_results = [
+            {
+                "name": str(row.get("name") or "").strip(),
+                "value": str(row.get("value") or "").strip(),
+                "unit": str(row.get("unit") or "").strip() or None,
+                "reference_range": str(row.get("reference_range") or "").strip() or None,
+                "timestamp": str(row.get("timestamp") or "").strip() or None,
+                "source": "LAB",
+                "verified": False,
+            }
+            for row in laboratory_table.to_dict("records")
+            if str(row.get("name") or "").strip()
+        ]
+        if workflow_mode == WITH_LABS_MODE and not laboratory_results:
+            st.warning("Đã chọn WITH_LABS nhưng chưa nhập kết quả xét nghiệm.")
+
+        st.markdown("##### G. Dữ liệu thiếu và yêu cầu của bác sĩ")
+        missing_col, request_col = st.columns(2)
+        missing_tests_text = missing_col.text_area(
+            "Xét nghiệm/hình ảnh chưa có (mỗi dòng một mục)",
+            key=f"missing_tests_{form_version}",
+            height=90,
+        )
+        clinician_request = request_col.text_area(
+            "Yêu cầu/câu hỏi của bác sĩ (không dùng làm bằng chứng)",
+            key=f"clinician_request_{form_version}",
+            height=90,
+        )
+
+        with st.expander("Cấu hình model Hermes (tùy chọn)"):
+            st.caption(
+                "Để trống để dùng model/provider mặc định đã cấu hình bằng "
+                "Hermes CLI. API key không được nhập hoặc lưu tại màn hình này."
+            )
+            config_left, config_right = st.columns(2)
+            hermes_model = config_left.text_input(
+                "Model override",
+                placeholder="Để trống = model mặc định",
+            )
+            hermes_provider = config_right.text_input(
+                "Provider override",
+                placeholder="Để trống = provider mặc định",
+            )
+
+        clinical_source_confirmed = st.checkbox(
+            "Tôi xác nhận các nội dung trên là dữ liệu thực tế của ca đang xem, "
+            "không phải câu hỏi hoặc đề xuất do AI tạo.",
+            key="clinical_source_confirmed",
+        )
+        privacy_confirmed = st.checkbox(
+            "Tôi xác nhận dữ liệu nhập không chứa thông tin định danh người bệnh "
+            "và hiểu rằng ảnh X-quang đã preprocess, Grad-CAM, overlay, pseudo bbox, "
+            "findings cùng nội dung này sẽ được gửi đến provider LLM đã cấu hình; "
+            "báo cáo phải được bác sĩ duyệt.",
+            key="privacy_confirmed",
+        )
+        generate_clicked = st.button(
+            "🤖 Tạo báo cáo nháp với Hermes",
+            type="primary",
+            use_container_width=True,
+            disabled=not (
+                symptom_items
+                and clinical_source_confirmed
+                and privacy_confirmed
+                and hermes_status.installed
+                and visual_evidence_ready
+            ),
+        )
+
+    workflow_code = "WITH_LABS" if workflow_mode == WITH_LABS_MODE else "MISSING_LABS"
+    general_info = {}
+    if age_text.strip():
+        general_info["age"] = age_text.strip()
+    if sex != "Không cung cấp":
+        general_info["sex"] = sex
+    visual_class_ids = {
+        int(item["class_id"]) for item, _visual in current_visual_pairs
+    }
+    model_results_for_report = [
+        {
+            **item,
+            "gradcam_available": int(item["class_id"]) in visual_class_ids,
+        }
+        for item in results
+    ]
+    case_payload = build_case_payload(
+        workflow_mode=workflow_code,
+        general_info=general_info,
+        symptoms=symptom_items,
+        history=history.splitlines(),
+        risk_factors=risk_factors.splitlines(),
+        vitals=vitals,
+        laboratory_results=laboratory_results,
+        missing_tests=missing_tests_text.splitlines(),
+        clinician_request=clinician_request,
+        model_results=model_results_for_report,
+        input_type=analysis["input_mode"],
+    )
+    visual_evidence = build_visual_evidence(
+        original=gray,
+        findings=current_visual_pairs,
+    )
+    visual_digest = visual_evidence_digest(visual_evidence)
+    report_input_hash = hashlib.sha256(
+        (
+            (current_hash or "")
+            + visual_digest
+            + json.dumps(case_payload, ensure_ascii=False, sort_keys=True)
+        ).encode("utf-8")
+    ).hexdigest()
+
+    if generate_clicked:
+        # A failed new attempt must not leave an older report looking current.
+        st.session_state.hermes_report = None
+        try:
+            with st.spinner("Hermes đang tổng hợp bằng chứng và soạn báo cáo nháp..."):
+                report = generate_hermes_report(
+                    workflow_mode=workflow_mode,
+                    model=hermes_model,
+                    provider=hermes_provider,
+                    case_payload=case_payload,
+                    visual_evidence=visual_evidence,
+                )
+            st.session_state.hermes_report = {
+                "file_hash": current_hash,
+                "content": report,
+                "workflow_mode": workflow_mode,
+                "review_status": "PENDING",
+                "input_hash": report_input_hash,
+                "input_snapshot": case_payload,
+                "visual_evidence": visual_evidence,
+            }
+            st.session_state[f"doctor_report_editor_{current_hash}"] = report
+            st.toast("Đã tạo báo cáo nháp", icon="✅")
+        except HermesReportError as exc:
+            st.session_state.hermes_report = None
+            st.error(str(exc))
+        except Exception as exc:
+            st.session_state.hermes_report = None
+            st.error(f"Lỗi không mong đợi khi gọi Hermes: {exc}")
+
+    saved_report = st.session_state.hermes_report
+    if saved_report and saved_report.get("file_hash") == current_hash:
+        report_is_stale = saved_report.get("input_hash") != report_input_hash
+        if report_is_stale:
+            st.warning(
+                "Dữ liệu lâm sàng đã thay đổi sau khi tạo báo cáo. Hãy nhấn "
+                "**Tạo báo cáo nháp với Hermes** lại trước khi duyệt."
+            )
+        with st.expander("Dữ liệu đầu vào đã dùng để tạo báo cáo"):
+            st.json(saved_report.get("input_snapshot", {}))
+        st.markdown("#### Bản nháp do Hermes tạo")
+        st.markdown(saved_report["content"])
+        with st.expander("Phụ lục hình ảnh đã gửi cho Hermes", expanded=True):
+            st.caption(
+                "Đây là đúng bộ ảnh được đóng băng tại thời điểm tạo báo cáo. "
+                "Grad-CAM và pseudo bbox không phải annotation của bác sĩ."
+            )
+            for evidence_item in saved_report.get("visual_evidence", []):
+                st.markdown(f"##### {evidence_item['finding']}")
+                evidence_images = list(evidence_item.get("images", {}).items())
+                if not evidence_images:
+                    st.caption("Không có ảnh đính kèm.")
+                    continue
+                image_columns = st.columns(len(evidence_images))
+                for column, (image_kind, png_bytes) in zip(
+                    image_columns, evidence_images
+                ):
+                    column.image(
+                        png_bytes,
+                        caption=IMAGE_LABELS.get(image_kind, image_kind),
+                        use_container_width=True,
+                    )
+        st.error(
+            "Báo cáo do AI hỗ trợ soạn thảo, không phải chẩn đoán và chỉ có "
+            "giá trị sau khi bác sĩ duyệt."
+        )
+        st.markdown("#### Cổng bác sĩ duyệt (bản demo)")
+        st.caption(
+            "Có thể sửa nội dung trước khi đánh dấu duyệt. Bản demo chưa có "
+            "xác thực bác sĩ, chữ ký số, lưu database hoặc audit log."
+        )
+        editor_key = f"doctor_report_editor_{current_hash}"
+        if editor_key not in st.session_state:
+            st.session_state[editor_key] = saved_report["content"]
+        edited_report = st.text_area(
+            "Nội dung sau chỉnh sửa",
+            height=420,
+            key=editor_key,
+        )
+        reviewer_confirmed = st.checkbox(
+            "Tôi xác nhận đây chỉ là thao tác mô phỏng duyệt của bác sĩ và đã "
+            "tự kiểm tra lại ảnh, dữ liệu lâm sàng cùng nội dung báo cáo.",
+            key=f"review_confirm_{current_hash}",
+        )
+        approve_col, reject_col = st.columns(2)
+        approve_clicked = approve_col.button(
+            "✅ Đánh dấu đã duyệt (demo)",
+            use_container_width=True,
+            disabled=not reviewer_confirmed or report_is_stale,
+        )
+        reject_clicked = reject_col.button(
+            "❌ Từ chối bản nháp",
+            use_container_width=True,
+        )
+        if approve_clicked:
+            saved_report["review_status"] = "APPROVED_DEMO"
+            saved_report["final_content"] = edited_report
+        if reject_clicked:
+            saved_report["review_status"] = "REJECTED"
+            saved_report.pop("final_content", None)
+
+        review_status = saved_report.get("review_status", "PENDING")
+        if review_status == "APPROVED_DEMO":
+            st.success("Trạng thái: ĐÃ ĐÁNH DẤU DUYỆT TRONG BẢN DEMO")
+            download_content = saved_report.get("final_content", edited_report)
+            download_name = "medvision_report_reviewed_demo.md"
+            download_label = "⬇️ Tải báo cáo đã chỉnh sửa (demo)"
+        elif review_status == "REJECTED":
+            st.error("Trạng thái: BẢN NHÁP ĐÃ BỊ TỪ CHỐI")
+            download_content = saved_report["content"]
+            download_name = "medvision_hermes_report_rejected_draft.md"
+            download_label = "⬇️ Tải bản nháp bị từ chối"
+        else:
+            st.info("Trạng thái: ĐANG CHỜ BÁC SĨ DUYỆT")
+            download_content = saved_report["content"]
+            download_name = "medvision_hermes_report_draft.md"
+            download_label = "⬇️ Tải báo cáo nháp"
+
+        st.markdown("#### Xuất báo cáo kèm hình ảnh")
+        export_format = st.selectbox(
+            "Định dạng",
+            ("Markdown (.md)", "PDF (.pdf)", "Word (.docx)"),
+            key=f"report_export_format_{current_hash}",
+        )
+        st.caption(
+            "File xuất bao gồm ảnh X-quang gốc và, với mỗi finding POSITIVE, "
+            "Grad-CAM, overlay và pseudo bbox đã dùng khi tạo báo cáo."
+        )
+        try:
+            export_basename = Path(download_name).stem if "." in download_name else download_name
+            exported = export_report(
+                download_content,
+                saved_report.get("visual_evidence", []),
+                export_format,
+                filename=export_basename,
+            )
+            st.download_button(
+                download_label,
+                data=exported.data,
+                file_name=exported.filename,
+                mime=exported.mime,
+                use_container_width=True,
+            )
+        except (RuntimeError, ValueError) as exc:
+            st.error(f"Không thể tạo file {export_format}: {exc}")
 
 elif uploaded_file is not None:
     st.info("Ảnh đã sẵn sàng. Nhấn **Phân tích ảnh** để xem kết quả.")

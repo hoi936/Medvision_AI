@@ -27,6 +27,9 @@ Output
 - Grad-CAM class-specific riêng cho từng finding POSITIVE
 - Pseudo bbox suy ra từ connected components của từng Grad-CAM
 - Tải bảng kết quả dưới dạng CSV
+- Hermes Agent tổng hợp findings và bối cảnh lâm sàng thành báo cáo nháp
+- Hermes xem ảnh gốc cùng Grad-CAM, overlay và pseudo bbox của từng finding
+- Xuất báo cáo kèm ảnh ở Markdown (.md), PDF (.pdf) hoặc Word (.docx)
 
 Thao tác
 --------
@@ -38,6 +41,15 @@ Thao tác
 5. Điều chỉnh CAM threshold/min area ratio nếu cần.
 6. Bật "Debug mode" ở sidebar để xem model input, class_id, raw score,
    threshold, số pseudo box và diện tích từng box.
+7. Nhập bối cảnh lâm sàng không định danh, xác nhận điều khoản và chọn
+   "Tạo báo cáo nháp với Hermes". Bác sĩ phải kiểm tra trước khi sử dụng.
+8. Chọn Markdown, PDF hoặc Word tại mục "Xuất báo cáo kèm hình ảnh".
+
+Các ô triệu chứng, tiền sử và xét nghiệm chỉ nhận dữ liệu thực tế do người bệnh
+cung cấp hoặc nhân viên y tế ghi nhận. Không dán câu hỏi, đề xuất xét nghiệm hay
+nội dung báo cáo do AI tạo vào các ô này. Triệu chứng thực tế là bắt buộc; nếu
+không ghi nhận triệu chứng, nhập rõ "Không ghi nhận triệu chứng". Dùng nút
+"Xóa dữ liệu ca" trước khi chuyển sang người bệnh/ảnh khác.
 
 Cài đặt và chạy trên Windows
 ----------------------------
@@ -56,6 +68,58 @@ Cài đặt và chạy trên Windows
 
 Nếu máy không có GPU/CUDA tương thích, ứng dụng tự động sử dụng CPU.
 
+Cấu hình Hermes Agent trên Windows
+----------------------------------
+Hermes được clone tại thư mục hermes-agent và cài trong môi trường riêng
+.hermes-runtime ở thư mục gốc dự án. Tại PowerShell ở thư mục gốc, chạy:
+
+   .\.hermes-runtime\Scripts\hermes.exe setup
+   .\.hermes-runtime\Scripts\hermes.exe model
+   .\.hermes-runtime\Scripts\hermes.exe doctor
+
+Sau khi cấu hình provider/model/API key, chạy ứng dụng bằng môi trường của
+AI_model (không dùng môi trường Hermes):
+
+   cd AI_model
+   .\.venv\Scripts\python.exe -m streamlit run app.py
+
+Nếu ứng dụng đã chạy trong lúc source code Hermes được cập nhật, chỉ cần tải lại
+trang. App sẽ phát hiện bridge cũ trong bộ nhớ và reload module. Nếu vẫn gặp lỗi
+module cache, dừng tiến trình bằng Ctrl+C rồi chạy lại lệnh trên.
+
+MedVision gọi Hermes CLI với toolset giới hạn (`clarify,vision`) và không lưu
+API key. Không nhập
+thông tin định danh người bệnh vào phần bối cảnh lâm sàng. Findings và nội dung
+được nhập, ảnh X-quang đã preprocess, Grad-CAM, overlay và pseudo bbox sẽ được
+gửi tới provider LLM đã cấu hình trong Hermes. Cần xem chính
+sách lưu trữ/xử lý dữ liệu của provider trước khi dùng dữ liệu thật. Nếu muốn
+thay model hoặc provider cho một lần tạo báo cáo, mở mục cấu hình Hermes trong
+giao diện; không nhập API key tại đó.
+
+Skill phân tích bệnh của Hermes
+-------------------------------
+Skill project-local nằm tại:
+
+   .hermes\skills\medvision-disease-analysis\SKILL.md
+
+Skill thực hiện kiểm tra chất lượng dữ liệu, ma trận bằng chứng, đối chiếu mâu
+thuẫn, chẩn đoán phân biệt có giới hạn, phát hiện dữ liệu thiếu và bắt buộc cổng
+bác sĩ duyệt. Skill không chẩn đoán xác định, kê đơn hoặc biến model score thành
+xác suất bệnh.
+
+Sau khi clone dự án trên một máy mới, chạy một lần tại thư mục gốc:
+
+   .\.hermes-runtime\Scripts\hermes.exe skills trust .
+   .\.hermes-runtime\Scripts\hermes.exe skills list --source local
+
+Ứng dụng nạp tường minh skill `medvision-disease-analysis` cho mỗi lần tạo báo
+cáo và chỉ bật toolset `clarify,vision`; không cấp terminal, file hoặc web tools
+cho phiên xử lý ca bệnh. Ảnh tạm dùng cho Hermes được xóa ngay sau khi tiến
+trình tạo báo cáo kết thúc.
+
+Kiến trúc Hermes, schema chuẩn hóa, kết quả kiểm thử và báo cáo mẫu acceptance
+case được mô tả trong HERMES_IMPLEMENTATION.md.
+
 Các file bắt buộc phải nằm cạnh app.py
 --------------------------------------
 - model.pth
@@ -68,6 +132,10 @@ Lưu ý
 Model score là đầu ra sigmoid và chưa phải xác suất lâm sàng đã được
 calibration. Ứng dụng chỉ phục vụ nghiên cứu/demo, không sử dụng kết quả
 để thay thế chẩn đoán của bác sĩ.
+
+Báo cáo Hermes là bản nháp hỗ trợ tổng hợp bằng chứng. Nội dung không phải chẩn
+đoán xác định, không được dùng để tự điều trị hoặc kê đơn và chỉ có giá trị sau
+khi bác sĩ có chuyên môn kiểm tra, chỉnh sửa và phê duyệt.
 
 Pseudo bbox được tạo từ vùng attention của Grad-CAM và chỉ mang tính minh
 họa. Đây không phải Doctor bbox, ground-truth hay annotation chuẩn của
