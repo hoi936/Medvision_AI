@@ -2,8 +2,18 @@
 MEDVISION AI - CHEST X-RAY DEMO
 ================================
 
-Ứng dụng Streamlit chạy DenseNet121 baseline BEST (epoch 8) để đánh giá
-14 chest X-ray findings. Ứng dụng không train lại hoặc thay đổi model.
+Ứng dụng Streamlit cho phép chọn một trong ba model để đánh giá 14 chest X-ray
+findings. Mỗi lần phân tích chỉ chạy đúng một model đã chọn:
+
+- V1 — DenseNet121 Baseline: ImageNet → VinBigData, BEST epoch 8.
+- V2 — DenseNet121 + CBAM: ImageNet → CBAM → VinBigData, BEST epoch 7.
+- V3 — DenseNet121 + CheXpert Transfer: ImageNet → CheXpert → VinBigData,
+  BEST epoch 7; đây là lựa chọn mặc định/khuyến nghị theo metrics hiện có.
+
+Ứng dụng không train lại hoặc thay đổi trọng số và threshold của các model.
+Ba thư mục `Model_AI_V1`, `Model_AI_V2`, `Model_AI_V3` là archive huấn luyện
+cục bộ và được Git bỏ qua. Các checkpoint inference gọn cần để triển khai được
+lưu trong `AI_model/model.pth` và `AI_model/models/`.
 
 Input
 -----
@@ -21,6 +31,7 @@ Input type
 
 Output
 ------
+- Tên và phiên bản model đã dùng cho lần nhận diện
 - 14 model sigmoid scores
 - Threshold riêng của từng finding
 - Kết quả POSITIVE / NEGATIVE
@@ -33,17 +44,18 @@ Output
 
 Thao tác
 --------
-1. Upload ảnh X-quang tại trang chính.
-2. Nhấn "Phân tích ảnh".
-3. Xem ảnh đã preprocess, findings POSITIVE và bảng đủ 14 findings.
-4. Mở từng card trong "Chi tiết từng finding POSITIVE" để xem Original,
+1. Chọn V1, V2 hoặc V3 ở sidebar.
+2. Upload ảnh X-quang tại trang chính.
+3. Nhấn "Phân tích ảnh".
+4. Xem ảnh đã preprocess, findings POSITIVE và bảng đủ 14 findings.
+5. Mở từng card trong "Chi tiết từng finding POSITIVE" để xem Original,
    Grad-CAM, Overlay và Pseudo bbox.
-5. Điều chỉnh CAM threshold/min area ratio nếu cần.
-6. Bật "Debug mode" ở sidebar để xem model input, class_id, raw score,
+6. Điều chỉnh CAM threshold/min area ratio nếu cần.
+7. Bật "Debug mode" ở sidebar để xem model input, class_id, raw score,
    threshold, số pseudo box và diện tích từng box.
-7. Nhập bối cảnh lâm sàng không định danh, xác nhận điều khoản và chọn
+8. Nhập bối cảnh lâm sàng không định danh, xác nhận điều khoản và chọn
    "Tạo báo cáo nháp với Hermes". Bác sĩ phải kiểm tra trước khi sử dụng.
-8. Chọn Markdown, PDF hoặc Word tại mục "Xuất báo cáo kèm hình ảnh".
+9. Chọn Markdown, PDF hoặc Word tại mục "Xuất báo cáo kèm hình ảnh".
 
 Các ô triệu chứng, tiền sử và xét nghiệm chỉ nhận dữ liệu thực tế do người bệnh
 cung cấp hoặc nhân viên y tế ghi nhận. Không dán câu hỏi, đề xuất xét nghiệm hay
@@ -120,9 +132,13 @@ trình tạo báo cáo kết thúc.
 Kiến trúc Hermes, schema chuẩn hóa, kết quả kiểm thử và báo cáo mẫu acceptance
 case được mô tả trong HERMES_IMPLEMENTATION.md.
 
-Các file bắt buộc phải nằm cạnh app.py
---------------------------------------
-- model.pth
+Các file model deployment bắt buộc
+----------------------------------
+- model.pth (V1)
+- models/model_v2_cbam.pth
+- models/model_v3_transfer.pth
+- models/thresholds_v2.json
+- models/thresholds_v3.json
 - class_names.json
 - thresholds.json
 - preprocessing.json

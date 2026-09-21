@@ -129,6 +129,8 @@ def build_case_payload(
     clinician_request: str,
     model_results: Iterable[dict[str, Any]],
     input_type: str | None = None,
+    model_name: str | None = "DenseNet121",
+    model_version: str | None = "baseline-best-epoch-8",
 ) -> dict[str, Any]:
     if workflow_mode not in ALLOWED_WORKFLOW_MODES:
         raise ClinicalSchemaError("workflow_mode không hợp lệ.")
@@ -146,7 +148,10 @@ def build_case_payload(
         "missing_tests": _lines(missing_tests),
         "clinician_request": _section(clinician_request),
         "model_findings": normalize_model_findings(
-            model_results, input_type=input_type
+            model_results,
+            model_name=model_name,
+            model_version=model_version,
+            input_type=input_type,
         ),
     }
 

@@ -111,3 +111,25 @@ class ClinicalSchemaTests(TestCase):
         self.assertTrue(normalized["vitals"]["provided"])
         self.assertTrue(normalized["laboratory"]["provided"])
         self.assertEqual(normalized["missing_tests"], ["Chest CT"])
+
+    def test_selected_model_identity_is_preserved_for_hermes(self):
+        payload = build_case_payload(
+            workflow_mode="MISSING_LABS",
+            general_info={},
+            symptoms=[{"name": "Không ghi nhận triệu chứng"}],
+            history=[],
+            risk_factors=[],
+            vitals={},
+            laboratory_results=[],
+            missing_tests=[],
+            clinician_request="",
+            model_results=acceptance_results(),
+            input_type="Raw DICOM",
+            model_name="DenseNet121 + CBAM",
+            model_version="v2-cbam-best-epoch-7",
+        )
+
+        model_findings = payload["model_findings"]
+        self.assertEqual(model_findings["model_name"], "DenseNet121 + CBAM")
+        self.assertEqual(model_findings["model_version"], "v2-cbam-best-epoch-7")
+        self.assertEqual(model_findings["input_type"], "Raw DICOM")

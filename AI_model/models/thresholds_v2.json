@@ -1,0 +1,16 @@
+{
+  "Aortic enlargement": 0.8359375,
+  "Atelectasis": 0.88720703125,
+  "Calcification": 0.8115234375,
+  "Cardiomegaly": 0.89013671875,
+  "Consolidation": 0.92236328125,
+  "ILD": 0.98681640625,
+  "Infiltration": 0.974609375,
+  "Lung Opacity": 0.91455078125,
+  "Nodule/Mass": 0.8212890625,
+  "Other lesion": 0.9033203125,
+  "Pleural effusion": 0.935546875,
+  "Pleural thickening": 0.85107421875,
+  "Pneumothorax": 0.96826171875,
+  "Pulmonary fibrosis": 0.92578125
+}

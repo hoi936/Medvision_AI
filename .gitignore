@@ -25,3 +25,8 @@ Thumbs.db
 *.log
 *.tmp
 ~$*
+
+# Local training archives; compact inference weights are tracked in AI_model/models/
+/Model_AI_V1/
+/Model_AI_V2/
+/Model_AI_V3/

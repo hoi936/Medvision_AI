@@ -14,18 +14,21 @@ import numpy as np
 import pydicom
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from PIL import Image, UnidentifiedImageError
 from torchvision import transforms
 from torchvision.models import densenet121
 
+from model_registry import (
+    DEFAULT_MODEL_ID,
+    EXPECTED_CLASS_NAMES,
+    ModelRegistryError,
+    get_model_spec,
+    load_model_package,
+)
+
 
 LOGGER = logging.getLogger("medvision.inference")
-
-BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / "model.pth"
-CLASS_PATH = BASE_DIR / "class_names.json"
-THRESHOLD_PATH = BASE_DIR / "thresholds.json"
-PREPROCESSING_PATH = BASE_DIR / "preprocessing.json"
 
 NUM_CLASSES = 14
 IMAGE_SIZE = 384
@@ -36,24 +39,6 @@ CACHE_IMAGE_MODE = "Preprocessed PNG/JPG from VinBigData cache"
 RAW_DICOM_MODE = "Raw DICOM"
 EXTERNAL_IMAGE_MODE = "External PNG/JPG"
 INPUT_MODES = (CACHE_IMAGE_MODE, RAW_DICOM_MODE, EXTERNAL_IMAGE_MODE)
-
-EXPECTED_CLASS_NAMES = [
-    "Aortic enlargement",
-    "Atelectasis",
-    "Calcification",
-    "Cardiomegaly",
-    "Consolidation",
-    "ILD",
-    "Infiltration",
-    "Lung Opacity",
-    "Nodule/Mass",
-    "Other lesion",
-    "Pleural effusion",
-    "Pleural thickening",
-    "Pneumothorax",
-    "Pulmonary fibrosis",
-]
-
 
 class MedVisionError(RuntimeError):
     """A clear, user-facing error raised by the inference pipeline."""
@@ -71,33 +56,15 @@ def _read_json(path: Path, label: str) -> Any:
         raise MedVisionError(f"Không thể đọc {path.name}: {exc}") from exc
 
 
-@lru_cache(maxsize=1)
-def load_configuration() -> tuple[list[str], dict[str, float], dict[str, Any]]:
-    """Load and validate the immutable metadata shipped with the model."""
-    class_names = _read_json(CLASS_PATH, "class_names.json")
-    thresholds_raw = _read_json(THRESHOLD_PATH, "thresholds.json")
-    preprocessing = _read_json(PREPROCESSING_PATH, "preprocessing.json")
-
-    if class_names != EXPECTED_CLASS_NAMES:
-        raise MedVisionError(
-            "class_names.json phải chứa đúng 14 finding theo đúng thứ tự đã train."
-        )
-    if not isinstance(thresholds_raw, dict):
-        raise MedVisionError("thresholds.json phải là một JSON object.")
-
-    thresholds: dict[str, float] = {}
-    for name in class_names:
-        if name not in thresholds_raw:
-            raise MedVisionError(f"thresholds.json thiếu finding: {name}")
-        try:
-            value = float(thresholds_raw[name])
-        except (TypeError, ValueError) as exc:
-            raise MedVisionError(f"Threshold của '{name}' không hợp lệ.") from exc
-        if not 0.0 <= value <= 1.0:
-            raise MedVisionError(f"Threshold của '{name}' phải nằm trong [0, 1].")
-        thresholds[name] = value
-    if len(thresholds_raw) != NUM_CLASSES:
-        raise MedVisionError("thresholds.json phải chứa đúng 14 threshold.")
+@lru_cache(maxsize=3)
+def load_configuration(
+    model_id: str = DEFAULT_MODEL_ID,
+) -> tuple[list[str], dict[str, float], dict[str, Any]]:
+    """Load and validate metadata belonging to the selected model version."""
+    try:
+        _spec, class_names, thresholds, preprocessing = load_model_package(model_id)
+    except ModelRegistryError as exc:
+        raise MedVisionError(str(exc)) from exc
 
     required = {"image_size", "channels", "imagenet_mean", "imagenet_std"}
     missing = required.difference(preprocessing)
@@ -124,7 +91,7 @@ def get_device() -> torch.device:
 def _extract_state_dict(checkpoint: Any) -> dict[str, torch.Tensor]:
     if not isinstance(checkpoint, dict):
         raise MedVisionError("Checkpoint model.pth không chứa state_dict hợp lệ.")
-    for key in ("model_state_dict", "state_dict"):
+    for key in ("model_state_dict", "state_dict", "model_state"):
         candidate = checkpoint.get(key)
         if isinstance(candidate, dict):
             checkpoint = candidate
@@ -136,25 +103,99 @@ def _extract_state_dict(checkpoint: Any) -> dict[str, torch.Tensor]:
     return checkpoint
 
 
-def load_model(device: torch.device | None = None) -> nn.Module:
-    """Build DenseNet121 and load the provided weights unchanged."""
-    load_configuration()
-    if not MODEL_PATH.is_file():
-        raise MedVisionError(f"Không tìm thấy model: {MODEL_PATH.name}")
+class ChannelAttention(nn.Module):
+    def __init__(self, channels: int, reduction: int = 16) -> None:
+        super().__init__()
+        hidden = max(channels // reduction, 1)
+        self.shared_mlp = nn.Sequential(
+            nn.Conv2d(channels, hidden, kernel_size=1, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(hidden, channels, kernel_size=1, bias=False),
+        )
+
+    def forward(self, tensor: torch.Tensor) -> torch.Tensor:
+        average = self.shared_mlp(F.adaptive_avg_pool2d(tensor, 1))
+        maximum = self.shared_mlp(F.adaptive_max_pool2d(tensor, 1))
+        return tensor * torch.sigmoid(average + maximum)
+
+
+class SpatialAttention(nn.Module):
+    def __init__(self, kernel_size: int = 7) -> None:
+        super().__init__()
+        padding = kernel_size // 2
+        self.conv = nn.Conv2d(2, 1, kernel_size=kernel_size, padding=padding, bias=False)
+
+    def forward(self, tensor: torch.Tensor) -> torch.Tensor:
+        average = torch.mean(tensor, dim=1, keepdim=True)
+        maximum, _indices = torch.max(tensor, dim=1, keepdim=True)
+        attention = torch.sigmoid(self.conv(torch.cat([average, maximum], dim=1)))
+        return tensor * attention
+
+
+class CBAM(nn.Module):
+    def __init__(self, channels: int = 1024, reduction: int = 16, spatial_kernel: int = 7) -> None:
+        super().__init__()
+        self.channel_attention = ChannelAttention(channels, reduction)
+        self.spatial_attention = SpatialAttention(spatial_kernel)
+
+    def forward(self, tensor: torch.Tensor) -> torch.Tensor:
+        return self.spatial_attention(self.channel_attention(tensor))
+
+
+class DenseNet121CBAM(nn.Module):
+    """Architecture matching the V2 checkpoint key contract."""
+
+    def __init__(self, num_classes: int = NUM_CLASSES) -> None:
+        super().__init__()
+        base = densenet121(weights=None)
+        self.features = base.features
+        self.cbam = CBAM(channels=base.classifier.in_features)
+        self.classifier = nn.Linear(base.classifier.in_features, num_classes)
+
+    def forward(self, tensor: torch.Tensor) -> torch.Tensor:
+        features = self.features(tensor)
+        features = self.cbam(features)
+        pooled = F.adaptive_avg_pool2d(F.relu(features, inplace=True), (1, 1))
+        return self.classifier(torch.flatten(pooled, 1))
+
+
+def _safe_load_checkpoint(path: Path) -> Any:
+    """Load tensor weights while allowlisting only NumPy scalar metadata."""
+    try:
+        safe_types = [np._core.multiarray.scalar, np.dtype, type(np.dtype("float64"))]
+        with torch.serialization.safe_globals(safe_types):
+            return torch.load(path, map_location="cpu", weights_only=True)
+    except AttributeError:  # Older NumPy/PyTorch without the safe-global API.
+        try:
+            return torch.load(path, map_location="cpu", weights_only=True)
+        except TypeError:
+            return torch.load(path, map_location="cpu")
+
+
+def load_model(
+    device: torch.device | None = None,
+    model_id: str = DEFAULT_MODEL_ID,
+) -> nn.Module:
+    """Build the selected architecture and load its versioned BEST weights."""
+    load_configuration(model_id)
+    try:
+        spec = get_model_spec(model_id)
+    except ModelRegistryError as exc:
+        raise MedVisionError(str(exc)) from exc
 
     device = device or get_device()
-    model = densenet121(weights=None)
-    model.classifier = nn.Linear(model.classifier.in_features, NUM_CLASSES)
+    if spec.architecture == "densenet121_cbam":
+        model = DenseNet121CBAM(NUM_CLASSES)
+    else:
+        model = densenet121(weights=None)
+        model.classifier = nn.Linear(model.classifier.in_features, NUM_CLASSES)
     try:
-        try:
-            checkpoint = torch.load(MODEL_PATH, map_location="cpu", weights_only=True)
-        except TypeError:  # Compatibility with older supported PyTorch versions.
-            checkpoint = torch.load(MODEL_PATH, map_location="cpu")
+        checkpoint = _safe_load_checkpoint(spec.checkpoint_path)
         model.load_state_dict(_extract_state_dict(checkpoint), strict=True)
     except MedVisionError:
         raise
     except Exception as exc:
-        raise MedVisionError(f"Không thể load model.pth: {exc}") from exc
+        raise MedVisionError(f"Không thể load {spec.display_name}: {exc}") from exc
 
     model.to(device)
     model.eval()
@@ -238,7 +279,12 @@ def read_normal_image(
     return validate_gray_image(gray)
 
 
-def preprocess_upload(file_bytes: bytes, filename: str, input_mode: str) -> np.ndarray:
+def preprocess_upload(
+    file_bytes: bytes,
+    filename: str,
+    input_mode: str,
+    model_id: str = DEFAULT_MODEL_ID,
+) -> np.ndarray:
     """Route input through the explicitly selected preprocessing pipeline."""
     if not file_bytes:
         raise MedVisionError("File tải lên đang trống.")
@@ -246,7 +292,7 @@ def preprocess_upload(file_bytes: bytes, filename: str, input_mode: str) -> np.n
         raise MedVisionError("Input type không hợp lệ.")
 
     extension = Path(filename).suffix.lower()
-    _, _, preprocessing = load_configuration()
+    _, _, preprocessing = load_configuration(model_id)
     image_size = int(preprocessing["image_size"])
 
     if input_mode == RAW_DICOM_MODE:
@@ -262,10 +308,10 @@ def preprocess_upload(file_bytes: bytes, filename: str, input_mode: str) -> np.n
     )
 
 
-def prepare_tensor(gray: np.ndarray) -> torch.Tensor:
+def prepare_tensor(gray: np.ndarray, model_id: str = DEFAULT_MODEL_ID) -> torch.Tensor:
     """Stack grayscale to RGB then apply ToTensor and ImageNet normalization."""
     validate_gray_image(gray)
-    _, _, preprocessing = load_configuration()
+    _, _, preprocessing = load_configuration(model_id)
     rgb = np.stack([gray, gray, gray], axis=-1)
     transform = transforms.Compose(
         [
@@ -290,13 +336,15 @@ def predict_findings(
     input_mode: str = CACHE_IMAGE_MODE,
     model: nn.Module | None = None,
     device: torch.device | None = None,
+    model_id: str = DEFAULT_MODEL_ID,
 ) -> tuple[np.ndarray, list[dict[str, Any]], dict[str, Any], torch.Tensor]:
     """Run multi-label inference and return the exact batched tensor for Grad-CAM."""
-    class_names, thresholds, _ = load_configuration()
+    class_names, thresholds, _ = load_configuration(model_id)
+    spec = get_model_spec(model_id)
     device = device or get_device()
-    model = model or load_model(device)
-    gray = preprocess_upload(file_bytes, filename, input_mode)
-    input_tensor = prepare_tensor(gray).unsqueeze(0).to(device)
+    model = model or load_model(device, model_id=model_id)
+    gray = preprocess_upload(file_bytes, filename, input_mode, model_id=model_id)
+    input_tensor = prepare_tensor(gray, model_id=model_id).unsqueeze(0).to(device)
 
     model.eval()
     with torch.no_grad():
@@ -332,6 +380,11 @@ def predict_findings(
 
     debug_info = {
         "filename": filename,
+        "model_id": model_id,
+        "model_name": spec.model_name,
+        "model_version": spec.model_version,
+        "model_display_name": spec.display_name,
+        "model_checkpoint": spec.checkpoint_path.name,
         "input_mode": input_mode,
         "image_shape": tuple(gray.shape),
         "image_dtype": str(gray.dtype),

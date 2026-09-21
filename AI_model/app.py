@@ -11,6 +11,13 @@ import streamlit as st
 
 import hermes_report as _hermes_report
 from clinical_schema import build_case_payload
+from model_registry import (
+    DEFAULT_MODEL_ID,
+    MODEL_IDS,
+    get_model_options,
+    get_model_spec,
+    model_summary,
+)
 
 # Streamlit reloads app.py after an edit but imported modules can remain cached.
 # Refresh only when the cached Hermes bridge predates the canonical payload API.
@@ -69,11 +76,14 @@ st.markdown(
 )
 
 
-@st.cache_resource(show_spinner="Đang tải mô hình DenseNet121...")
-def get_cached_model():
-    """Load the checkpoint once for the entire Streamlit process."""
+@st.cache_resource(
+    show_spinner="Đang tải model nhận diện đã chọn...",
+    max_entries=1,
+)
+def get_cached_model(model_id):
+    """Keep only the selected model cached to avoid retaining three GPU copies."""
     device = get_device()
-    return load_model(device), device
+    return load_model(device, model_id=model_id), device
 
 
 def show_error(exc: Exception, prefix: str = "") -> None:
@@ -189,11 +199,29 @@ def render_positive_finding_card(
 
 
 st.title("🩻 MedVision AI - Chest X-ray Demo")
-st.write("Giao diện thử nghiệm mô hình DenseNet121 nhận diện 14 chest X-ray findings.")
+st.write("Chọn một trong ba model để nhận diện 14 chest X-ray findings.")
+
+model_options = get_model_options()
+with st.sidebar:
+    st.header("Model nhận diện")
+    selected_model_id = st.selectbox(
+        "Chọn phiên bản",
+        options=MODEL_IDS,
+        index=MODEL_IDS.index(DEFAULT_MODEL_ID),
+        format_func=lambda model_id: model_options[model_id],
+        help="Mỗi lần phân tích chỉ chạy đúng một model được chọn.",
+    )
+    selected_spec = get_model_spec(selected_model_id)
+    selected_summary = model_summary(selected_model_id)
+    st.success(f"Đã chọn: {selected_spec.display_name}")
+    st.caption(f"Pipeline: {selected_spec.pipeline}")
+    with st.expander("Thông tin đánh giá model"):
+        for label, value in selected_summary.items():
+            st.write(f"**{label}:** {value}")
 
 try:
-    load_configuration()
-    model, device = get_cached_model()
+    load_configuration(selected_model_id)
+    model, device = get_cached_model(selected_model_id)
 except Exception as exc:
     show_error(exc, "Lỗi khởi tạo: ")
     st.stop()
@@ -210,7 +238,7 @@ with st.sidebar:
     )
     st.divider()
     st.subheader("Trạng thái hệ thống")
-    st.success("Model đã sẵn sàng")
+    st.success(f"{selected_spec.display_name} đã sẵn sàng")
     st.caption(f"Thiết bị: **{device.type.upper()}**")
     st.caption("Input: PNG · JPG · JPEG · DCM · DICOM")
     st.caption("Kích thước model input: 384 × 384")
@@ -283,7 +311,9 @@ for clinical_key in CLINICAL_FIELD_KEYS:
 current_hash = None
 if uploaded_file is not None:
     current_hash = hashlib.sha256(
-        input_mode.encode("utf-8") + uploaded_file.getvalue()
+        selected_model_id.encode("utf-8")
+        + input_mode.encode("utf-8")
+        + uploaded_file.getvalue()
     ).hexdigest()
 
 if analyze_clicked and uploaded_file is not None:
@@ -295,6 +325,7 @@ if analyze_clicked and uploaded_file is not None:
                 input_mode=input_mode,
                 model=model,
                 device=device,
+                model_id=selected_model_id,
             )
         previous_analysis = st.session_state.analysis
         if (
@@ -306,6 +337,10 @@ if analyze_clicked and uploaded_file is not None:
             "file_hash": current_hash,
             "filename": uploaded_file.name,
             "input_mode": input_mode,
+            "model_id": selected_model_id,
+            "model_name": selected_spec.model_name,
+            "model_version": selected_spec.model_version,
+            "model_display_name": selected_spec.display_name,
             "gray": gray,
             "results": results,
             "debug_info": debug_info,
@@ -339,7 +374,8 @@ if analysis is not None and analysis["file_hash"] == current_hash:
     metric_a, metric_b, metric_c = st.columns(3)
     metric_a.metric("Findings POSITIVE", f"{len(positive_results)} / 14")
     metric_b.metric("Model score cao nhất", f"{results[0]['score'] * 100:.2f}%")
-    metric_c.metric("Ảnh đầu vào", analysis["filename"])
+    metric_c.metric("Model", analysis["model_display_name"])
+    st.caption(f"Ảnh đầu vào: **{analysis['filename']}**")
 
     image_column, result_column = st.columns([1, 1.35], gap="large")
     with image_column:
@@ -369,6 +405,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
     st.subheader("3. Bảng toàn bộ 14 findings")
     table = pd.DataFrame(
         {
+            "Model": [analysis["model_display_name"]] * len(results),
             "Finding": [item["finding"] for item in results],
             "Model score (%)": [round(item["score"] * 100, 2) for item in results],
             "Threshold (%)": [round(item["threshold"] * 100, 2) for item in results],
@@ -388,7 +425,7 @@ if analysis is not None and analysis["file_hash"] == current_hash:
     st.download_button(
         "⬇️ Tải kết quả CSV",
         data=table.to_csv(index=False).encode("utf-8-sig"),
-        file_name="medvision_result.csv",
+        file_name=f"medvision_result_{analysis['model_id']}.csv",
         mime="text/csv",
         use_container_width=True,
     )
@@ -404,6 +441,9 @@ if analysis is not None and analysis["file_hash"] == current_hash:
                 "\n".join(
                     [
                         f"filename: {debug_info['filename']}",
+                        f"model: {debug_info['model_display_name']}",
+                        f"model version: {debug_info['model_version']}",
+                        f"checkpoint: {debug_info['model_checkpoint']}",
                         f"input mode: {debug_info['input_mode']}",
                         f"image shape: {debug_info['image_shape']}",
                         f"image dtype: {debug_info['image_dtype']}",
@@ -750,6 +790,8 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         clinician_request=clinician_request,
         model_results=model_results_for_report,
         input_type=analysis["input_mode"],
+        model_name=analysis["model_name"],
+        model_version=analysis["model_version"],
     )
     visual_evidence = build_visual_evidence(
         original=gray,
@@ -869,17 +911,17 @@ if analysis is not None and analysis["file_hash"] == current_hash:
         if review_status == "APPROVED_DEMO":
             st.success("Trạng thái: ĐÃ ĐÁNH DẤU DUYỆT TRONG BẢN DEMO")
             download_content = saved_report.get("final_content", edited_report)
-            download_name = "medvision_report_reviewed_demo.md"
+            download_name = f"medvision_report_{analysis['model_id']}_reviewed_demo.md"
             download_label = "⬇️ Tải báo cáo đã chỉnh sửa (demo)"
         elif review_status == "REJECTED":
             st.error("Trạng thái: BẢN NHÁP ĐÃ BỊ TỪ CHỐI")
             download_content = saved_report["content"]
-            download_name = "medvision_hermes_report_rejected_draft.md"
+            download_name = f"medvision_hermes_report_{analysis['model_id']}_rejected_draft.md"
             download_label = "⬇️ Tải bản nháp bị từ chối"
         else:
             st.info("Trạng thái: ĐANG CHỜ BÁC SĨ DUYỆT")
             download_content = saved_report["content"]
-            download_name = "medvision_hermes_report_draft.md"
+            download_name = f"medvision_hermes_report_{analysis['model_id']}_draft.md"
             download_label = "⬇️ Tải báo cáo nháp"
 
         st.markdown("#### Xuất báo cáo kèm hình ảnh")
