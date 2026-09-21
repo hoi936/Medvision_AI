@@ -58,6 +58,41 @@ from inference import (
 
 st.set_page_config(page_title="MedVision AI Demo", page_icon="🩻", layout="wide")
 
+
+def install_browser_translation_guard() -> None:
+    """Prevent browser translators from mutating React-owned Streamlit nodes."""
+    st.iframe(
+        """
+        <script>
+        (() => {
+          try {
+            const doc = window.parent.document;
+            const root = doc.documentElement;
+            root.lang = "vi";
+            root.setAttribute("translate", "no");
+            root.classList.add("notranslate");
+            doc.body?.setAttribute("translate", "no");
+            doc.body?.classList.add("notranslate");
+
+            let meta = doc.head.querySelector('meta[name="google"]');
+            if (!meta) {
+              meta = doc.createElement("meta");
+              meta.name = "google";
+              doc.head.appendChild(meta);
+            }
+            meta.content = "notranslate";
+          } catch (_error) {
+            // The app remains usable if a browser blocks parent-frame access.
+          }
+        })();
+        </script>
+        """,
+        height=1,
+    )
+
+
+install_browser_translation_guard()
+
 st.markdown(
     """
     <style>

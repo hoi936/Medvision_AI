@@ -80,6 +80,10 @@ Cài đặt và chạy trên Windows
 
 Nếu máy không có GPU/CUDA tương thích, ứng dụng tự động sử dụng CPU.
 
+Ứng dụng đặt ngôn ngữ trang là tiếng Việt và chặn browser auto-translate để
+tránh extension dịch nội dung làm mất đồng bộ cây React của Streamlit. Sau khi
+cập nhật phiên bản này, nhấn Ctrl+Shift+R một lần hoặc mở lại tab localhost.
+
 Cấu hình Hermes Agent trên Windows
 ----------------------------------
 Hermes được clone tại thư mục hermes-agent và cài trong môi trường riêng
