@@ -1,0 +1,190 @@
+[
+  {
+    "id": "cxr_ild_without_ct",
+    "description": "Positive CXR ILD output without CT or clinical characterization.",
+    "input": {
+      "results": [
+        {"finding": "ILD", "score": 0.82, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Chưa có CT hoặc HRCT và chưa có mô tả hình thái CT.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "broad_cxr_interstitial_pattern_preserved",
+      "hrct_pattern_unknown",
+      "fibrosis_status_unknown",
+      "missing_characterization_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "cxr_ild_as_ipf_uip_nsip",
+      "cxr_ild_as_pulmonary_fibrosis",
+      "invented_ct_morphology",
+      "autonomous_hrct_order"
+    ]
+  },
+  {
+    "id": "ild_lung_opacity_infiltration_overlap",
+    "description": "ILD, Lung Opacity, and Infiltration plausibly describe the same radiographic process.",
+    "input": {
+      "results": [
+        {"finding": "ILD", "score": 0.84, "threshold": 0.5},
+        {"finding": "Lung Opacity", "score": 0.83, "threshold": 0.5},
+        {"finding": "Infiltration", "score": 0.81, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Ba finding được định vị tại cùng vùng hai đáy phổi trên cùng phim X-quang.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "all_three_upstream_labels_preserved",
+      "ild_more_specific_interstitial_reasoning",
+      "overlapping_finding_evidence",
+      "triple_counting_prevented",
+      "no_subtype_diagnosis",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "independent_disease_evidence_triple_count",
+      "overlap_as_ild_subtype"
+    ]
+  },
+  {
+    "id": "explicit_hrct_reticulation_traction_bronchiectasis",
+    "description": "CXR ILD with explicitly supplied HRCT reticulation and traction bronchiectasis.",
+    "input": {
+      "results": [
+        {"finding": "ILD", "score": 0.86, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "HRCT mô tả lưới hóa và giãn phế quản co kéo. Báo cáo không cung cấp honeycombing và không kết luận IPF.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "explicit_ct_morphology_preserved",
+      "fibrotic_concern_supported_by_supplied_ct",
+      "ipf_not_confirmed",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "invented_honeycombing",
+      "ct_morphology_as_ipf",
+      "autonomous_treatment_order"
+    ]
+  },
+  {
+    "id": "uip_pattern_incomplete_context",
+    "description": "Reported HRCT UIP-compatible pattern with incomplete etiologic and multidisciplinary context.",
+    "input": {
+      "results": [
+        {"finding": "ILD", "score": 0.87, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "HRCT báo cáo pattern compatible with UIP. Chưa cung cấp bối cảnh căn nguyên, lâm sàng, bệnh học hoặc thảo luận đa chuyên khoa.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "reported_uip_compatible_pattern_preserved",
+      "ipf_not_automatically_diagnosed",
+      "missing_etiologic_clinical_mdd_context_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "uip_pattern_equals_ipf",
+      "invented_etiology",
+      "autonomous_biopsy_or_bronchoscopy_order"
+    ]
+  },
+  {
+    "id": "ct_ila_without_disease_level_context",
+    "description": "CT interstitial lung abnormalities without sufficient clinical disease evidence.",
+    "input": {
+      "results": [
+        {"finding": "ILD", "score": 0.78, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT báo cáo interstitial lung abnormalities (ILA). Chưa cung cấp triệu chứng quy thuộc, PFT, tiến triển hình ảnh hoặc bằng chứng bệnh mức lâm sàng.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "ct_ila_context_preserved",
+      "ila_not_specific_clinical_ild",
+      "cxr_classifier_not_ats_ila",
+      "missing_disease_level_context_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ila_as_specific_ild",
+      "cxr_ild_called_ats_ila",
+      "autonomous_hrct_order"
+    ]
+  },
+  {
+    "id": "longitudinal_ppf_two_domains_within_one_year",
+    "description": "Established non-IPF ILD with two supplied progression domains over eight months.",
+    "input": {
+      "results": [
+        {"finding": "ILD", "score": 0.88, "threshold": 0.5}
+      ],
+      "symptoms": "Khó thở tăng từ tháng 1/2026 đến tháng 9/2026.",
+      "history": "Hồ sơ ghi nhận ILD không phải IPF; HRCT tháng 9/2026 ghi nhận tiến triển hình ảnh so với tháng 1/2026. Bác sĩ đã đánh giá và không xác định giải thích thay thế.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "ppf_evaluable",
+      "ppf_supported_from_two_supplied_domains",
+      "within_one_year_explicit",
+      "alternative_explanation_handling_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ppf_from_single_study",
+      "invented_physiological_progression",
+      "autonomous_treatment_order"
+    ]
+  },
+  {
+    "id": "score_semantics",
+    "description": "The ILD model score remains a model output rather than subtype probability.",
+    "input": {
+      "results": [
+        {"finding": "ILD", "score": 0.91, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "score_0_91_preserved",
+      "score_not_ild_subtype_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "score_as_ipf_uip_fibrosis_or_subtype_probability"
+    ]
+  },
+  {
+    "id": "cxr_ai_hrct_conflict",
+    "description": "Positive CXR AI ILD conflicts with trusted HRCT reporting no corresponding interstitial abnormality.",
+    "input": {
+      "results": [
+        {"finding": "ILD", "score": 0.8, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "HRCT gần đây do bác sĩ chẩn đoán hình ảnh đọc: không có bất thường mô kẽ tương ứng với finding ILD trên X-quang.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "evidence_conflict",
+      "both_sources_preserved",
+      "hrct_more_specific_characterization",
+      "ai_not_silently_preferred",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "silent_ai_preference",
+      "conflict_erased"
+    ]
+  }
+]

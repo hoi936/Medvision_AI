@@ -87,8 +87,14 @@ Nếu ứng dụng đã chạy trong lúc source code Hermes được cập nh�
 trang. App sẽ phát hiện bridge cũ trong bộ nhớ và reload module. Nếu vẫn gặp lỗi
 module cache, dừng tiến trình bằng Ctrl+C rồi chạy lại lệnh trên.
 
-MedVision gọi Hermes CLI với toolset giới hạn (`clarify,vision`) và không lưu
-API key. Không nhập
+MedVision gọi Hermes CLI với toolset giới hạn (`clarify,skills`, hoặc
+`clarify,vision,skills` khi có ảnh) và không lưu API key. Toolset `skills` của
+Hermes v0.21.4 cung cấp `skills_list`, `skill_view`, `skill_manage`; không bật
+terminal, browser, messaging hoặc công cụ sửa file tùy ý. Phiên bản này không
+hỗ trợ tắt riêng `skill_manage`, vì vậy cấu hình runtime bắt buộc đặt
+`skills.write_approval: true`; bridge sẽ từ chối chạy nếu gate này bị tắt. Mọi
+yêu cầu sửa skill chỉ được staged và không được ghi cho đến khi có phê duyệt rõ
+ràng. Không nhập
 thông tin định danh người bệnh vào phần bối cảnh lâm sàng. Findings và nội dung
 được nhập, ảnh X-quang đã preprocess, Grad-CAM, overlay và pseudo bbox sẽ được
 gửi tới provider LLM đã cấu hình trong Hermes. Cần xem chính
@@ -113,9 +119,22 @@ Sau khi clone dự án trên một máy mới, chạy một lần tại thư m�
    .\.hermes-runtime\Scripts\hermes.exe skills list --source local
 
 Ứng dụng nạp tường minh skill `medvision-disease-analysis` cho mỗi lần tạo báo
-cáo và chỉ bật toolset `clarify,vision`; không cấp terminal, file hoặc web tools
+cáo và chỉ bật toolset `clarify,skills` (thêm `vision` khi có ảnh); không cấp
+terminal, file hoặc web tools
 cho phiên xử lý ca bệnh. Ảnh tạm dùng cho Hermes được xóa ngay sau khi tiến
 trình tạo báo cáo kết thúc.
+
+Kiểm thử runtime thật là opt-in. Pytest chạy bằng môi trường dự án, còn mọi lệnh
+Hermes vẫn chạy qua runtime đã pin ở `.runtime/hermes-venv`. Từ thư mục gốc dự
+án, chạy launcher có preflight bắt buộc:
+
+   PROJECT_TEST_PYTHON="$PWD/AI_model/.venv/bin/python" \
+     bash AI_model/scripts/run_real_validation.sh
+
+Không cài pytest vào Hermes runtime. Nếu không đặt RUN_HERMES_REAL, các golden
+clinical cases được skip với lý do rõ ràng. Nếu preflight thất bại, launcher dừng
+trước khi chạy clinical cases. Quy trình cấu hình và lệnh thủ công nằm trong
+AI_model/PROVIDER_ACTIVATION_RUNBOOK.md.
 
 Kiến trúc Hermes, schema chuẩn hóa, kết quả kiểm thử và báo cáo mẫu acceptance
 case được mô tả trong HERMES_IMPLEMENTATION.md.

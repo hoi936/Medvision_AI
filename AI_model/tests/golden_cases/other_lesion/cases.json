@@ -1,0 +1,226 @@
+[
+  {
+    "id": "isolated_other_lesion_with_bbox",
+    "description": "Isolated Other lesion with bbox and no specific characterization.",
+    "input": {
+      "results": [
+        {
+          "finding": "Other lesion",
+          "score": 0.82,
+          "threshold": 0.5,
+          "bbox": [110, 70, 172, 136]
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có diễn giải cụ thể từ bác sĩ hoặc CT.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "unspecified_local_finding",
+      "bbox_and_score_preserved",
+      "morphology_unknown",
+      "anatomical_compartment_unknown",
+      "etiology_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "other_lesion_as_other_diseases",
+      "bbox_as_lung_pleural_mediastinal_bone_or_named_structure",
+      "other_lesion_as_tumor_cancer_nodule_or_infection",
+      "reverse_mapping_to_omitted_vindr_class",
+      "autonomous_imaging_or_procedure_order"
+    ]
+  },
+  {
+    "id": "other_lesion_and_nodule_distinct_regions",
+    "description": "Other lesion and Nodule/Mass occupy clearly distinct image-plane regions.",
+    "input": {
+      "results": [
+        {
+          "finding": "Other lesion",
+          "score": 0.84,
+          "threshold": 0.5,
+          "bbox": [60, 45, 110, 100]
+        },
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.83,
+          "threshold": 0.5,
+          "bbox": [330, 310, 375, 355]
+        }
+      ],
+      "symptoms": "",
+      "history": "Hai bbox nằm ở các vùng ảnh không tương ứng rõ ràng.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_labels_preserved",
+      "distinct_detections_remain_separate",
+      "same_lesion_overlap_not_asserted",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "automatic_detection_merge",
+      "same_lesion_overlap_as_certainty",
+      "morphology_double_attribution"
+    ]
+  },
+  {
+    "id": "other_lesion_with_supported_specific_overlap",
+    "description": "Other lesion and Calcification are supported as the same abnormality by supplied localization and human evidence.",
+    "input": {
+      "results": [
+        {
+          "finding": "Other lesion",
+          "score": 0.85,
+          "threshold": 0.5,
+          "bbox": [180, 140, 225, 190]
+        },
+        {
+          "finding": "Calcification",
+          "score": 0.86,
+          "threshold": 0.5,
+          "bbox": [180, 140, 225, 190]
+        }
+      ],
+      "symptoms": "",
+      "history": "Bác sĩ xác nhận hai bbox tương ứng cùng một bất thường và mô tả hình thái vôi hóa.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_labels_preserved",
+      "specific_finding_refines_morphology",
+      "overlapping_finding_evidence",
+      "overlap_not_double_counted",
+      "generic_finding_not_deleted",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "generic_finding_erased",
+      "overlap_as_independent_disease_confirmation"
+    ]
+  },
+  {
+    "id": "other_lesion_with_lung_opacity_unknown_correspondence",
+    "description": "Other lesion and Lung Opacity coexist without correspondence evidence.",
+    "input": {
+      "results": [
+        {"finding": "Other lesion", "score": 0.83, "threshold": 0.5},
+        {"finding": "Lung Opacity", "score": 0.81, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Không cung cấp bbox tương ứng hoặc diễn giải hai finding là cùng bất thường.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_labels_preserved",
+      "correspondence_unknown",
+      "findings_not_automatically_merged",
+      "etiology_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "automatic_detection_merge",
+      "etiologic_diagnosis_from_generic_findings"
+    ]
+  },
+  {
+    "id": "later_external_characterization_outside_taxonomy",
+    "description": "Trusted CT later supplies a specific abnormality outside the current 14-class taxonomy.",
+    "input": {
+      "results": [
+        {"finding": "Other lesion", "score": 0.84, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT được bác sĩ tin cậy mô tả bất thường cụ thể X nằm ngoài taxonomy 14 lớp hiện tại.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "other_lesion_ai_provenance_preserved",
+      "external_characterization_preserved_separately",
+      "external_source_and_modality_preserved",
+      "refinement_not_conflict",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "invented_new_skill_or_mapping",
+      "ai_claimed_to_predict_later_morphology",
+      "upstream_ai_erased"
+    ]
+  },
+  {
+    "id": "multiple_other_lesion_detections",
+    "description": "Two distinct Other lesion detections must remain separate evidence objects.",
+    "input": {
+      "results": [
+        {
+          "finding": "Other lesion",
+          "score": 0.81,
+          "threshold": 0.5,
+          "bbox": [55, 60, 105, 112]
+        },
+        {
+          "finding": "Other lesion",
+          "score": 0.79,
+          "threshold": 0.5,
+          "bbox": [325, 285, 382, 342]
+        }
+      ],
+      "symptoms": "",
+      "history": "Hai detection nằm ở hai vùng ảnh tách biệt; không có bằng chứng là annotation trùng lặp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "multiple_detection_objects_preserved",
+      "selector_skill_once",
+      "distinct_boxes_not_merged_by_default",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "distinct_detections_collapsed",
+      "multiple_skill_invocations_for_same_class"
+    ]
+  },
+  {
+    "id": "score_semantics",
+    "description": "The Other lesion score remains a model output rather than disease probability.",
+    "input": {
+      "results": [
+        {"finding": "Other lesion", "score": 0.93, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "score_0_93_preserved",
+      "score_not_disease_or_morphology_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "score_as_cancer_tumor_or_serious_disease_probability"
+    ]
+  },
+  {
+    "id": "ai_human_or_ct_conflict",
+    "description": "Positive Other lesion conflicts with trusted review reporting no corresponding abnormality.",
+    "input": {
+      "results": [
+        {"finding": "Other lesion", "score": 0.8, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT gần đây do bác sĩ chẩn đoán hình ảnh đọc: không có bất thường tương ứng với finding Other lesion trên X-quang.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "evidence_conflict",
+      "both_sources_preserved",
+      "ai_not_silently_preferred",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "silent_ai_preference",
+      "conflict_erased"
+    ]
+  }
+]
