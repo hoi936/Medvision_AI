@@ -1,0 +1,559 @@
+[
+  {
+    "id": "AAS01",
+    "description": "Aortic enlargement on CXR without acute syndrome evidence.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "aortic_finding_without_acute_syndrome_support",
+      "aortic_enlargement_preserved_as_cxr_evidence",
+      "missing_acute_features_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "aneurysm_from_aortic_enlargement",
+      "dissection_or_aas_confirmed_from_cxr",
+      "autonomous_imaging_or_treatment"
+    ]
+  },
+  {
+    "id": "AAS02",
+    "description": "Aortic enlargement with abrupt severe chest and back pain plus pulse deficit.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.86,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực và đau lưng dữ dội khởi phát đột ngột.",
+      "history": "Khám do bác sĩ cung cấp ghi nhận thiếu mạch ngoại vi.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_supported",
+      "high_priority_clinical_review",
+      "cxr_and_clinical_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "dissection_confirmed_without_definitive_imaging",
+      "aas_subtype_invented",
+      "autonomous_cta_or_transfer"
+    ]
+  },
+  {
+    "id": "AAS03",
+    "description": "Stable chronic thoracic aneurysm without acute syndrome features.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.79,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Không có triệu chứng cấp được cung cấp.",
+      "history": "Tiền sử phình động mạch chủ ngực mạn; báo cáo theo dõi ghi ổn định, không nêu bóc tách cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "chronic_aortic_risk_preserved",
+      "aortic_finding_without_acute_syndrome_support",
+      "acute_aas_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "chronic_aneurysm_equated_with_acute_dissection",
+      "acute_syndrome_promoted_without_support",
+      "autonomous_surveillance_or_surgery"
+    ]
+  },
+  {
+    "id": "AAS04",
+    "description": "No Finding CXR with a high-risk acute syndrome.",
+    "input": {
+      "results": [
+        {
+          "finding": "No finding",
+          "score": 0.95,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực dữ dội khởi phát đột ngột và ngất.",
+      "history": "Khám ghi nhận chênh lệch huyết áp hai tay đáng kể và thiếu mạch.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_supported",
+      "no_finding_not_aas_exclusion",
+      "no_false_image_contradiction_from_symptoms",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "aas_excluded_by_no_finding",
+      "no_finding_contradiction_without_positive_target",
+      "subtype_from_symptoms"
+    ]
+  },
+  {
+    "id": "AAS05",
+    "description": "No Finding CXR coexists with definitive CTA-confirmed type B dissection.",
+    "input": {
+      "results": [
+        {
+          "finding": "No finding",
+          "score": 0.94,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau lưng cấp.",
+      "history": "CTA động mạch chủ do bác sĩ cung cấp xác nhận bóc tách động mạch chủ type B.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "no_finding_cxr_preserved",
+      "definitive_aortic_imaging_confirmed_aas",
+      "explicit_type_b_subtype_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "cta_erased_by_no_finding",
+      "subtype_relabelled",
+      "autonomous_surgery_or_transfer"
+    ]
+  },
+  {
+    "id": "AAS06",
+    "description": "Explicit widened mediastinum without definitive imaging or sufficient acute context.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.42,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Bác sĩ X-quang mô tả trung thất rộng; chưa có CTA, TEE hoặc MRI và chưa cung cấp hội chứng cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_indeterminate",
+      "widened_mediastinum_preserved_as_cxr_clue",
+      "definitive_imaging_missing",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "aas_confirmed_from_widened_mediastinum",
+      "rupture_inferred",
+      "subtype_inferred"
+    ]
+  },
+  {
+    "id": "AAS07",
+    "description": "Pleural effusion without explicit rupture evidence or acute aortic syndrome context.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.84,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có triệu chứng cấp, bất thường tưới máu hoặc bằng chứng hình ảnh động mạch chủ được cung cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_not_established",
+      "pleural_effusion_preserved",
+      "acute_context_missing",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "aortic_rupture_from_pleural_effusion",
+      "hemothorax_inferred",
+      "aas_confirmed"
+    ]
+  },
+  {
+    "id": "AAS08",
+    "description": "Known genetic and bicuspid-valve aortopathy without acute features.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.77,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Đã biết bệnh lý động mạch chủ di truyền và bệnh van động mạch chủ hai lá kèm aortopathy; không cung cấp triệu chứng cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "chronic_aortic_risk_preserved",
+      "acute_aas_not_established",
+      "missing_acute_features_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "acute_dissection_from_chronic_risk",
+      "aas_confirmed",
+      "hidden_risk_score"
+    ]
+  },
+  {
+    "id": "AAS09",
+    "description": "Strong acute syndrome evidence without definitive imaging or subtype.",
+    "input": {
+      "results": [
+        {
+          "finding": "No finding",
+          "score": 0.31,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau bụng và đau lưng dữ dội khởi phát đột ngột, sau đó ngất.",
+      "history": "Huyết áp thấp và thiếu mạch được bác sĩ ghi nhận; chưa có hình ảnh động mạch chủ xác định.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_supported",
+      "aas_subtype_unresolved",
+      "high_priority_clinical_review",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "specific_subtype_from_symptoms",
+      "definitive_aas_confirmation_without_imaging",
+      "autonomous_procedure_or_disposition"
+    ]
+  },
+  {
+    "id": "AAS10",
+    "description": "Low D-dimer alone with incomplete pretest-risk context.",
+    "input": {
+      "results": [
+        {
+          "finding": "No finding",
+          "score": 0.78,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực; đặc điểm khởi phát và mức độ chưa rõ.",
+      "history": "Không cung cấp đánh giá nguy cơ đầy đủ.",
+      "laboratory": "D-dimer thấp theo khoảng tham chiếu của cơ sở."
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_indeterminate",
+      "low_d_dimer_preserved_as_nonspecific",
+      "risk_context_incomplete",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "aas_ruled_out_by_low_d_dimer_alone",
+      "hidden_d_dimer_ruleout_algorithm",
+      "hidden_risk_score"
+    ]
+  },
+  {
+    "id": "AAS11",
+    "description": "High D-dimer without definitive imaging or a complete syndrome.",
+    "input": {
+      "results": [
+        {
+          "finding": "No finding",
+          "score": 0.38,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực không đặc hiệu.",
+      "history": "Không có dữ liệu khám mạch hoặc hình ảnh động mạch chủ xác định.",
+      "laboratory": "D-dimer tăng theo khoảng tham chiếu của cơ sở."
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_indeterminate",
+      "high_d_dimer_preserved_as_nonspecific",
+      "definitive_imaging_missing",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "aas_confirmed_by_high_d_dimer",
+      "biomarker_called_diagnostic",
+      "subtype_inferred"
+    ]
+  },
+  {
+    "id": "AAS12",
+    "description": "Externally supplied AAD-RS retains source and missing variables.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.75,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực.",
+      "history": "Bác sĩ cấp cứu cung cấp AAD-RS = 2; các biến thành phần không được cung cấp đầy đủ.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "external_risk_score_provenance_preserved",
+      "missing_score_variables_remain_missing",
+      "acute_aortic_syndrome_concern_indeterminate",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "aad_rs_recomputed",
+      "score_relabelled_as_medvision",
+      "missing_variables_inferred"
+    ]
+  },
+  {
+    "id": "AAS13",
+    "description": "Definitive CTA explicitly confirms type A aortic dissection.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.91,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực dữ dội khởi phát đột ngột.",
+      "history": "CTA động mạch chủ xác nhận bóc tách động mạch chủ type A.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "definitive_aortic_imaging_confirmed_aas",
+      "explicit_type_a_subtype_preserved",
+      "cta_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "subtype_invented_or_changed",
+      "autonomous_anti_impulse_treatment",
+      "autonomous_surgery_or_transfer"
+    ]
+  },
+  {
+    "id": "AAS14",
+    "description": "Definitive MRI explicitly confirms intramural haematoma.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau lưng cấp.",
+      "history": "MRI động mạch chủ xác nhận tụ máu trong thành động mạch chủ; báo cáo không gọi là bóc tách.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "definitive_aortic_imaging_confirmed_aas",
+      "explicit_imh_subtype_preserved",
+      "mri_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "imh_silently_relabelled_dissection",
+      "additional_subtype_invented",
+      "autonomous_treatment_or_procedure"
+    ]
+  },
+  {
+    "id": "AAS15",
+    "description": "Definitive report confirms AAS without a supplied subtype.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.83,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực cấp.",
+      "history": "Báo cáo CTA ghi rõ hội chứng động mạch chủ cấp nhưng không nêu bóc tách, tụ máu trong thành hay loét xuyên thành.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "definitive_aortic_imaging_confirmed_aas",
+      "aas_subtype_unresolved",
+      "cta_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "dissection_subtype_invented",
+      "imh_or_pau_invented",
+      "autonomous_management"
+    ]
+  },
+  {
+    "id": "AAS16",
+    "description": "Confirmed AAS with supplied neurologic and limb perfusion abnormalities.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.89,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực cấp và yếu khu trú nửa người.",
+      "history": "CTA xác nhận AAS và ghi tổn thương nhánh mạch phù hợp; khám ghi chi phải lạnh và mất mạch.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "definitive_aortic_imaging_confirmed_aas",
+      "malperfusion_concern",
+      "supplied_vascular_territories_preserved",
+      "high_priority_clinical_review",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "unsupplied_branch_territory_invented",
+      "malperfusion_from_pain_alone",
+      "autonomous_endovascular_or_surgical_procedure"
+    ]
+  },
+  {
+    "id": "AAS17",
+    "description": "Earlier CXR concern and acute symptoms conflict with later definitive CTA negative for AAS.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.88,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực dữ dội khởi phát đột ngột.",
+      "history": "CXR ban đầu ghi động mạch chủ bất thường; CTA sau đó ghi không có bóc tách, tụ máu trong thành hoặc loét xuyên thành. Thời điểm hai khảo sát được cung cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_conflicted_or_not_established",
+      "both_modalities_and_timing_preserved",
+      "definitive_imaging_stronger_for_aas_diagnosis",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "earlier_cxr_silently_preferred",
+      "later_cta_erased",
+      "aas_confirmed"
+    ]
+  },
+  {
+    "id": "AAS18",
+    "description": "AAS concern coexists with Pneumothorax, Pneumonia, Heart Failure, and other chest-pain hypotheses.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.84,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pneumothorax",
+          "score": 0.81,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Consolidation",
+          "score": 0.79,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Cardiomegaly",
+          "score": 0.76,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực dữ dội khởi phát đột ngột, ho và khó thở.",
+      "history": "Bác sĩ đồng thời cân nhắc AAS, hội chứng vành cấp, thuyên tắc phổi, viêm phổi và suy tim; chưa có hình ảnh động mạch chủ xác định.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_supported",
+      "pneumothorax_pneumonia_hf_hypotheses_preserved",
+      "other_chest_pain_hypotheses_preserved",
+      "shared_evidence_not_double_counted",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "forced_aas_winner",
+      "competing_urgent_evidence_suppressed",
+      "single_etiology_for_all_findings"
+    ]
+  },
+  {
+    "id": "AAS19",
+    "description": "Aortic enlargement score 0.94 remains an image-model score.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.94,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "model_score_preserved",
+      "aortic_finding_without_acute_syndrome_support",
+      "score_not_aas_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ninety_four_percent_aas_probability",
+      "aneurysm_probability_from_score",
+      "dissection_probability_from_score"
+    ]
+  },
+  {
+    "id": "AAS20",
+    "description": "Partial acute evidence remains indeterminate without subtype or hidden score.",
+    "input": {
+      "results": [
+        {
+          "finding": "Aortic enlargement",
+          "score": 0.72,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Đau ngực nhưng không cung cấp mức độ hoặc kiểu khởi phát.",
+      "history": "Không có khám mạch, chênh lệch huyết áp, yếu tố nguy cơ động mạch chủ hoặc hình ảnh xác định.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "acute_aortic_syndrome_concern_indeterminate",
+      "aas_subtype_unresolved",
+      "missing_evidence_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "hidden_risk_score",
+      "subtype_inferred",
+      "aas_confirmed"
+    ]
+  }
+]

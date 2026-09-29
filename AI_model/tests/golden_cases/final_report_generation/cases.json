@@ -1,0 +1,3409 @@
+[
+  {
+    "id": "FR01",
+    "description": "Doctor review pending blocks generation.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR01: Doctor review pending blocks generation. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"not_ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"pending\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "pending",
+        "readiness": "not_ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_BLOCKED_BY_REVIEW"
+    ],
+    "expected_blockers": [
+      "review_status_not_completed",
+      "review_readiness_not_ready"
+    ],
+    "expected_error": null,
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR02",
+    "description": "Review in progress cannot yield a candidate.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR02: Review in progress cannot yield a candidate. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"not_ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"in_progress\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "in_progress",
+        "readiness": "not_ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_BLOCKED_BY_REVIEW"
+    ],
+    "expected_blockers": [
+      "review_status_not_completed"
+    ],
+    "expected_error": null,
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR03",
+    "description": "Completed review with blockers stays blocked.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR03: Completed review with blockers stays blocked. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"blocking_reasons\": [\"high_priority_item_unacknowledged\"], \"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"not_ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "not_ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [],
+        "blocking_reasons": [
+          "high_priority_item_unacknowledged"
+        ]
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_BLOCKED_BY_REVIEW"
+    ],
+    "expected_blockers": [
+      "high_priority_item_unacknowledged"
+    ],
+    "expected_error": null,
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR04",
+    "description": "Ready completed review produces an unfinalized candidate.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR04: Ready completed review produces an unfinalized candidate. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY",
+      "FINAL_REPORT_RENDERED_FROM_REVIEW"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "candidate_not_final"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR05",
+    "description": "Accepted finding may render with upstream provenance.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR05: Accepted finding may render with upstream provenance. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "accepted_finding",
+      "source_bound"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR06",
+    "description": "Rejected AI finding is excluded while source remains immutable.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR06: Rejected AI finding is excluded while source remains immutable. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"reject\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "reject",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "rejected_absent",
+      "source_immutable"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR07",
+    "description": "Doctor modification controls rendered laterality and size.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR07: Doctor modification controls rendered laterality and size. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"modify\", \"doctor_value\": \"small right pleural effusion\", \"id\": \"F1\", \"reviewed_value\": \"Pleural effusion\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "modify",
+            "reviewed_value": "Pleural effusion",
+            "doctor_value": "small right pleural effusion"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "modified_finding",
+      "doctor_authored"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR08",
+    "description": "Reviewed doctor-added finding renders without changing AI history.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR08: Reviewed doctor-added finding renders without changing AI history. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [{\"id\": \"DF1\", \"reviewed\": true, \"text\": \"Doctor-added opacity\"}], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [],
+        "hypotheses": [],
+        "doctor_added_findings": [
+          {
+            "id": "DF1",
+            "text": "Doctor-added opacity",
+            "reviewed": true
+          }
+        ],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "doctor_added",
+      "source_immutable"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR09",
+    "description": "Deferred finding appears only as retained bounded uncertainty.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR09: Deferred finding appears only as retained bounded uncertainty. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"defer\", \"id\": \"F1\", \"retained_uncertainty\": \"Indeterminate opacity retained for review.\", \"reviewed_value\": \"Nodule/Mass\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [\"F1\"], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "defer",
+            "reviewed_value": "Nodule/Mass",
+            "retained_uncertainty": "Indeterminate opacity retained for review."
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [
+          "F1"
+        ]
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "deferred_uncertainty"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR10",
+    "description": "Required unreviewed finding blocks candidate.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR10: Required unreviewed finding blocks candidate. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"unreviewed\", \"id\": \"F1\", \"required\": true, \"reviewed_value\": \"Nodule/Mass\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "unreviewed",
+            "required": true,
+            "reviewed_value": "Nodule/Mass"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_BLOCKED_BY_REVIEW"
+    ],
+    "expected_blockers": [
+      "REQUIRED_FINDING_UNREVIEWED"
+    ],
+    "expected_error": null,
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR11",
+    "description": "Accepted pneumonia hypothesis retains bounded wording.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR11: Accepted pneumonia hypothesis retains bounded wording. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [{\"decision\": \"accept\", \"id\": \"H1\", \"reviewed_value\": \"Pneumonia hypothesis supported; not confirmed.\"}], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [
+          {
+            "id": "H1",
+            "decision": "accept",
+            "reviewed_value": "Pneumonia hypothesis supported; not confirmed."
+          }
+        ],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "accepted_hypothesis",
+      "uncertainty_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR12",
+    "description": "Rejected heart-failure hypothesis does not reappear.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR12: Rejected heart-failure hypothesis does not reappear. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [{\"decision\": \"reject\", \"id\": \"H1\", \"reviewed_value\": \"Heart failure hypothesis\"}], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [
+          {
+            "id": "H1",
+            "decision": "reject",
+            "reviewed_value": "Heart failure hypothesis"
+          }
+        ],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "rejected_hypothesis_absent"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR13",
+    "description": "Modified malignancy concern uses doctor wording.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR13: Modified malignancy concern uses doctor wording. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [{\"decision\": \"modify\", \"doctor_value\": \"Indeterminate pulmonary lesion; malignancy is not established.\", \"id\": \"H1\", \"reviewed_value\": \"Malignancy concern\"}], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [
+          {
+            "id": "H1",
+            "decision": "modify",
+            "reviewed_value": "Malignancy concern",
+            "doctor_value": "Indeterminate pulmonary lesion; malignancy is not established."
+          }
+        ],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "modified_hypothesis",
+      "uncertainty_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR14",
+    "description": "Deferred TB hypothesis remains uncertain.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR14: Deferred TB hypothesis remains uncertain. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [{\"decision\": \"defer\", \"id\": \"H1\", \"retained_uncertainty\": \"TB remains indeterminate pending clinical review.\", \"reviewed_value\": \"TB concern\"}], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [\"H1\"], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [
+          {
+            "id": "H1",
+            "decision": "defer",
+            "reviewed_value": "TB concern",
+            "retained_uncertainty": "TB remains indeterminate pending clinical review."
+          }
+        ],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [
+          "H1"
+        ]
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "deferred_hypothesis"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR15",
+    "description": "Accepted TB concern does not create microbiologic confirmation.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR15: Accepted TB concern does not create microbiologic confirmation. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [{\"decision\": \"accept\", \"id\": \"H1\", \"reviewed_value\": \"Pulmonary TB concern supported without microbiologic confirmation.\"}], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [
+          {
+            "id": "H1",
+            "decision": "accept",
+            "reviewed_value": "Pulmonary TB concern supported without microbiologic confirmation."
+          }
+        ],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "no_tb_confirmation"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR16",
+    "description": "Reviewed pathology-confirmed wording can be retained.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR16: Reviewed pathology-confirmed wording can be retained. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [{\"decision\": \"accept\", \"id\": \"H1\", \"reviewed_value\": \"Pathology-confirmed malignancy.\"}], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [
+          {
+            "id": "H1",
+            "decision": "accept",
+            "reviewed_value": "Pathology-confirmed malignancy."
+          }
+        ],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "accepted_hypothesis",
+      "no_staging_invention"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR17",
+    "description": "AAS uncertainty is retained without diagnostic upgrade.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR17: AAS uncertainty is retained without diagnostic upgrade. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [{\"decision\": \"modify\", \"doctor_value\": \"Acute aortic syndrome remains indeterminate and high priority.\", \"id\": \"H1\", \"reviewed_value\": \"AAS concern\"}], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [
+          {
+            "id": "H1",
+            "decision": "modify",
+            "reviewed_value": "AAS concern",
+            "doctor_value": "Acute aortic syndrome remains indeterminate and high priority."
+          }
+        ],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "uncertainty_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR18",
+    "description": "Reviewed coexisting processes render without a winner.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR18: Reviewed coexisting processes render without a winner. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [{\"decision\": \"accept\", \"id\": \"H1\", \"reviewed_value\": \"Pneumonia process may coexist.\"}, {\"decision\": \"accept\", \"id\": \"H2\", \"reviewed_value\": \"Heart-failure congestion may coexist.\"}], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [
+          {
+            "id": "H1",
+            "decision": "accept",
+            "reviewed_value": "Pneumonia process may coexist."
+          },
+          {
+            "id": "H2",
+            "decision": "accept",
+            "reviewed_value": "Heart-failure congestion may coexist."
+          }
+        ],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "multiple_hypotheses",
+      "no_ranking"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR19",
+    "description": "Shared arbitration evidence is not multiplied by rendering.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR19: Shared arbitration evidence is not multiplied by rendering. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Shared dyspnea evidence supports multiple reviewed considerations without duplication.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Shared dyspnea evidence supports multiple reviewed considerations without duplication.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "doctor_text_preserved",
+      "no_ranking"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR20",
+    "description": "CXR No Finding does not erase reviewed CT abnormality.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR20: CXR No Finding does not erase reviewed CT abnormality. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [{\"id\": \"DF1\", \"reviewed\": true, \"text\": \"CT-reviewed pulmonary abnormality\"}], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"reject\", \"id\": \"F1\", \"reviewed_value\": \"CXR No Finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "reject",
+            "reviewed_value": "CXR No Finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [
+          {
+            "id": "DF1",
+            "text": "CT-reviewed pulmonary abnormality",
+            "reviewed": true
+          }
+        ],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "rejected_absent",
+      "doctor_added"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR21",
+    "description": "Absent comparison remains null and stable is not invented.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR21: Absent comparison remains null and stable is not invented. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "comparison_null"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR22",
+    "description": "Reviewed comparison may be rendered.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR22: Reviewed comparison may be rendered. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"temporal\": {\"reviewed\": true, \"text\": \"Compared with 2026-09-01, reviewed opacity is stable.\"}, \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [],
+        "temporal": {
+          "text": "Compared with 2026-09-01, reviewed opacity is stable.",
+          "reviewed": true
+        }
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "comparison_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR23",
+    "description": "Reviewed comparability limitation is retained.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR23: Reviewed comparability limitation is retained. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [\"Limited cross-modality comparability.\"], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"temporal\": {\"reviewed\": true, \"text\": \"Comparison is limited by differing modalities.\"}, \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [
+          "Limited cross-modality comparability."
+        ],
+        "unresolved_items": [],
+        "temporal": {
+          "text": "Comparison is limited by differing modalities.",
+          "reviewed": true
+        }
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "comparison_preserved",
+      "limitation_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR24",
+    "description": "High AI score stays out of ordinary clinical narrative.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR24: High AI score stays out of ordinary clinical narrative. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "no_ai_score_narrative"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR25",
+    "description": "Missing exam datetime stays null.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR25: Missing exam datetime stays null. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {\"exam\": \"Chest radiograph\", \"patient_id\": \"P1\", \"study_id\": \"S1\"}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {
+        "patient_id": "P1",
+        "study_id": "S1",
+        "exam": "Chest radiograph"
+      }
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "datetime_null"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR26",
+    "description": "Missing technique remains null.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR26: Missing technique remains null. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "technique_null"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR27",
+    "description": "Missing indication remains null.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR27: Missing indication remains null. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "indication_null"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR28",
+    "description": "Doctor-authored recommendation renders with provenance.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR28: Doctor-authored recommendation renders with provenance. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"recommendation\": {\"source\": \"doctor_authored\", \"text\": \"Doctor-authored recommendation.\"}, \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [],
+        "recommendation": {
+          "text": "Doctor-authored recommendation.",
+          "source": "doctor_authored"
+        }
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "doctor_recommendation"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR29",
+    "description": "External clinician-approved recommendation retains provenance.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR29: External clinician-approved recommendation retains provenance. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"recommendation\": {\"source\": \"external_clinician_approved\", \"text\": \"Externally approved clinician recommendation.\"}, \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [],
+        "recommendation": {
+          "text": "Externally approved clinician recommendation.",
+          "source": "external_clinician_approved"
+        }
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "external_recommendation"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR30",
+    "description": "No supplied recommendation remains null.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR30: No supplied recommendation remains null. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "recommendation_null"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR31",
+    "description": "Autonomous recommendation is rejected.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR31: Autonomous recommendation is rejected. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"recommendation\": {\"source\": \"hermes_generated\", \"text\": \"CT follow-up\"}, \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [],
+        "recommendation": {
+          "text": "CT follow-up",
+          "source": "hermes_generated"
+        }
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [],
+    "expected_blockers": [],
+    "expected_error": "AUTONOMOUS_RECOMMENDATION_FORBIDDEN",
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR32",
+    "description": "Autonomous recommendation is rejected.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR32: Autonomous recommendation is rejected. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"recommendation\": {\"source\": \"hermes_generated\", \"text\": \"Start antibiotics\"}, \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [],
+        "recommendation": {
+          "text": "Start antibiotics",
+          "source": "hermes_generated"
+        }
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [],
+    "expected_blockers": [],
+    "expected_error": "AUTONOMOUS_RECOMMENDATION_FORBIDDEN",
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR33",
+    "description": "Autonomous recommendation is rejected.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR33: Autonomous recommendation is rejected. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"recommendation\": {\"source\": \"hermes_generated\", \"text\": \"Perform biopsy\"}, \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [],
+        "recommendation": {
+          "text": "Perform biopsy",
+          "source": "hermes_generated"
+        }
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [],
+    "expected_blockers": [],
+    "expected_error": "AUTONOMOUS_RECOMMENDATION_FORBIDDEN",
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR34",
+    "description": "Changed review version invalidates stale candidate.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR34: Changed review version invalidates stale candidate. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 2}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 2,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_VERSION_MISMATCH"
+    ],
+    "expected_blockers": [
+      "source_review_version_changed"
+    ],
+    "expected_error": null,
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR35",
+    "description": "AI snapshot mismatch fails closed.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR35: AI snapshot mismatch fails closed. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-OLD\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-OLD",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_SOURCE_MISMATCH"
+    ],
+    "expected_blockers": [
+      "ai_snapshot_id_mismatch"
+    ],
+    "expected_error": null,
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR36",
+    "description": "Hermes snapshot mismatch requires regeneration.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR36: Hermes snapshot mismatch requires regeneration. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-OLD\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-OLD",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_SOURCE_MISMATCH"
+    ],
+    "expected_blockers": [
+      "hermes_snapshot_id_mismatch"
+    ],
+    "expected_error": null,
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR37",
+    "description": "Successful render remains an unfinalized candidate.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR37: Successful render remains an unfinalized candidate. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_RENDERED_FROM_REVIEW"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "candidate_not_final"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR38",
+    "description": "AI or Hermes cannot finalize.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR38: AI or Hermes cannot finalize. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"external_finalization\": {\"finalized_at\": \"2026-09-29T10:01:00+07:00\", \"finalized_by\": \"HERMES\", \"review_version\": 1, \"source\": \"hermes\"}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {},
+      "external_finalization": {
+        "source": "hermes",
+        "finalized_by": "HERMES",
+        "finalized_at": "2026-09-29T10:01:00+07:00",
+        "review_version": 1
+      }
+    },
+    "expected_states": [],
+    "expected_blockers": [],
+    "expected_error": "HERMES_AUTO_FINALIZATION_FORBIDDEN",
+    "checks": [],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR39",
+    "description": "Authenticated doctor finalization is accepted as external state.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR39: Authenticated doctor finalization is accepted as external state. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"external_finalization\": {\"finalized_at\": \"2026-09-29T10:01:00+07:00\", \"finalized_by\": \"DOC-1\", \"review_version\": 1, \"source\": \"authenticated_doctor\"}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {},
+      "external_finalization": {
+        "source": "authenticated_doctor",
+        "finalized_by": "DOC-1",
+        "finalized_at": "2026-09-29T10:01:00+07:00",
+        "review_version": 1
+      }
+    },
+    "expected_states": [
+      "FINAL_REPORT_FINALIZED_BY_DOCTOR"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "doctor_finalized"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR40",
+    "description": "Finalization without actor is invalid.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR40: Finalization without actor is invalid. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"external_finalization\": {\"finalized_at\": \"2026-09-29T10:01:00+07:00\", \"finalized_by\": null, \"review_version\": 1, \"source\": \"authenticated_doctor\"}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {},
+      "external_finalization": {
+        "source": "authenticated_doctor",
+        "finalized_by": null,
+        "finalized_at": "2026-09-29T10:01:00+07:00",
+        "review_version": 1
+      }
+    },
+    "expected_states": [],
+    "expected_blockers": [],
+    "expected_error": "FINALIZED_BY_MISSING",
+    "checks": [],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR41",
+    "description": "Finalization without timestamp is invalid.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR41: Finalization without timestamp is invalid. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"external_finalization\": {\"finalized_at\": null, \"finalized_by\": \"DOC-1\", \"review_version\": 1, \"source\": \"authenticated_doctor\"}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {},
+      "external_finalization": {
+        "source": "authenticated_doctor",
+        "finalized_by": "DOC-1",
+        "finalized_at": null,
+        "review_version": 1
+      }
+    },
+    "expected_states": [],
+    "expected_blockers": [],
+    "expected_error": "FINALIZED_AT_MISSING",
+    "checks": [],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR42",
+    "description": "New evidence after finalization requires amendment.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR42: New evidence after finalization requires amendment. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"external_finalization\": {\"finalized_at\": \"2026-09-29T10:01:00+07:00\", \"finalized_by\": \"DOC-1\", \"review_version\": 1, \"source\": \"authenticated_doctor\"}, \"new_evidence_after_finalization\": true, \"report_history\": [{\"report_id\": \"REPORT-1\", \"text\": \"immutable original\", \"version\": 1}], \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {},
+      "external_finalization": {
+        "source": "authenticated_doctor",
+        "finalized_by": "DOC-1",
+        "finalized_at": "2026-09-29T10:01:00+07:00",
+        "review_version": 1
+      },
+      "new_evidence_after_finalization": true,
+      "report_history": [
+        {
+          "report_id": "REPORT-1",
+          "version": 1,
+          "text": "immutable original"
+        }
+      ]
+    },
+    "expected_states": [
+      "FINAL_REPORT_FINALIZED_BY_DOCTOR",
+      "FINAL_REPORT_AMENDMENT_REQUIRED"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "history_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR43",
+    "description": "Amended report preserves and supersedes prior version by host policy.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR43: Amended report preserves and supersedes prior version by host policy. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"external_finalization\": {\"finalized_at\": \"2026-09-30T10:01:00+07:00\", \"finalized_by\": \"DOC-2\", \"review_version\": 1, \"source\": \"authenticated_doctor\"}, \"replacement_report_id\": \"REPORT-2\", \"report_history\": [{\"report_id\": \"REPORT-1\", \"text\": \"immutable original\", \"version\": 1}], \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {},
+      "external_finalization": {
+        "source": "authenticated_doctor",
+        "finalized_by": "DOC-2",
+        "finalized_at": "2026-09-30T10:01:00+07:00",
+        "review_version": 1
+      },
+      "replacement_report_id": "REPORT-2",
+      "report_history": [
+        {
+          "report_id": "REPORT-1",
+          "version": 1,
+          "text": "immutable original"
+        }
+      ]
+    },
+    "expected_states": [
+      "FINAL_REPORT_FINALIZED_BY_DOCTOR",
+      "FINAL_REPORT_SUPERSEDED"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "history_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR44",
+    "description": "Urgent content does not fabricate a communication event.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR44: Urgent content does not fabricate a communication event. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "communication_absent"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR45",
+    "description": "Exact host communication event may be referenced.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR45: Exact host communication event may be referenced. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"communication_event\": {\"host_supplied\": true, \"method\": \"phone\", \"recipient\": \"DOC-2\", \"timestamp\": \"2026-09-29T10:05:00+07:00\"}, \"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": [],
+        "communication_event": {
+          "host_supplied": true,
+          "recipient": "DOC-2",
+          "timestamp": "2026-09-29T10:05:00+07:00",
+          "method": "phone"
+        }
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "communication_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR46",
+    "description": "Final narrative may preserve uncertainty.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR46: Final narrative may preserve uncertainty. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Etiology remains uncertain after review.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Etiology remains uncertain after review.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "uncertainty_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR47",
+    "description": "Doctor-authored differential is preserved without added ranking.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR47: Doctor-authored differential is preserved without added ranking. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Doctor-authored differential: infection versus edema.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Doctor-authored differential: infection versus edema.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "doctor_text_preserved",
+      "no_ranking"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR48",
+    "description": "Template default normal statements are never auto-filled.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR48: Template default normal statements are never auto-filled. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"Reviewed finding.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"accept\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass finding\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "Reviewed finding.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "accept",
+            "reviewed_value": "Nodule/Mass finding"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "no_default_normals"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR49",
+    "description": "Old draft positive cannot override current rejection.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR49: Old draft positive cannot override current rejection. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"doctor_review\": {\"completed_at\": \"2026-09-29T10:00:00+07:00\", \"doctor_added_findings\": [], \"doctor_findings_text\": \"No affirmative nodule finding retained by doctor review.\", \"doctor_impression\": \"Reviewed impression remains bounded.\", \"doctor_owned_report_text\": true, \"findings\": [{\"decision\": \"reject\", \"id\": \"F1\", \"reviewed_value\": \"Nodule/Mass\"}], \"hypotheses\": [], \"id\": \"REVIEW-1\", \"limitations\": [], \"readiness\": \"ready\", \"reviewer_id\": \"DOC-1\", \"status\": \"completed\", \"unresolved_items\": [], \"version\": 1}, \"request_source\": \"doctor_review\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "doctor_review",
+      "doctor_review": {
+        "id": "REVIEW-1",
+        "version": 1,
+        "status": "completed",
+        "readiness": "ready",
+        "reviewer_id": "DOC-1",
+        "completed_at": "2026-09-29T10:00:00+07:00",
+        "doctor_owned_report_text": true,
+        "doctor_findings_text": "No affirmative nodule finding retained by doctor review.",
+        "doctor_impression": "Reviewed impression remains bounded.",
+        "findings": [
+          {
+            "id": "F1",
+            "decision": "reject",
+            "reviewed_value": "Nodule/Mass"
+          }
+        ],
+        "hypotheses": [],
+        "doctor_added_findings": [],
+        "limitations": [],
+        "unresolved_items": []
+      },
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_CANDIDATE_READY"
+    ],
+    "expected_blockers": [],
+    "expected_error": null,
+    "checks": [
+      "rejected_absent",
+      "doctor_text_preserved"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  },
+  {
+    "id": "FR50",
+    "description": "Raw AI cannot be requested directly as a final report.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Final Report Generation case FR50: Raw AI cannot be requested directly as a final report. Use only the supplied Structured Doctor Review contract. REVIEW_CONTRACT={\"candidate_binding\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\", \"review_version\": 1}, \"request_source\": \"raw_ai\", \"source\": {\"ai_snapshot_id\": \"AI-1\", \"draft_report_snapshot_id\": \"DRAFT-1\", \"hermes_snapshot_id\": \"HERMES-1\"}, \"verified_metadata\": {}}",
+      "laboratory": ""
+    },
+    "render": {
+      "request_source": "raw_ai",
+      "source": {
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "candidate_binding": {
+        "review_version": 1,
+        "ai_snapshot_id": "AI-1",
+        "hermes_snapshot_id": "HERMES-1",
+        "draft_report_snapshot_id": "DRAFT-1"
+      },
+      "verified_metadata": {}
+    },
+    "expected_states": [
+      "FINAL_REPORT_NOT_GENERATABLE"
+    ],
+    "expected_blockers": [
+      "structured_doctor_review_required"
+    ],
+    "expected_error": null,
+    "checks": [
+      "no_candidate"
+    ],
+    "provenance": [
+      "S1",
+      "S5"
+    ]
+  }
+]

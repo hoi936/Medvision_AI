@@ -435,6 +435,309 @@ def test_native_skill_view_reads_skill_and_reference():
     assert "Fleischner Society: Glossary of Terms for Thoracic Imaging" in other_lesion_reference["content"]
     assert "Deployment and validation of an AI system" in other_lesion_reference["content"]
 
+    pneumonia_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pneumonia/PNEUMONIA_POLICY.md",
+    )
+    pneumonia_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pneumonia/PNEUMONIA_EVIDENCE.md",
+    )
+    pneumonia_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pneumonia/references.md",
+    )
+    assert pneumonia_policy["file"] == "references/pneumonia/PNEUMONIA_POLICY.md"
+    assert "Progressive-loading trigger" in pneumonia_policy["content"]
+    assert pneumonia_evidence["file"] == (
+        "references/pneumonia/PNEUMONIA_EVIDENCE.md"
+    )
+    assert "RADIOGRAPHIC_FINDING != PNEUMONIA_DIAGNOSIS" in (
+        pneumonia_evidence["content"]
+    )
+    assert pneumonia_references["file"] == "references/pneumonia/references.md"
+    assert all(
+        f"## S{number}" in pneumonia_references["content"]
+        for number in range(1, 5)
+    )
+
+    heart_failure_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/heart_failure/HEART_FAILURE_POLICY.md",
+    )
+    heart_failure_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/heart_failure/HEART_FAILURE_EVIDENCE.md",
+    )
+    heart_failure_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/heart_failure/references.md",
+    )
+    assert heart_failure_policy["file"] == (
+        "references/heart_failure/HEART_FAILURE_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in heart_failure_policy["content"]
+    assert heart_failure_evidence["file"] == (
+        "references/heart_failure/HEART_FAILURE_EVIDENCE.md"
+    )
+    assert "Heart failure syndrome" in heart_failure_evidence["content"]
+    assert heart_failure_references["file"] == (
+        "references/heart_failure/references.md"
+    )
+    assert all(
+        f"## S{number}" in heart_failure_references["content"]
+        for number in range(1, 5)
+    )
+
+    pulmonary_malignancy_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pulmonary_malignancy/PULMONARY_MALIGNANCY_POLICY.md",
+    )
+    pulmonary_malignancy_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pulmonary_malignancy/PULMONARY_MALIGNANCY_EVIDENCE.md",
+    )
+    pulmonary_malignancy_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pulmonary_malignancy/references.md",
+    )
+    assert pulmonary_malignancy_policy["file"] == (
+        "references/pulmonary_malignancy/PULMONARY_MALIGNANCY_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in pulmonary_malignancy_policy["content"]
+    assert pulmonary_malignancy_evidence["file"] == (
+        "references/pulmonary_malignancy/PULMONARY_MALIGNANCY_EVIDENCE.md"
+    )
+    assert "Nodule/Mass != Lung Cancer" in pulmonary_malignancy_evidence["content"]
+    assert pulmonary_malignancy_references["file"] == (
+        "references/pulmonary_malignancy/references.md"
+    )
+    assert all(
+        f"## S{number}" in pulmonary_malignancy_references["content"]
+        for number in range(1, 7)
+    )
+
+    acute_aortic_syndrome_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/acute_aortic_syndrome/ACUTE_AORTIC_SYNDROME_POLICY.md",
+    )
+    acute_aortic_syndrome_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/acute_aortic_syndrome/ACUTE_AORTIC_SYNDROME_EVIDENCE.md",
+    )
+    acute_aortic_syndrome_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/acute_aortic_syndrome/references.md",
+    )
+    assert acute_aortic_syndrome_policy["file"] == (
+        "references/acute_aortic_syndrome/ACUTE_AORTIC_SYNDROME_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in acute_aortic_syndrome_policy["content"]
+    assert acute_aortic_syndrome_evidence["file"] == (
+        "references/acute_aortic_syndrome/ACUTE_AORTIC_SYNDROME_EVIDENCE.md"
+    )
+    assert "Aortic enlargement != AAS" in acute_aortic_syndrome_evidence["content"]
+    assert acute_aortic_syndrome_references["file"] == (
+        "references/acute_aortic_syndrome/references.md"
+    )
+    assert all(
+        f"## S{number}" in acute_aortic_syndrome_references["content"]
+        for number in range(1, 5)
+    )
+
+    ild_fibrotic_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/ild_fibrotic/ILD_FIBROTIC_POLICY.md",
+    )
+    ild_fibrotic_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/ild_fibrotic/ILD_FIBROTIC_EVIDENCE.md",
+    )
+    ild_fibrotic_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/ild_fibrotic/references.md",
+    )
+    assert ild_fibrotic_policy["file"] == (
+        "references/ild_fibrotic/ILD_FIBROTIC_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in ild_fibrotic_policy["content"]
+    assert ild_fibrotic_evidence["file"] == (
+        "references/ild_fibrotic/ILD_FIBROTIC_EVIDENCE.md"
+    )
+    assert "Single study != PPF" in ild_fibrotic_evidence["content"]
+    assert ild_fibrotic_references["file"] == (
+        "references/ild_fibrotic/references.md"
+    )
+    assert all(
+        f"## S{number}" in ild_fibrotic_references["content"]
+        for number in range(1, 6)
+    )
+
+    pleural_disease_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pleural_disease/PLEURAL_DISEASE_POLICY.md",
+    )
+    pleural_disease_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pleural_disease/PLEURAL_DISEASE_EVIDENCE.md",
+    )
+    pleural_disease_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/pleural_disease/references.md",
+    )
+    assert pleural_disease_policy["file"] == (
+        "references/pleural_disease/PLEURAL_DISEASE_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in pleural_disease_policy["content"]
+    assert pleural_disease_evidence["file"] == (
+        "references/pleural_disease/PLEURAL_DISEASE_EVIDENCE.md"
+    )
+    assert "Pleural effusion != malignant pleural effusion" in (
+        pleural_disease_evidence["content"]
+    )
+    assert pleural_disease_references["file"] == (
+        "references/pleural_disease/references.md"
+    )
+    assert all(
+        f"## S{number}" in pleural_disease_references["content"]
+        for number in range(1, 5)
+    )
+
+    tb_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/tb_chronic_mycobacterial/TB_CHRONIC_MYCOBACTERIAL_POLICY.md",
+    )
+    tb_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/tb_chronic_mycobacterial/TB_CHRONIC_MYCOBACTERIAL_EVIDENCE.md",
+    )
+    tb_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/tb_chronic_mycobacterial/references.md",
+    )
+    assert tb_policy["file"] == (
+        "references/tb_chronic_mycobacterial/TB_CHRONIC_MYCOBACTERIAL_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in tb_policy["content"]
+    assert tb_evidence["file"] == (
+        "references/tb_chronic_mycobacterial/TB_CHRONIC_MYCOBACTERIAL_EVIDENCE.md"
+    )
+    assert "AFB smear positive != M. tuberculosis confirmed" in tb_evidence["content"]
+    assert tb_references["file"] == (
+        "references/tb_chronic_mycobacterial/references.md"
+    )
+    assert all(
+        f"## S{number}" in tb_references["content"]
+        for number in range(1, 8)
+    )
+
+    temporal_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/temporal_reasoning/TEMPORAL_REASONING_POLICY.md",
+    )
+    temporal_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/temporal_reasoning/TEMPORAL_REASONING_EVIDENCE.md",
+    )
+    temporal_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/temporal_reasoning/references.md",
+    )
+    assert temporal_policy["file"] == (
+        "references/temporal_reasoning/TEMPORAL_REASONING_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in temporal_policy["content"]
+    assert temporal_evidence["file"] == (
+        "references/temporal_reasoning/TEMPORAL_REASONING_EVIDENCE.md"
+    )
+    assert "No prior study != new lesion" in temporal_evidence["content"]
+    assert temporal_references["file"] == "references/temporal_reasoning/references.md"
+    assert all(
+        f"## S{number}" in temporal_references["content"]
+        for number in range(1, 5)
+    )
+
+    arbitration_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/cross_disease_arbitration/CROSS_DISEASE_ARBITRATION_POLICY.md",
+    )
+    arbitration_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/cross_disease_arbitration/CROSS_DISEASE_ARBITRATION_EVIDENCE.md",
+    )
+    arbitration_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/cross_disease_arbitration/references.md",
+    )
+    assert arbitration_policy["file"] == (
+        "references/cross_disease_arbitration/CROSS_DISEASE_ARBITRATION_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in arbitration_policy["content"]
+    assert arbitration_evidence["file"] == (
+        "references/cross_disease_arbitration/CROSS_DISEASE_ARBITRATION_EVIDENCE.md"
+    )
+    assert "Most evidence != true diagnosis" in arbitration_evidence["content"]
+    assert arbitration_references["file"] == (
+        "references/cross_disease_arbitration/references.md"
+    )
+    assert all(
+        f"## S{number}" in arbitration_references["content"]
+        for number in range(1, 4)
+    )
+
+    doctor_review_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/doctor_review/STRUCTURED_DOCTOR_REVIEW_POLICY.md",
+    )
+    doctor_review_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/doctor_review/STRUCTURED_DOCTOR_REVIEW_EVIDENCE.md",
+    )
+    doctor_review_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/doctor_review/references.md",
+    )
+    assert doctor_review_policy["file"] == (
+        "references/doctor_review/STRUCTURED_DOCTOR_REVIEW_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in doctor_review_policy["content"]
+    assert doctor_review_evidence["file"] == (
+        "references/doctor_review/STRUCTURED_DOCTOR_REVIEW_EVIDENCE.md"
+    )
+    assert "AI_RESULT != DOCTOR_REVIEW" in doctor_review_evidence["content"]
+    assert doctor_review_references["file"] == "references/doctor_review/references.md"
+    assert all(
+        f"## S{number}" in doctor_review_references["content"]
+        for number in range(1, 6)
+    )
+
+    final_report_policy = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/final_report/FINAL_REPORT_GENERATION_POLICY.md",
+    )
+    final_report_evidence = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/final_report/FINAL_REPORT_GENERATION_EVIDENCE.md",
+    )
+    final_report_references = inspect_hermes_skill(
+        "medvision-disease-analysis",
+        "references/final_report/references.md",
+    )
+    assert final_report_policy["file"] == (
+        "references/final_report/FINAL_REPORT_GENERATION_POLICY.md"
+    )
+    assert "Progressive-loading trigger" in final_report_policy["content"]
+    assert final_report_evidence["file"] == (
+        "references/final_report/FINAL_REPORT_GENERATION_EVIDENCE.md"
+    )
+    assert "Raw AI/Hermes state" in final_report_evidence["content"]
+    assert "!= final report source of truth" in final_report_evidence["content"]
+    assert final_report_references["file"] == "references/final_report/references.md"
+    assert all(
+        f"## S{number}" in final_report_references["content"]
+        for number in range(1, 6)
+    )
+
 
 def test_skill_manage_is_approval_gated_and_cannot_write_directly():
     assert hermes_skill_write_approval_enabled() is True

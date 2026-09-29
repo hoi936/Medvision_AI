@@ -1,0 +1,377 @@
+[
+  {
+    "id": "HF01",
+    "description": "Cardiomegaly without clinical, biomarker, or cardiac imaging support.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.82, "threshold": 0.5}],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "imaging_without_sufficient_hf_clinical_support",
+      "cardiomegaly_preserved_as_cxr_evidence",
+      "hf_phenotype_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "heart_failure_confirmed",
+      "ef_inferred_from_cxr",
+      "chamber_abnormality_inferred_from_cardiomegaly"
+    ]
+  },
+  {
+    "id": "HF02",
+    "description": "Cardiomegaly with compatible syndrome and current objective cardiac evidence.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.84, "threshold": 0.5}],
+      "symptoms": "Khó thở và khó thở khi nằm.",
+      "history": "Siêu âm tim hiện tại do bác sĩ cung cấp ghi nhận bất thường cấu trúc/chức năng tim và giảm chức năng tâm thu; thời điểm thực hiện được ghi trong báo cáo.",
+      "laboratory": "NT-proBNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "heart_failure_hypothesis_supported",
+      "cardiomegaly_preserved_as_cxr_evidence",
+      "phenotype_only_from_adequate_echo_and_syndrome",
+      "echo_source_and_time_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ef_inferred_from_cxr",
+      "heart_failure_confirmed"
+    ]
+  },
+  {
+    "id": "HF03",
+    "description": "Pleural effusion without sufficient heart-failure support.",
+    "input": {
+      "results": [{"finding": "Pleural effusion", "score": 0.83, "threshold": 0.5}],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "heart_failure_not_established",
+      "cardiogenic_cause_unknown_or_possible",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "heart_failure_confirmed",
+      "transudate_inferred",
+      "autonomous_thoracentesis_or_drainage"
+    ]
+  },
+  {
+    "id": "HF04",
+    "description": "Generic opacity with infectious context and no objective cardiac evidence.",
+    "input": {
+      "results": [{"finding": "Lung Opacity", "score": 0.81, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "Không cung cấp bằng chứng tim hoặc mô tả phù phổi đặc hiệu.",
+      "laboratory": "Dấu ấn viêm được báo cáo tăng nhưng không đặc hiệu.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "generic_opacity_not_converted_to_edema",
+      "pneumonia_hypothesis_preserved",
+      "no_forced_disease_winner",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "pulmonary_edema_inferred_from_generic_opacity",
+      "heart_failure_confirmed"
+    ]
+  },
+  {
+    "id": "HF05",
+    "description": "Explicit congestion with compatible clinical and objective cardiac evidence.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.85, "threshold": 0.5}],
+      "symptoms": "Khó thở, khó thở khi nằm và phù ngoại biên.",
+      "history": "Báo cáo X-quang của bác sĩ mô tả sung huyết mạch phổi; siêu âm tim cùng đợt ghi nhận bất thường cấu trúc/chức năng tim.",
+      "laboratory": "BNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "cardiogenic_congestion_hypothesis_supported",
+      "heart_failure_hypothesis_supported",
+      "objective_evidence_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "heart_failure_confirmed",
+      "autonomous_treatment_or_disposition"
+    ]
+  },
+  {
+    "id": "HF06",
+    "description": "Elevated natriuretic peptide without compatible syndrome or objective cardiac evidence.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.2, "threshold": 0.5}],
+      "symptoms": "",
+      "history": "",
+      "laboratory": "NT-proBNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "natriuretic_peptide_supportive_nonspecific",
+      "hf_objective_evidence_incomplete",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "heart_failure_confirmed_from_np_alone",
+      "hf_probability_from_np"
+    ]
+  },
+  {
+    "id": "HF07",
+    "description": "Elevated natriuretic peptide with known renal dysfunction.",
+    "input": {
+      "results": [{"finding": "Pleural effusion", "score": 0.3, "threshold": 0.5}],
+      "symptoms": "Khó thở.",
+      "history": "Bác sĩ ghi nhận rối loạn chức năng thận.",
+      "laboratory": "BNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "renal_dysfunction_preserved_as_np_modifier",
+      "natriuretic_peptide_not_discarded",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "heart_failure_confirmed_from_np_alone",
+      "natriuretic_peptide_discarded_due_to_renal_dysfunction"
+    ]
+  },
+  {
+    "id": "HF08",
+    "description": "Low natriuretic peptide in obesity with otherwise strong objective HF evidence.",
+    "input": {
+      "results": [{"finding": "No finding", "score": 0.93, "threshold": 0.5}],
+      "symptoms": "Khó thở và khó thở khi nằm.",
+      "history": "Bác sĩ ghi nhận béo phì; siêu âm tim hiện tại có bất thường chức năng và bằng chứng áp lực đổ đầy tăng.",
+      "laboratory": "BNP thấp theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "obesity_preserved_as_np_modifier",
+      "low_np_not_universal_hf_exclusion",
+      "heart_failure_hypothesis_supported",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "heart_failure_excluded_by_low_np",
+      "no_finding_excludes_hf"
+    ]
+  },
+  {
+    "id": "HF09",
+    "description": "No Finding with compatible syndrome and objective cardiac evidence.",
+    "input": {
+      "results": [{"finding": "No finding", "score": 0.92, "threshold": 0.5}],
+      "symptoms": "Khó thở và khó thở khi nằm.",
+      "history": "Siêu âm tim hiện tại do bác sĩ cung cấp ghi nhận rối loạn chức năng tim.",
+      "laboratory": "NT-proBNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "heart_failure_possible_without_radiographic_congestion",
+      "no_finding_not_universal_hf_exclusion",
+      "no_finding_no_contradiction_without_positive_target",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "heart_failure_excluded_by_no_finding",
+      "no_finding_contradiction_without_positive_target"
+    ]
+  },
+  {
+    "id": "HF10",
+    "description": "Current phenotype inference with compatible syndrome and adequate echo evidence.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.8, "threshold": 0.5}],
+      "symptoms": "Khó thở, khó thở khi nằm và giảm khả năng gắng sức.",
+      "history": "Siêu âm tim hiện tại, có ngày thực hiện và nguồn bác sĩ, ghi nhận giảm chức năng tâm thu cùng bất thường cấu trúc tim.",
+      "laboratory": "NT-proBNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "heart_failure_hypothesis_supported",
+      "current_phenotype_allowed_with_adequate_echo",
+      "echo_source_and_time_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ef_inferred_from_cxr",
+      "phenotype_from_cxr_alone"
+    ]
+  },
+  {
+    "id": "HF11",
+    "description": "HFpEF hypothesis with preserved EF plus compatible syndrome and filling-pressure evidence.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.72, "threshold": 0.5}],
+      "symptoms": "Khó thở và khó thở khi nằm.",
+      "history": "Siêu âm tim hiện tại do bác sĩ cung cấp ghi nhận EF bảo tồn và bằng chứng áp lực đổ đầy tăng.",
+      "laboratory": "BNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "hfpef_may_be_supported_with_objective_evidence",
+      "preserved_ef_alone_insufficient",
+      "echo_source_and_time_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "hfpef_from_preserved_ef_alone",
+      "heart_failure_confirmed"
+    ]
+  },
+  {
+    "id": "HF12",
+    "description": "Generic opacity coexists with explicit trusted congestion characterization.",
+    "input": {
+      "results": [{"finding": "Lung Opacity", "score": 0.8, "threshold": 0.5}],
+      "symptoms": "Khó thở và khó thở khi nằm.",
+      "history": "Báo cáo X-quang của bác sĩ mô tả sung huyết mạch phổi và phù mô kẽ; siêu âm tim cùng đợt có bất thường chức năng tim.",
+      "laboratory": "BNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "cardiogenic_congestion_hypothesis_supported",
+      "generic_opacity_remains_nonspecific",
+      "trusted_congestion_description_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "generic_opacity_automatically_assigned_to_edema",
+      "hidden_disease_score"
+    ]
+  },
+  {
+    "id": "HF13",
+    "description": "Pneumonia-supporting and HF-supporting evidence coexist.",
+    "input": {
+      "results": [
+        {"finding": "Consolidation", "score": 0.84, "threshold": 0.5},
+        {"finding": "Lung Opacity", "score": 0.81, "threshold": 0.5}
+      ],
+      "symptoms": "Ho cấp tính, sốt, khó thở và khó thở khi nằm.",
+      "history": "Siêu âm tim hiện tại ghi nhận bất thường chức năng tim; không có mô tả phù phổi đặc hiệu.",
+      "laboratory": "Dấu ấn viêm tăng không đặc hiệu; NT-proBNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_preserved",
+      "heart_failure_hypothesis_preserved",
+      "shared_evidence_not_double_counted",
+      "no_forced_disease_winner",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "generic_opacity_automatically_assigned_to_edema",
+      "generic_opacity_automatically_assigned_to_pneumonia",
+      "single_forced_etiology"
+    ]
+  },
+  {
+    "id": "HF14",
+    "description": "Earlier CXR congestion conflicts with stronger later objective evidence.",
+    "input": {
+      "results": [{"finding": "Lung Opacity", "score": 0.82, "threshold": 0.5}],
+      "symptoms": "Khó thở.",
+      "history": "X-quang ban đầu được bác sĩ mô tả sung huyết; CT và siêu âm tim thực hiện sau đó không ủng hộ sung huyết do tim. Nguồn và thời điểm của mỗi báo cáo được cung cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "heart_failure_hypothesis_conflicted",
+      "evidence_conflict_preserved",
+      "source_and_timing_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "earlier_cxr_silently_preferred",
+      "later_objective_evidence_erased"
+    ]
+  },
+  {
+    "id": "HF15",
+    "description": "Severe physiology requires high-priority review without autonomous action.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.84, "threshold": 0.5}],
+      "symptoms": "Khó thở nặng và SpO2 82%.",
+      "history": "Bác sĩ ghi nhận suy hô hấp và dấu hiệu giảm tưới máu; siêu âm tim có bất thường chức năng tim.",
+      "laboratory": "BNP tăng theo khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "high_priority_clinical_review",
+      "heart_failure_hypothesis_supported",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "autonomous_diuretic_or_ventilation_order",
+      "autonomous_icu_or_admission_decision",
+      "autonomous_vasopressor_order"
+    ]
+  },
+  {
+    "id": "HF16",
+    "description": "Cardiomegaly score remains an image-model score.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.95, "threshold": 0.5}],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "score_0_95_preserved",
+      "score_not_hf_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ninety_five_percent_hf_probability",
+      "heart_failure_confirmed"
+    ]
+  },
+  {
+    "id": "HF17",
+    "description": "Historical clinician HFmrEF documentation is preserved with provenance.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.78, "threshold": 0.5}],
+      "symptoms": "Khó thở.",
+      "history": "Hồ sơ bác sĩ trước đây ghi HFmrEF, có ngày và nguồn; chưa cung cấp đủ bằng chứng tim hiện tại để phân loại lại.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "historical_hfmref_label_preserved",
+      "historical_source_and_time_preserved",
+      "hf_phenotype_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "historical_label_silently_rewritten",
+      "current_phenotype_invented"
+    ]
+  },
+  {
+    "id": "HF18",
+    "description": "One current higher EF measurement without prior EF evidence.",
+    "input": {
+      "results": [{"finding": "Cardiomegaly", "score": 0.76, "threshold": 0.5}],
+      "symptoms": "Khó thở.",
+      "history": "Siêu âm tim hiện tại ghi EF cao hơn mô tả định tính trước đây, nhưng không cung cấp giá trị EF trước đó hoặc chuỗi theo dõi dọc.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "longitudinal_evidence_missing",
+      "hf_phenotype_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "hf_with_improved_ef_inferred_from_one_study",
+      "prior_ef_invented"
+    ]
+  }
+]

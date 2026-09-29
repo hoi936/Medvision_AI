@@ -1,0 +1,341 @@
+[
+  {
+    "id": "P01",
+    "description": "Compatible consolidation and acute infectious syndrome with outside-hospital acquisition.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.84, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính, sốt và khó thở.",
+      "history": "Người lớn; triệu chứng khởi phát ngoài bệnh viện.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "community_acquired_true",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "confirmed_pneumonia",
+      "confirmed_bacterial_pneumonia",
+      "autonomous_treatment_or_procedure"
+    ]
+  },
+  {
+    "id": "P02",
+    "description": "Compatible image finding with clinical context missing.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.82, "threshold": 0.5}],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "imaging_without_sufficient_clinical_support",
+      "missing_evidence_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "confirmed_pneumonia",
+      "invented_clinical_syndrome"
+    ]
+  },
+  {
+    "id": "P03",
+    "description": "Acute infectious syndrome with No finding positive and no compatible radiographic class.",
+    "input": {
+      "results": [{"finding": "No finding", "score": 0.94, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính, sốt và khó thở.",
+      "history": "Bác sĩ nêu nghi ngờ viêm phổi; chưa có xác nhận hình ảnh.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pneumonia_possible_without_radiographic_support",
+      "no_finding_not_universal_exclusion",
+      "no_image_contradiction_from_symptoms",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "pneumonia_excluded",
+      "symptoms_create_no_finding_contradiction",
+      "autonomous_imaging_order"
+    ]
+  },
+  {
+    "id": "P04",
+    "description": "Nonspecific Lung Opacity with compatible acute infectious syndrome.",
+    "input": {
+      "results": [{"finding": "Lung Opacity", "score": 0.81, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "Người lớn; triệu chứng khởi phát ngoài bệnh viện.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "lung_opacity_remains_nonspecific",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "confirmed_pneumonia",
+      "bacterial_etiology_inferred"
+    ]
+  },
+  {
+    "id": "P05",
+    "description": "Legacy Infiltration label with compatible acute infectious syndrome.",
+    "input": {
+      "results": [{"finding": "Infiltration", "score": 0.8, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính, sốt và đau ngực kiểu màng phổi.",
+      "history": "Người lớn; bối cảnh mắc bệnh ngoài bệnh viện được ghi nhận.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "infiltration_remains_legacy_nonspecific",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "infiltration_equated_with_pneumonia",
+      "confirmed_pneumonia"
+    ]
+  },
+  {
+    "id": "P06",
+    "description": "Consolidation and pleural effusion with compatible infectious context.",
+    "input": {
+      "results": [
+        {"finding": "Consolidation", "score": 0.86, "threshold": 0.5},
+        {"finding": "Pleural effusion", "score": 0.83, "threshold": 0.5}
+      ],
+      "symptoms": "Ho cấp tính, sốt và khó thở.",
+      "history": "Người lớn; triệu chứng khởi phát ngoài bệnh viện.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "pleural_effusion_preserved_as_associated_finding",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "empyema_inferred",
+      "complicated_parapneumonic_effusion_inferred",
+      "autonomous_drainage_or_treatment"
+    ]
+  },
+  {
+    "id": "P07",
+    "description": "Compatible pneumonia evidence with low procalcitonin.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.85, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "Người lớn; triệu chứng khởi phát ngoài bệnh viện.",
+      "laboratory": "Procalcitonin được báo cáo thấp hơn khoảng tham chiếu của cơ sở.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "low_procalcitonin_does_not_erase_evidence",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "bacterial_pneumonia_excluded_by_low_procalcitonin",
+      "antibiotic_decision_from_procalcitonin"
+    ]
+  },
+  {
+    "id": "P08",
+    "description": "Compatible broader pneumonia hypothesis with known major immunocompromise.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.84, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính, sốt và khó thở.",
+      "history": "Người lớn; bác sĩ ghi nhận tình trạng suy giảm miễn dịch nặng.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "broader_pneumonia_hypothesis_retained",
+      "cap_guideline_scope_limitation",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "immunocompetent_cap_pathway_fully_applicable",
+      "pathogen_inferred"
+    ]
+  },
+  {
+    "id": "P09",
+    "description": "Compatible broader pneumonia hypothesis with hospital acquisition documented.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.83, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "Bác sĩ xác nhận hội chứng khởi phát trong thời gian nằm viện.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "broader_pneumonia_hypothesis_retained",
+      "community_acquired_false",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "cap_label_for_hospital_acquisition",
+      "confirmed_pneumonia"
+    ]
+  },
+  {
+    "id": "P10",
+    "description": "Compatible pneumonia evidence with acquisition context missing.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.82, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "Không cung cấp bối cảnh nơi mắc bệnh.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "community_acquired_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "community_acquired_invented",
+      "confirmed_pneumonia"
+    ]
+  },
+  {
+    "id": "P11",
+    "description": "Adult CAP context with one explicitly supplied major severe-CAP criterion.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.87, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "Người lớn; mắc bệnh ngoài bệnh viện; bác sĩ xác nhận suy hô hấp cần thở máy.",
+      "laboratory": ""
+    },
+    "severity_evidence": {
+      "major_present": ["respiratory_failure_requiring_mechanical_ventilation"],
+      "minor_present": [],
+      "minor_unknown": [
+        "respiratory_rate",
+        "pao2_fio2",
+        "multilobar_infiltrates",
+        "confusion_disorientation",
+        "bun",
+        "infection_attributable_leukopenia",
+        "platelets",
+        "core_temperature",
+        "hypotension_requiring_aggressive_fluid_resuscitation"
+      ]
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "severe_cap_criteria_met",
+      "high_priority_clinical_review",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "autonomous_icu_admission_or_treatment",
+      "missing_severity_criteria_counted_negative"
+    ]
+  },
+  {
+    "id": "P12",
+    "description": "Three compatible airspace labels plausibly represent one process.",
+    "input": {
+      "results": [
+        {"finding": "Consolidation", "score": 0.85, "threshold": 0.5},
+        {"finding": "Lung Opacity", "score": 0.82, "threshold": 0.5},
+        {"finding": "Infiltration", "score": 0.8, "threshold": 0.5}
+      ],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "Bác sĩ chẩn đoán hình ảnh cho biết ba nhãn có thể cùng phản ánh một quá trình vùng khí phế nang; chưa cung cấp bằng chứng nhiều thùy.",
+      "laboratory": ""
+    },
+    "severity_evidence": {
+      "major_present": [],
+      "minor_present": [],
+      "minor_unknown": ["multilobar_infiltrates"]
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "all_upstream_findings_preserved",
+      "overlap_deduplicated",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "three_independent_pneumonia_confirmations",
+      "multilobar_infiltrates_inferred_from_labels"
+    ]
+  },
+  {
+    "id": "P13",
+    "description": "Adult CAP context with three explicitly supplied minor severe-CAP criteria.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.86, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính, sốt và khó thở; nhịp thở 32 lần/phút.",
+      "history": "Người lớn; mắc bệnh ngoài bệnh viện; nhiệt độ trung tâm 35.5°C.",
+      "laboratory": "BUN 25 mg/dL.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "severity_evidence": {
+      "major_present": [],
+      "minor_present": [
+        "respiratory_rate_at_least_30",
+        "bun_at_least_20_mg_dl",
+        "core_temperature_below_36_c"
+      ],
+      "minor_unknown": []
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "severe_cap_criteria_met",
+      "high_priority_clinical_review",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "autonomous_icu_admission_or_treatment"
+    ]
+  },
+  {
+    "id": "P14",
+    "description": "Only two explicit minor criteria; leukopenia attribution and other criteria remain unknown.",
+    "input": {
+      "results": [{"finding": "Consolidation", "score": 0.84, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính và sốt; nhịp thở 31 lần/phút.",
+      "history": "Người lớn; mắc bệnh ngoài bệnh viện.",
+      "laboratory": "BUN 22 mg/dL; WBC 3,500/µL nhưng không cung cấp nguyên nhân giảm bạch cầu.",
+      "workflow_mode": "Đã có kết quả xét nghiệm"
+    },
+    "severity_evidence": {
+      "major_present": [],
+      "minor_present": [
+        "respiratory_rate_at_least_30",
+        "bun_at_least_20_mg_dl"
+      ],
+      "minor_unknown": ["infection_attributable_leukopenia"]
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_supported",
+      "severe_cap_criteria_not_met",
+      "infection_attributable_leukopenia_not_invented",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "severe_cap_from_two_minor_criteria",
+      "leukopenia_attributed_to_infection_without_evidence"
+    ]
+  },
+  {
+    "id": "P15",
+    "description": "Positive AI opacity conflicts with trusted CT evidence.",
+    "input": {
+      "results": [{"finding": "Lung Opacity", "score": 0.83, "threshold": 0.5}],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "Báo cáo CT do bác sĩ cung cấp: không có bất thường vùng khí phế nang tương ứng.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_conflicted",
+      "evidence_conflict_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ai_silently_preferred",
+      "trusted_ct_erased"
+    ]
+  }
+]
