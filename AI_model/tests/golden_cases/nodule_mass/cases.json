@@ -1,0 +1,193 @@
+[
+  {
+    "id": "cxr_positive_without_ct",
+    "description": "Adult at least 35 years old with a positive CXR finding and no CT characterization.",
+    "input": {
+      "results": [
+        {"finding": "Nodule/Mass", "score": 0.86, "threshold": 0.5}
+      ],
+      "demographics": "Tuổi: 56",
+      "symptoms": "",
+      "history": "Chưa có CT ngực hoặc mô tả đặc điểm tổn thương trên CT.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "focal_lesion_finding_preserved",
+      "ct_characterization_relevant",
+      "missing_ct_characterization_explicit",
+      "fleischner_not_evaluable_without_ct",
+      "lung_cancer_not_diagnosed",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "lung_cancer_from_cxr_class",
+      "autonomous_ct_order",
+      "direct_pet_biopsy_or_surgery_from_cxr",
+      "invented_lesion_size"
+    ]
+  },
+  {
+    "id": "ct_solid_nodule_measured",
+    "description": "In-scope adult with an incidental CT-characterized solid lesion no larger than 30 mm.",
+    "input": {
+      "results": [
+        {"finding": "Nodule/Mass", "score": 0.88, "threshold": 0.5}
+      ],
+      "demographics": "Tuổi: 62",
+      "symptoms": "",
+      "history": "CT ngực phát hiện tình cờ một tổn thương phổi đặc, đường kính trung bình 18 mm. Không phải CT tầm soát ung thư phổi; bệnh nhân không suy giảm miễn dịch và không có ung thư nguyên phát đã biết.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "nodule_terminology_from_supplied_size",
+      "size_18_mm_preserved",
+      "malignancy_remains_hypothesis",
+      "fleischner_scope_explicitly_evaluated",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "lung_cancer_from_nodule",
+      "invented_numeric_malignancy_probability"
+    ]
+  },
+  {
+    "id": "ct_spiculated_lesion",
+    "description": "CT-characterized solid pulmonary lesion with explicitly reported spiculation.",
+    "input": {
+      "results": [
+        {"finding": "Nodule/Mass", "score": 0.9, "threshold": 0.5}
+      ],
+      "demographics": "Tuổi: 64",
+      "symptoms": "",
+      "history": "CT ngực mô tả nốt phổi đặc 22 mm có bờ tua gai; chưa có kết quả mô bệnh học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "spiculation_increases_malignancy_concern",
+      "cancer_not_confirmed",
+      "no_numeric_risk_invented",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "spiculation_proves_cancer",
+      "invented_numeric_malignancy_probability"
+    ]
+  },
+  {
+    "id": "ct_mass_over_30_mm",
+    "description": "CT lesion larger than 30 mm supports mass terminology only.",
+    "input": {
+      "results": [
+        {"finding": "Nodule/Mass", "score": 0.91, "threshold": 0.5}
+      ],
+      "demographics": "Tuổi: 59",
+      "symptoms": "",
+      "history": "CT ngực ghi nhận tổn thương phổi khu trú đường kính trung bình 38 mm; chưa có mô bệnh học hoặc dữ liệu giai đoạn.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "mass_terminology_from_supplied_size",
+      "size_38_mm_preserved",
+      "malignancy_not_confirmed_by_mass_term",
+      "stage_or_histology_not_inferred",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "mass_term_proves_malignancy",
+      "invented_stage_or_histology"
+    ]
+  },
+  {
+    "id": "ct_calcification_and_fat_morphology",
+    "description": "CT explicitly reports calcification and a fat component without a definitive benign diagnosis.",
+    "input": {
+      "results": [
+        {"finding": "Nodule/Mass", "score": 0.79, "threshold": 0.5}
+      ],
+      "demographics": "Tuổi: 58",
+      "symptoms": "",
+      "history": "CT ngực mô tả tổn thương phổi 16 mm có thành phần vôi hóa và mỡ; báo cáo không đưa ra chẩn đoán mô học hoặc chẩn đoán lành tính cụ thể.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "calcification_and_fat_recorded",
+      "specific_benign_diagnosis_not_invented",
+      "cancer_not_automatic",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "calcification_or_fat_proves_specific_benign_diagnosis",
+      "lung_cancer_from_morphology"
+    ]
+  },
+  {
+    "id": "comparable_prior_imaging_growth",
+    "description": "Comparable dated CT measurements provide direct evidence of interval change.",
+    "input": {
+      "results": [
+        {"finding": "Nodule/Mass", "score": 0.87, "threshold": 0.5}
+      ],
+      "demographics": "Tuổi: 61",
+      "symptoms": "",
+      "history": "Hai CT ngực được báo cáo là có kỹ thuật so sánh phù hợp: ngày 2024-01-10 tổn thương đo 12 mm; ngày 2025-01-10 cùng tổn thương đo 15 mm. Không cung cấp tốc độ tăng trưởng đã tính.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "prior_dates_and_measurements_preserved",
+      "growth_derived_only_from_comparable_data",
+      "growth_rate_not_invented",
+      "ai_score_not_used_as_growth",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "growth_from_ai_score_change",
+      "invented_growth_rate"
+    ]
+  },
+  {
+    "id": "score_semantics",
+    "description": "The image-model score remains a model output rather than malignancy probability.",
+    "input": {
+      "results": [
+        {"finding": "Nodule/Mass", "score": 0.94, "threshold": 0.5}
+      ],
+      "demographics": "Tuổi: 55",
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "score_0_94_preserved",
+      "score_not_malignancy_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "score_as_lung_cancer_or_malignancy_probability"
+    ]
+  },
+  {
+    "id": "cxr_ct_modality_conflict",
+    "description": "Positive AI CXR finding has no corresponding pulmonary lesion on trusted CT.",
+    "input": {
+      "results": [
+        {"finding": "Nodule/Mass", "score": 0.82, "threshold": 0.5}
+      ],
+      "demographics": "Tuổi: 63",
+      "symptoms": "",
+      "history": "CT ngực gần đây do bác sĩ chẩn đoán hình ảnh đọc: không có tổn thương nốt hoặc khối phổi tương ứng với finding trên X-quang.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "cxr_ct_modality_discordance",
+      "both_sources_preserved",
+      "ct_stronger_for_lesion_characterization",
+      "ai_not_silently_preferred",
+      "lesion_not_treated_as_ct_confirmed",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "silent_ai_preference",
+      "ct_confirmation_invented"
+    ]
+  }
+]

@@ -1,0 +1,2279 @@
+[
+  {
+    "id": "E2E01",
+    "description": "Simple positive finding accepted through final candidate.",
+    "model_results": [
+      {
+        "finding": "No finding",
+        "score": 0.1,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Atelectasis",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "POSITIVE_FINDING_WITH_NO_FINDING_NEGATIVE",
+    "expected_positive_findings": [
+      "Atelectasis"
+    ]
+  },
+  {
+    "id": "E2E02",
+    "description": "Three positives preserve payload routing order.",
+    "model_results": [
+      {
+        "finding": "Pneumothorax",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Pleural effusion",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Cardiomegaly",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Pneumothorax",
+      "Pleural effusion",
+      "Cardiomegaly"
+    ]
+  },
+  {
+    "id": "E2E03",
+    "description": "No Finding only remains taxonomy-bounded.",
+    "model_results": [
+      {
+        "finding": "No finding",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_WITHIN_14_CLASS_TAXONOMY",
+    "expected_positive_findings": []
+  },
+  {
+    "id": "E2E04",
+    "description": "No Finding contradiction remains explicit.",
+    "model_results": [
+      {
+        "finding": "No finding",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Pneumothorax",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [
+      "NO_FINDING_CONTRADICTION"
+    ],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": true,
+      "hypotheses": [],
+      "evidence_ledger": [
+        {
+          "canonical_evidence_id": "EV1"
+        }
+      ],
+      "relations": [
+        "conflict"
+      ],
+      "preserved_conflicts": [
+        "NO_FINDING_CONTRADICTION"
+      ]
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_CONTRADICTION",
+    "expected_positive_findings": [
+      "Pneumothorax"
+    ]
+  },
+  {
+    "id": "E2E05",
+    "description": "Missing No Finding stays missing.",
+    "model_results": [
+      {
+        "finding": "Atelectasis",
+        "score": 0.1,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": []
+  },
+  {
+    "id": "E2E06",
+    "description": "Nodule concern without pathology is deferred.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "pulmonary_malignancy",
+        "state": "PULMONARY_MALIGNANCY_CONCERN_SUPPORTED",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pulmonary_malignancy",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "hypotheses": [
+        {
+          "id": "H1",
+          "hermes_state": "PULMONARY_MALIGNANCY_CONCERN_SUPPORTED",
+          "decision": "defer",
+          "doctor_assessment": "Indeterminate malignancy concern."
+        }
+      ],
+      "unresolved_items": [
+        "H1"
+      ]
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E07",
+    "description": "Pathology-confirmed malignancy preserves source certainty.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      },
+      {
+        "id": "PATH1",
+        "source": "PATHOLOGY"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "pulmonary_malignancy",
+        "state": "PATHOLOGY_CONFIRMED_MALIGNANCY",
+        "source_ids": [
+          "PATH1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pulmonary_malignancy",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E08",
+    "description": "Pneumonia and HF share evidence without winner.",
+    "model_results": [
+      {
+        "finding": "Lung Opacity",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Cardiomegaly",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "pneumonia",
+        "state": "PNEUMONIA_HYPOTHESIS_SUPPORTED",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pneumonia",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      },
+      {
+        "module": "heart_failure",
+        "state": "HF_HYPOTHESIS_SUPPORTED",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-heart_failure",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": true,
+      "hypotheses": [
+        "pneumonia",
+        "heart_failure"
+      ],
+      "evidence_ledger": [
+        {
+          "canonical_evidence_id": "EV1"
+        }
+      ],
+      "relations": [
+        "SHARED_EVIDENCE"
+      ],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Lung Opacity",
+      "Cardiomegaly"
+    ]
+  },
+  {
+    "id": "E2E09",
+    "description": "Pneumonia and HF coexist with distinct support.",
+    "model_results": [
+      {
+        "finding": "Lung Opacity",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Cardiomegaly",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      },
+      {
+        "id": "EV2",
+        "source": "ECHO"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "pneumonia",
+        "state": "PNEUMONIA_HYPOTHESIS_SUPPORTED",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pneumonia",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      },
+      {
+        "module": "heart_failure",
+        "state": "HF_HYPOTHESIS_SUPPORTED",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-heart_failure",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": true,
+      "hypotheses": [
+        "pneumonia",
+        "heart_failure"
+      ],
+      "evidence_ledger": [
+        {
+          "canonical_evidence_id": "EV1"
+        },
+        {
+          "canonical_evidence_id": "EV2"
+        }
+      ],
+      "relations": [
+        "COEXISTING_PROCESSES_SUPPORTED"
+      ],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Lung Opacity",
+      "Cardiomegaly"
+    ]
+  },
+  {
+    "id": "E2E10",
+    "description": "AAS indeterminate remains high review priority.",
+    "model_results": [
+      {
+        "finding": "Aortic enlargement",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "high",
+      "flags": [
+        "AAS_REVIEW"
+      ],
+      "high_priority_supported": true
+    },
+    "disease_analysis": [
+      {
+        "module": "acute_aortic_syndrome",
+        "state": "AAS_HYPOTHESIS_INDETERMINATE",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-acute_aortic_syndrome",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "priority_items": [
+        {
+          "id": "P1",
+          "priority": "high",
+          "acknowledged": true,
+          "acknowledged_by_source": "authenticated_doctor"
+        }
+      ],
+      "hypotheses": [
+        {
+          "id": "H1",
+          "hermes_state": "AAS_HYPOTHESIS_INDETERMINATE",
+          "decision": "defer",
+          "doctor_assessment": "Indeterminate high-priority concern."
+        }
+      ],
+      "unresolved_items": [
+        "H1"
+      ]
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Aortic enlargement"
+    ]
+  },
+  {
+    "id": "E2E11",
+    "description": "Definitive imaging AAS state preserves CXR provenance.",
+    "model_results": [
+      {
+        "finding": "Aortic enlargement",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      },
+      {
+        "id": "CTA1",
+        "source": "DEFINITIVE_AORTIC_IMAGING"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "high",
+      "flags": [
+        "AAS_CONFIRMED_SOURCE"
+      ],
+      "high_priority_supported": true
+    },
+    "disease_analysis": [
+      {
+        "module": "acute_aortic_syndrome",
+        "state": "DEFINITIVE_AORTIC_IMAGING_CONFIRMED_AAS",
+        "source_ids": [
+          "CTA1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-acute_aortic_syndrome",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "priority_items": [
+        {
+          "id": "P1",
+          "priority": "high",
+          "acknowledged": true,
+          "acknowledged_by_source": "authenticated_doctor"
+        }
+      ]
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Aortic enlargement"
+    ]
+  },
+  {
+    "id": "E2E12",
+    "description": "Single ILD study cannot establish PPF progression.",
+    "model_results": [
+      {
+        "finding": "ILD",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [
+      "serial comparison"
+    ],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "ild_fibrotic",
+        "state": "ILD_CONCERN_SUPPORTED",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-ild_fibrotic",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "ILD"
+    ]
+  },
+  {
+    "id": "E2E13",
+    "description": "Valid serial ILD progression handoff.",
+    "model_results": [
+      {
+        "finding": "ILD",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Pulmonary fibrosis",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "ild_fibrotic",
+        "state": "PPF_CRITERIA_MET",
+        "source_ids": [
+          "EV1",
+          "SERIAL1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-ild_fibrotic",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": true,
+      "comparisons": [
+        {
+          "state": "WORSENED",
+          "valid": true,
+          "source_ids": [
+            "SERIAL1"
+          ]
+        }
+      ]
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "ILD",
+      "Pulmonary fibrosis"
+    ]
+  },
+  {
+    "id": "E2E14",
+    "description": "Pleural effusion attribution remains unresolved.",
+    "model_results": [
+      {
+        "finding": "Pleural effusion",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Cardiomegaly",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "pleural_disease",
+        "state": "PLEURAL_DISEASE_HYPOTHESIS_INDETERMINATE",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pleural_disease",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      },
+      {
+        "module": "heart_failure",
+        "state": "HF_HYPOTHESIS_INDETERMINATE",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-heart_failure",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": true,
+      "hypotheses": [
+        "pleural disease",
+        "heart failure",
+        "malignancy"
+      ],
+      "evidence_ledger": [
+        {
+          "canonical_evidence_id": "EV1"
+        }
+      ],
+      "relations": [
+        "EVIDENCE_ATTRIBUTION_UNRESOLVED"
+      ],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Pleural effusion",
+      "Cardiomegaly"
+    ]
+  },
+  {
+    "id": "E2E15",
+    "description": "Malignant pleural cytology confirmation retains origin.",
+    "model_results": [
+      {
+        "finding": "Pleural effusion",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      },
+      {
+        "id": "CYTO1",
+        "source": "PLEURAL_CYTOLOGY"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "pleural_disease",
+        "state": "CYTOLOGY_CONFIRMED_MALIGNANT_PLEURAL_EFFUSION",
+        "source_ids": [
+          "CYTO1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pleural_disease",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Pleural effusion"
+    ]
+  },
+  {
+    "id": "E2E16",
+    "description": "Pleural ADA alone keeps TB concern bounded.",
+    "model_results": [
+      {
+        "finding": "Pleural effusion",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      },
+      {
+        "id": "ADA1",
+        "source": "PLEURAL_FLUID"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "tb_chronic_mycobacterial",
+        "state": "PLEURAL_TB_CONCERN_SUPPORTED",
+        "source_ids": [
+          "ADA1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-tb_chronic_mycobacterial",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Pleural effusion"
+    ]
+  },
+  {
+    "id": "E2E17",
+    "description": "AFB positive alone does not confirm M tuberculosis.",
+    "model_results": [
+      {
+        "finding": "Infiltration",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      },
+      {
+        "id": "AFB1",
+        "source": "AFB_SMEAR"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "tb_chronic_mycobacterial",
+        "state": "MYCOBACTERIAL_DISEASE_CONCERN_SUPPORTED",
+        "source_ids": [
+          "AFB1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-tb_chronic_mycobacterial",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Infiltration"
+    ]
+  },
+  {
+    "id": "E2E18",
+    "description": "Molecular or culture TB confirmation preserves site.",
+    "model_results": [
+      {
+        "finding": "Infiltration",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      },
+      {
+        "id": "MTB1",
+        "source": "MTB_SPECIFIC_MOLECULAR"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "tb_chronic_mycobacterial",
+        "state": "MICROBIOLOGICALLY_CONFIRMED_TB",
+        "source_ids": [
+          "MTB1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-tb_chronic_mycobacterial",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Infiltration"
+    ]
+  },
+  {
+    "id": "E2E19",
+    "description": "TB and malignancy may coexist at separate lesions.",
+    "model_results": [
+      {
+        "finding": "Infiltration",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "tb_chronic_mycobacterial",
+        "state": "MICROBIOLOGICALLY_CONFIRMED_TB",
+        "source_ids": [
+          "MTB1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-tb_chronic_mycobacterial",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      },
+      {
+        "module": "pulmonary_malignancy",
+        "state": "PATHOLOGY_CONFIRMED_MALIGNANCY",
+        "source_ids": [
+          "PATH1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pulmonary_malignancy",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": true,
+      "hypotheses": [
+        "TB",
+        "malignancy"
+      ],
+      "evidence_ledger": [
+        {
+          "canonical_evidence_id": "MTB1"
+        },
+        {
+          "canonical_evidence_id": "PATH1"
+        }
+      ],
+      "relations": [
+        "COEXISTING_PROCESSES_SUPPORTED"
+      ],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Infiltration",
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E20",
+    "description": "Different nodule cannot support a growth claim.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [
+      {
+        "module": "pulmonary_malignancy",
+        "state": "PULMONARY_MALIGNANCY_CONCERN_SUPPORTED",
+        "source_ids": [
+          "EV1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pulmonary_malignancy",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": true,
+      "comparisons": [
+        {
+          "state": "COMPARISON_NOT_POSSIBLE",
+          "valid": true,
+          "correspondence": "NOT_SAME"
+        }
+      ]
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E21",
+    "description": "Documented presence absence presence supports recurrence.",
+    "model_results": [
+      {
+        "finding": "Pleural effusion",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": true,
+      "comparisons": [
+        {
+          "state": "RECURRENT",
+          "valid": true,
+          "source_ids": [
+            "T1",
+            "T2",
+            "T3"
+          ]
+        }
+      ]
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Pleural effusion"
+    ]
+  },
+  {
+    "id": "E2E22",
+    "description": "AI disappearance and human persistence remain conflicted.",
+    "model_results": [
+      {
+        "finding": "No finding",
+        "score": 0.1,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Lung Opacity",
+        "score": 0.1,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [
+      "TEMPORAL_CONFLICT"
+    ],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": true,
+      "comparisons": [
+        {
+          "state": "TEMPORAL_CONFLICT",
+          "valid": true
+        }
+      ]
+    },
+    "arbitration": {
+      "activated": true,
+      "hypotheses": [],
+      "evidence_ledger": [
+        {
+          "canonical_evidence_id": "HUMAN1"
+        }
+      ],
+      "relations": [
+        "CONFLICT"
+      ],
+      "preserved_conflicts": [
+        "TEMPORAL_CONFLICT"
+      ]
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_NOT_ESTABLISHED",
+    "expected_positive_findings": []
+  },
+  {
+    "id": "E2E23",
+    "description": "Doctor rejects AI finding without mutating AI snapshot.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "findings": [
+        {
+          "id": "F1",
+          "ai_state": "Nodule/Mass",
+          "decision": "reject"
+        }
+      ]
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E24",
+    "description": "Doctor modifies generic effusion with laterality.",
+    "model_results": [
+      {
+        "finding": "Pleural effusion",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "findings": [
+        {
+          "id": "F1",
+          "ai_state": "Pleural effusion",
+          "decision": "modify",
+          "doctor_value": "small right pleural effusion"
+        }
+      ]
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Pleural effusion"
+    ]
+  },
+  {
+    "id": "E2E25",
+    "description": "Doctor adds missed finding without retroactive routing.",
+    "model_results": [
+      {
+        "finding": "No finding",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "doctor_added_findings": [
+        {
+          "finding": "CT-reviewed pulmonary lesion"
+        }
+      ]
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_WITHIN_14_CLASS_TAXONOMY",
+    "expected_positive_findings": []
+  },
+  {
+    "id": "E2E26",
+    "description": "Unacknowledged high-priority item blocks candidate.",
+    "model_results": [
+      {
+        "finding": "Pneumothorax",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "high",
+      "flags": [
+        "URGENT_REVIEW"
+      ],
+      "high_priority_supported": true
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "priority_items": [
+        {
+          "id": "P1",
+          "priority": "high",
+          "acknowledged": false
+        }
+      ]
+    },
+    "expected_final_status": "FINAL_REPORT_BLOCKED_BY_REVIEW",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Pneumothorax"
+    ]
+  },
+  {
+    "id": "E2E27",
+    "description": "Stale review version fails closed.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "stale_review_version": true,
+    "expected_final_status": "FINAL_REPORT_VERSION_MISMATCH",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E28",
+    "description": "Snapshot mismatch after rerun fails closed.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "snapshot_mismatch": true,
+    "expected_final_status": "FINAL_REPORT_SOURCE_MISMATCH",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E29",
+    "description": "New evidence before finalization reopens review.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "new_evidence": "before_finalization"
+    },
+    "expected_final_status": "FINAL_REPORT_BLOCKED_BY_REVIEW",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E30",
+    "description": "New evidence after finalization requires amendment.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "external_finalization": {
+      "source": "authenticated_doctor",
+      "finalized_by": "DOC-E2E-1",
+      "finalized_at": "2026-09-29T10:05:00+07:00",
+      "review_version": 1
+    },
+    "new_evidence_after_finalization": true,
+    "expected_final_status": "FINAL_REPORT_AMENDMENT_REQUIRED",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E31",
+    "description": "Autonomous recommendation injection is detected.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": "NO_AUTONOMOUS_TREATMENT_OR_PROCEDURE",
+    "violations": {
+      "autonomous_action": true
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E32",
+    "description": "Score-to-disease-probability injection is detected.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.87,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": "NO_SCORE_TO_DISEASE_PROBABILITY",
+    "violations": {
+      "score_probability": true
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E33",
+    "description": "Missing laboratory treated as negative is detected.",
+    "model_results": [
+      {
+        "finding": "Consolidation",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [
+      "microbiology"
+    ],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": "MISSING_STAYS_UNKNOWN",
+    "violations": {
+      "missing_negative": true
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Consolidation"
+    ]
+  },
+  {
+    "id": "E2E34",
+    "description": "Overlapping opacity labels share one canonical evidence object.",
+    "model_results": [
+      {
+        "finding": "Consolidation",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Lung Opacity",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Infiltration",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": true,
+      "hypotheses": [
+        "pneumonia"
+      ],
+      "evidence_ledger": [
+        {
+          "canonical_evidence_id": "OPACITY-GROUP-1",
+          "labels": [
+            "Consolidation",
+            "Lung Opacity",
+            "Infiltration"
+          ]
+        }
+      ],
+      "relations": [
+        "DUPLICATE_EVIDENCE_DEDUPLICATED"
+      ],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Consolidation",
+      "Lung Opacity",
+      "Infiltration"
+    ]
+  },
+  {
+    "id": "E2E35",
+    "description": "Raw AI direct final-report attempt is blocked.",
+    "model_results": [
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "EV1",
+        "source": "AI_RESULT"
+      }
+    ],
+    "conflicts": [],
+    "missing_information": [],
+    "safety": {
+      "priority": "routine",
+      "flags": [],
+      "high_priority_supported": false
+    },
+    "disease_analysis": [],
+    "temporal": {
+      "activated": false,
+      "comparisons": []
+    },
+    "arbitration": {
+      "activated": false,
+      "hypotheses": [],
+      "evidence_ledger": [],
+      "relations": [],
+      "preserved_conflicts": []
+    },
+    "expected_failure_invariant": null,
+    "final_request_source": "raw_ai",
+    "expected_final_status": "FINAL_REPORT_NOT_GENERATABLE",
+    "expected_no_finding_state": "NO_FINDING_MISSING",
+    "expected_positive_findings": [
+      "Nodule/Mass"
+    ]
+  },
+  {
+    "id": "E2E36",
+    "description": "Full multi-module stress case evaluates all invariants.",
+    "model_results": [
+      {
+        "finding": "No finding",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Lung Opacity",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Cardiomegaly",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Pleural effusion",
+        "score": 0.9,
+        "threshold": 0.5
+      },
+      {
+        "finding": "Nodule/Mass",
+        "score": 0.9,
+        "threshold": 0.5
+      }
+    ],
+    "evidence_objects": [
+      {
+        "id": "OPACITY1",
+        "source": "AI_RESULT"
+      },
+      {
+        "id": "ECHO1",
+        "source": "ECHO"
+      },
+      {
+        "id": "PATH1",
+        "source": "PATHOLOGY"
+      },
+      {
+        "id": "SERIAL1",
+        "source": "PRIOR_IMAGING"
+      }
+    ],
+    "conflicts": [
+      "NO_FINDING_CONTRADICTION"
+    ],
+    "missing_information": [],
+    "safety": {
+      "priority": "high",
+      "flags": [
+        "CONFLICT_REVIEW"
+      ],
+      "high_priority_supported": true
+    },
+    "disease_analysis": [
+      {
+        "module": "pneumonia",
+        "state": "PNEUMONIA_HYPOTHESIS_SUPPORTED",
+        "source_ids": [
+          "OPACITY1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pneumonia",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      },
+      {
+        "module": "heart_failure",
+        "state": "HF_HYPOTHESIS_SUPPORTED",
+        "source_ids": [
+          "OPACITY1",
+          "ECHO1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-heart_failure",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      },
+      {
+        "module": "pulmonary_malignancy",
+        "state": "PULMONARY_MALIGNANCY_CONCERN_SUPPORTED",
+        "source_ids": [
+          "PATH1"
+        ],
+        "diagnosis_supported": true,
+        "diagnosis_asserted": false,
+        "etiology_supported": true,
+        "etiology_asserted": false,
+        "execution_mode": "fixture",
+        "fixture_id": "FIX-pulmonary_malignancy",
+        "fixed_timestamp": "2026-09-29T09:00:00+07:00"
+      }
+    ],
+    "temporal": {
+      "activated": true,
+      "comparisons": [
+        {
+          "state": "PERSISTENT",
+          "valid": true,
+          "source_ids": [
+            "SERIAL1"
+          ]
+        }
+      ]
+    },
+    "arbitration": {
+      "activated": true,
+      "hypotheses": [
+        "pneumonia",
+        "heart_failure",
+        "pulmonary_malignancy"
+      ],
+      "evidence_ledger": [
+        {
+          "canonical_evidence_id": "OPACITY1"
+        },
+        {
+          "canonical_evidence_id": "ECHO1"
+        },
+        {
+          "canonical_evidence_id": "PATH1"
+        },
+        {
+          "canonical_evidence_id": "SERIAL1"
+        }
+      ],
+      "relations": [
+        "SHARED_EVIDENCE",
+        "COEXISTING_PROCESSES_SUPPORTED",
+        "EVIDENCE_ATTRIBUTION_UNRESOLVED"
+      ],
+      "preserved_conflicts": [
+        "NO_FINDING_CONTRADICTION"
+      ]
+    },
+    "expected_failure_invariant": null,
+    "doctor_review": {
+      "findings": [
+        {
+          "id": "F1",
+          "ai_state": "Lung Opacity",
+          "decision": "modify",
+          "doctor_value": "right lower-lobe opacity"
+        },
+        {
+          "id": "F2",
+          "ai_state": "Cardiomegaly",
+          "decision": "accept"
+        },
+        {
+          "id": "F3",
+          "ai_state": "Pleural effusion",
+          "decision": "defer",
+          "doctor_value": "indeterminate effusion"
+        },
+        {
+          "id": "F4",
+          "ai_state": "Nodule/Mass",
+          "decision": "reject"
+        }
+      ],
+      "hypotheses": [
+        {
+          "id": "H1",
+          "hermes_state": "PNEUMONIA_HYPOTHESIS_SUPPORTED",
+          "decision": "accept"
+        },
+        {
+          "id": "H2",
+          "hermes_state": "HF_HYPOTHESIS_SUPPORTED",
+          "decision": "defer",
+          "doctor_assessment": "HF remains uncertain"
+        },
+        {
+          "id": "H3",
+          "hermes_state": "PULMONARY_MALIGNANCY_CONCERN_SUPPORTED",
+          "decision": "reject"
+        }
+      ],
+      "conflicts": [
+        {
+          "id": "NO_FINDING_CONTRADICTION",
+          "decision": "preserve"
+        }
+      ],
+      "priority_items": [
+        {
+          "id": "P1",
+          "priority": "high",
+          "acknowledged": true,
+          "acknowledged_by_source": "authenticated_doctor"
+        }
+      ],
+      "unresolved_items": [
+        "F3",
+        "H2"
+      ],
+      "doctor_findings_text": "Doctor-modified finding and bounded unresolved items.",
+      "doctor_impression": "Multiple reviewed processes; uncertainty preserved."
+    },
+    "expected_final_status": "FINAL_REPORT_CANDIDATE_READY",
+    "expected_no_finding_state": "NO_FINDING_CONTRADICTION",
+    "expected_positive_findings": [
+      "Lung Opacity",
+      "Cardiomegaly",
+      "Pleural effusion",
+      "Nodule/Mass"
+    ]
+  }
+]

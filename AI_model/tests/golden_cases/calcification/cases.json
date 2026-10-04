@@ -1,0 +1,192 @@
+[
+  {
+    "id": "isolated_calcification_with_bbox",
+    "description": "Positive Calcification with image-plane bbox but no anatomical structure or CT.",
+    "input": {
+      "results": [
+        {
+          "finding": "Calcification",
+          "score": 0.82,
+          "threshold": 0.5,
+          "bbox": [120, 85, 168, 133]
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có CT hoặc diễn giải cấu trúc giải phẫu.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "calcification_finding_and_bbox_preserved",
+      "anatomical_compartment_unknown",
+      "etiology_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "bbox_as_pulmonary_pleural_nodal_or_cardiovascular_origin",
+      "bbox_as_nodule_plaque_or_lymph_node",
+      "calcification_as_etiologic_diagnosis",
+      "autonomous_ct_order"
+    ]
+  },
+  {
+    "id": "calcification_with_nodule_mass_without_colocalization",
+    "description": "Calcification and Nodule/Mass coexist without evidence that they are the same lesion.",
+    "input": {
+      "results": [
+        {"finding": "Calcification", "score": 0.84, "threshold": 0.5},
+        {"finding": "Nodule/Mass", "score": 0.81, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Không cung cấp quan hệ cùng tổn thương hoặc định vị CT.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_labels_preserved",
+      "same_lesion_relationship_unknown",
+      "anatomical_compartment_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "automatic_calcified_pulmonary_nodule",
+      "calcification_as_benignity",
+      "calcification_excludes_malignancy"
+    ]
+  },
+  {
+    "id": "ct_confirmed_intranodular_calcification",
+    "description": "CT explicitly localizes central calcification within a pulmonary nodule.",
+    "input": {
+      "results": [
+        {"finding": "Calcification", "score": 0.86, "threshold": 0.5},
+        {"finding": "Nodule/Mass", "score": 0.83, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT ngực xác nhận vôi hóa nằm trong nốt phổi và mô tả pattern trung tâm.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "explicit_pulmonary_intranodular_localization_preserved",
+      "supplied_central_pattern_preserved",
+      "pattern_refines_morphology",
+      "overlapping_finding_evidence",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "intranodular_calcification_as_benignity",
+      "calcification_excludes_malignancy",
+      "invented_calcification_pattern"
+    ]
+  },
+  {
+    "id": "calcification_with_pleural_thickening_unknown_localization",
+    "description": "Calcification and Pleural thickening coexist without explicit pleural localization.",
+    "input": {
+      "results": [
+        {"finding": "Calcification", "score": 0.83, "threshold": 0.5},
+        {"finding": "Pleural thickening", "score": 0.82, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Không có CT hoặc diễn giải xác nhận vôi hóa thuộc màng phổi.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_labels_preserved",
+      "pleural_localization_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "automatic_calcified_pleural_plaque",
+      "invented_asbestos_exposure",
+      "generic_cooccurrence_as_colocalization"
+    ]
+  },
+  {
+    "id": "ct_confirmed_calcified_pleural_plaque",
+    "description": "CT explicitly reports a calcified pleural plaque without exposure history.",
+    "input": {
+      "results": [
+        {"finding": "Calcification", "score": 0.85, "threshold": 0.5},
+        {"finding": "Pleural thickening", "score": 0.84, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT ngực xác nhận calcified pleural plaque. Không cung cấp tiền sử phơi nhiễm asbestos.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "upstream_findings_preserved",
+      "explicit_ct_pleural_plaque_preserved",
+      "explicit_pleural_localization_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "invented_asbestos_exposure",
+      "calcified_plaque_as_asbestosis"
+    ]
+  },
+  {
+    "id": "calcified_nodes_with_prior_granulomatous_context",
+    "description": "CT-confirmed calcified hilar and mediastinal nodes with documented prior granulomatous disease.",
+    "input": {
+      "results": [
+        {"finding": "Calcification", "score": 0.88, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT xác nhận hạch rốn phổi và trung thất vôi hóa; hồ sơ ghi nhận bệnh hạt đã lành trước đây. Không có bằng chứng được cung cấp về nhiễm trùng hoạt động.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "explicit_nodal_localization_preserved",
+      "prior_healed_granulomatous_context_preserved",
+      "bounded_granulomatous_hypothesis",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "active_tb_diagnosis",
+      "tb_as_only_cause",
+      "forced_sarcoidosis_or_silicosis"
+    ]
+  },
+  {
+    "id": "score_semantics",
+    "description": "The Calcification score remains a model output rather than disease probability.",
+    "input": {
+      "results": [
+        {"finding": "Calcification", "score": 0.9, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "score_0_90_preserved",
+      "score_not_disease_or_benignity_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "score_as_benignity_tb_malignancy_granuloma_or_asbestos_probability"
+    ]
+  },
+  {
+    "id": "cxr_ai_ct_conflict",
+    "description": "Positive CXR AI Calcification conflicts with trusted CT reporting no calcified focus.",
+    "input": {
+      "results": [
+        {"finding": "Calcification", "score": 0.8, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT ngực chất lượng cao gần đây do bác sĩ chẩn đoán hình ảnh đọc: không có ổ vôi hóa tương ứng với finding AI trên X-quang.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "evidence_conflict",
+      "both_sources_preserved",
+      "ct_more_specific_localization_evidence",
+      "ai_not_silently_erased",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "silent_ai_erasure",
+      "conflict_erased"
+    ]
+  }
+]
