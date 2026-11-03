@@ -1,0 +1,188 @@
+[
+  {
+    "id": "isolated_cxr_pleural_thickening",
+    "description": "Isolated positive CXR Pleural thickening without cross-sectional or etiologic context.",
+    "input": {
+      "results": [
+        {"finding": "Pleural thickening", "score": 0.82, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Chưa có CT, tiền sử phơi nhiễm hoặc kết quả bệnh học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "local_pleural_finding_preserved",
+      "cross_sectional_morphology_unknown",
+      "etiology_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "cxr_thickening_as_asbestos_or_asbestosis",
+      "cxr_thickening_as_tb_or_malignancy",
+      "cxr_thickening_as_pleural_plaque",
+      "autonomous_ct_or_pet_order"
+    ]
+  },
+  {
+    "id": "documented_asbestos_exposure",
+    "description": "CXR Pleural thickening with explicitly documented occupational asbestos exposure.",
+    "input": {
+      "results": [
+        {"finding": "Pleural thickening", "score": 0.84, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Hồ sơ nghề nghiệp xác nhận phơi nhiễm asbestos trong công việc. Chưa có CT mô tả pleural plaque.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "documented_asbestos_exposure_preserved",
+      "asbestos_related_pleural_disease_hypothesis_supported",
+      "asbestosis_not_confirmed",
+      "pleural_plaque_not_confirmed",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "exposure_invented_from_imaging",
+      "asbestosis_confirmed",
+      "plaque_without_supplied_morphology"
+    ]
+  },
+  {
+    "id": "ct_confirmed_calcified_pleural_plaque",
+    "description": "CXR thickening with CT explicitly reporting a calcified pleural plaque.",
+    "input": {
+      "results": [
+        {"finding": "Pleural thickening", "score": 0.85, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT ngực mô tả pleural plaque có vôi hóa. Không cung cấp tiền sử phơi nhiễm asbestos.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "cxr_finding_preserved_separately",
+      "explicit_ct_plaque_morphology_preserved",
+      "explicit_pleural_calcification_localization_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "invented_asbestos_exposure",
+      "plaque_as_malignancy",
+      "unlocalized_calcification_assumed_pleural"
+    ]
+  },
+  {
+    "id": "suspicious_ct_pleural_morphology",
+    "description": "CT explicitly reports nodular circumferential pleural thickening.",
+    "input": {
+      "results": [
+        {"finding": "Pleural thickening", "score": 0.86, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT ngực mô tả dày màng phổi dạng nốt và bao quanh chu vi. Chưa có bệnh học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "explicit_suspicious_ct_morphology_preserved",
+      "malignant_pleural_disease_concern",
+      "pathology_status_separate",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "mesothelioma_confirmed",
+      "pleural_metastasis_confirmed",
+      "suspicious_morphology_as_pathology",
+      "autonomous_biopsy_or_thoracoscopy_order"
+    ]
+  },
+  {
+    "id": "pleural_thickening_with_pulmonary_fibrosis",
+    "description": "Pleural thickening and Pulmonary fibrosis coexist without exposure evidence.",
+    "input": {
+      "results": [
+        {"finding": "Pleural thickening", "score": 0.83, "threshold": 0.5},
+        {"finding": "Pulmonary fibrosis", "score": 0.81, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Không cung cấp tiền sử nghề nghiệp hoặc phơi nhiễm asbestos.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_labels_preserved",
+      "pleural_and_parenchymal_evidence_separate",
+      "etiology_remains_conditional",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "coexistence_as_asbestosis",
+      "coexistence_as_occupational_exposure"
+    ]
+  },
+  {
+    "id": "pleural_thickening_with_pleural_effusion",
+    "description": "Pleural thickening and Pleural effusion coexist without etiologic evidence.",
+    "input": {
+      "results": [
+        {"finding": "Pleural thickening", "score": 0.84, "threshold": 0.5},
+        {"finding": "Pleural effusion", "score": 0.82, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "Chưa cung cấp bệnh học, vi sinh hoặc xét nghiệm dịch màng phổi.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_labels_preserved",
+      "fluid_reasoning_deferred_to_effusion_skill",
+      "etiology_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "coexistence_as_mesothelioma",
+      "coexistence_as_tb",
+      "coexistence_as_empyema",
+      "coexistence_as_malignancy"
+    ]
+  },
+  {
+    "id": "score_semantics",
+    "description": "The Pleural thickening score remains a model output rather than disease probability.",
+    "input": {
+      "results": [
+        {"finding": "Pleural thickening", "score": 0.87, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "score_0_87_preserved",
+      "score_not_pleural_disease_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "score_as_mesothelioma_asbestos_tb_or_malignancy_probability"
+    ]
+  },
+  {
+    "id": "cxr_ai_ct_conflict",
+    "description": "Positive CXR AI Pleural thickening conflicts with trusted CT reporting no thickening.",
+    "input": {
+      "results": [
+        {"finding": "Pleural thickening", "score": 0.8, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT ngực chất lượng cao gần đây do bác sĩ chẩn đoán hình ảnh đọc: không có dày màng phổi tương ứng với finding AI trên X-quang.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "evidence_conflict",
+      "both_sources_preserved",
+      "ct_more_specific_pleural_morphology",
+      "ai_not_silently_erased",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "silent_ai_erasure",
+      "conflict_erased"
+    ]
+  }
+]

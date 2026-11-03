@@ -1,0 +1,854 @@
+[
+  {
+    "id": "PL01",
+    "description": "Pleural effusion finding only.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.84,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pleural_disease_finding_preserved",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "malignant_pleural_effusion_inferred",
+      "heart_failure_inferred",
+      "pleural_infection_inferred"
+    ]
+  },
+  {
+    "id": "PL02",
+    "description": "Pleural thickening finding only.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pleural_thickening_preserved",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "mesothelioma_inferred",
+      "asbestos_exposure_inferred",
+      "metastatic_pleural_disease_inferred"
+    ]
+  },
+  {
+    "id": "PL03",
+    "description": "Generic Calcification without pleural localization.",
+    "input": {
+      "results": [
+        {
+          "finding": "Calcification",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có CT hoặc báo cáo xác định vị trí màng phổi.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "generic_calcification_provenance_preserved",
+      "pleural_localization_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "pleural_calcification_inferred",
+      "pleural_plaque_inferred",
+      "asbestos_exposure_inferred"
+    ]
+  },
+  {
+    "id": "PL04",
+    "description": "Trusted CT explicitly characterizes pleural plaques with compatible asbestos exposure.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.76,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT đáng tin cậy ghi rõ pleural plaques; tiền sử phơi nhiễm asbestos nghề nghiệp được cung cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "explicit_pleural_plaque_preserved",
+      "asbestos_related_pleural_disease_concern",
+      "exposure_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "plaque_equated_with_mesothelioma",
+      "mesothelioma_confirmed",
+      "tissue_histology_invented"
+    ]
+  },
+  {
+    "id": "PL05",
+    "description": "Asbestos exposure with nonspecific pleural thickening.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.79,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Có tiền sử phơi nhiễm asbestos; không có CT plaque, khối màng phổi hoặc bệnh lý học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "asbestos_exposure_preserved_as_risk_context",
+      "mesothelioma_not_established",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "asbestos_exposure_equated_with_mesothelioma",
+      "pleural_plaque_invented",
+      "malignancy_confirmed"
+    ]
+  },
+  {
+    "id": "PL06",
+    "description": "Explicit plaques and exposure support bounded asbestos-related pleural disease concern.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.81,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT mô tả plaques màng phổi vôi hóa và ghi nhận phơi nhiễm asbestos phù hợp; không có khối hoặc bệnh lý học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "asbestos_related_pleural_disease_concern",
+      "plaque_and_exposure_preserved",
+      "mesothelioma_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "plaque_equated_with_mesothelioma",
+      "pathology_confirmed_mesothelioma",
+      "staging_inferred"
+    ]
+  },
+  {
+    "id": "PL07",
+    "description": "Recurrent unilateral effusion without cytology or pathology confirmation.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.86,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Khó thở tái diễn.",
+      "history": "Tràn dịch màng phổi một bên tái phát; chưa có cytology, pathology hoặc nguyên nhân xác định.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pleural_malignancy_concern_indeterminate",
+      "malignant_pleural_effusion_not_established",
+      "recurrence_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "recurrence_confirms_malignancy",
+      "mpe_confirmed",
+      "histology_or_origin_invented"
+    ]
+  },
+  {
+    "id": "PL08",
+    "description": "Suspicious CT pleural morphology with compatible concern but no pathology.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.85,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT ghi pleural nodularity, circumferential thickening và mediastinal pleural involvement; chưa có pathology.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pleural_malignancy_concern_supported",
+      "suspicious_ct_morphology_preserved",
+      "malignant_pleural_effusion_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ct_morphology_called_pathology_confirmation",
+      "mesothelioma_confirmed",
+      "histology_or_origin_invented"
+    ]
+  },
+  {
+    "id": "PL09",
+    "description": "Negative CT does not exclude pleural malignancy when unilateral effusion remains unexplained.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Tràn dịch một bên không giải thích được; CT không thấy hình thái ác tính rõ.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "negative_ct_preserved",
+      "pleural_malignancy_concern_indeterminate",
+      "malignant_pleural_effusion_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "malignancy_excluded_by_negative_ct",
+      "benign_etiology_declared",
+      "mpe_confirmed"
+    ]
+  },
+  {
+    "id": "PL10",
+    "description": "Negative pleural-fluid cytology with persistent suspicious CT morphology.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.84,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pleural thickening",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT vẫn đáng ngờ cho bệnh màng phổi.",
+      "laboratory": "Cytology dịch màng phổi âm tính; nguồn mẫu và ngày được cung cấp."
+    },
+    "semantic_expectations": [
+      "negative_cytology_preserved",
+      "ongoing_pleural_malignancy_concern",
+      "malignant_pleural_effusion_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "malignancy_excluded_by_negative_cytology",
+      "negative_cytology_called_benign",
+      "mesothelioma_excluded"
+    ]
+  },
+  {
+    "id": "PL11",
+    "description": "Nondiagnostic pleural-fluid cytology with other concern.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.83,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Tràn dịch một bên vẫn chưa giải thích được.",
+      "laboratory": "Cytology dịch màng phổi không chẩn đoán được do mẫu không đủ."
+    },
+    "semantic_expectations": [
+      "nondiagnostic_cytology_preserved",
+      "pleural_malignancy_concern_indeterminate",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "nondiagnostic_cytology_called_benign",
+      "malignancy_excluded",
+      "mpe_confirmed"
+    ]
+  },
+  {
+    "id": "PL12",
+    "description": "Pleural-fluid cytology explicitly reports malignant cells with origin unknown.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.89,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có tissue pathology hoặc nguồn gốc u xác định.",
+      "laboratory": "Cytology dịch màng phổi ghi rõ có tế bào ác tính; nguồn mẫu và ngày được cung cấp."
+    },
+    "semantic_expectations": [
+      "cytology_confirmed_malignant_pleural_effusion",
+      "cytology_provenance_preserved",
+      "tumor_origin_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "mesothelioma_inferred_from_generic_malignant_cytology",
+      "primary_origin_invented",
+      "staging_inferred"
+    ]
+  },
+  {
+    "id": "PL13",
+    "description": "Known lung cancer with pleural effusion but no direct pleural malignancy evidence.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.85,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Ung thư phổi đã biết; chưa có cytology, pleural pathology hoặc bằng chứng xâm lấn màng phổi.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pulmonary_malignancy_and_effusion_preserved",
+      "malignant_pleural_effusion_not_established",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "pleural_metastasis_from_known_lung_cancer",
+      "mpe_from_known_lung_cancer",
+      "mesothelioma_inferred"
+    ]
+  },
+  {
+    "id": "PL14",
+    "description": "Malignant pleural-fluid cytology explicitly identifies lung adenocarcinoma origin.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.9,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": "Cytology dịch màng phổi xác nhận tế bào ác tính phù hợp adenocarcinoma nguyên phát phổi; nguồn mẫu và ngày rõ."
+    },
+    "semantic_expectations": [
+      "cytology_confirmed_malignant_pleural_effusion",
+      "explicit_tumor_origin_preserved",
+      "cytology_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "additional_stage_inferred",
+      "mesothelioma_relabeling",
+      "additional_histology_invented"
+    ]
+  },
+  {
+    "id": "PL15",
+    "description": "Asbestos exposure and suspicious unilateral CT pleural disease without tissue pathology.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.84,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pleural thickening",
+          "score": 0.86,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Phơi nhiễm asbestos nghề nghiệp; CT ghi pleural nodularity và thickening một bên; chưa có tissue pathology.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "mesothelioma_concern_supported",
+      "pleural_malignancy_concern_supported",
+      "pathology_missing_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "pathology_confirmed_mesothelioma",
+      "mesothelioma_histology_invented",
+      "autonomous_biopsy_or_treatment"
+    ]
+  },
+  {
+    "id": "PL16",
+    "description": "Generic malignant pleural-fluid cytology does not establish mesothelioma.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có tissue pathology hoặc IHC xác nhận mesothelioma.",
+      "laboratory": "Cytology dịch màng phổi ghi tế bào ác tính, không xác định nguồn gốc."
+    },
+    "semantic_expectations": [
+      "cytology_confirmed_malignant_pleural_effusion",
+      "mesothelioma_not_established",
+      "tumor_origin_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "pathology_confirmed_mesothelioma",
+      "mesothelioma_from_cytology_alone",
+      "histologic_subtype_invented"
+    ]
+  },
+  {
+    "id": "PL17",
+    "description": "Tissue pathology explicitly confirms epithelioid malignant pleural mesothelioma.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.9,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Pathology mô màng phổi với IHC xác nhận malignant pleural mesothelioma dạng epithelioid; nguồn mẫu và ngày rõ.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pathology_confirmed_mesothelioma",
+      "explicit_histologic_subtype_preserved",
+      "pathology_ihc_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "additional_stage_inferred",
+      "autonomous_oncology_or_surgery",
+      "additional_subtype_invented"
+    ]
+  },
+  {
+    "id": "PL18",
+    "description": "Tissue pathology confirms secondary pleural malignancy from breast primary.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.88,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Pathology mô màng phổi xác nhận carcinoma di căn từ vú; nguồn mẫu và ngày rõ.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pathology_confirmed_pleural_malignancy",
+      "explicit_primary_origin_preserved",
+      "pathology_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "secondary_malignancy_relabelled_mesothelioma",
+      "lung_primary_inferred",
+      "additional_stage_inferred"
+    ]
+  },
+  {
+    "id": "PL19",
+    "description": "Multiple clinical, imaging, fluid, and microbiology domains support pleural infection concern.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.86,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Consolidation",
+          "score": 0.81,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Sốt, ho và biểu hiện viêm.",
+      "history": "CT ghi loculated effusion và split-pleura sign.",
+      "laboratory": "Dịch màng phổi có mủ và microbiology dương tính; nguồn mẫu được cung cấp."
+    },
+    "semantic_expectations": [
+      "pleural_infection_concern_supported",
+      "microbiology_and_purulence_provenance_preserved",
+      "pneumonia_hypothesis_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "bacterial_species_invented",
+      "autonomous_drainage_or_antibiotics",
+      "imaging_alone_called_empyema"
+    ]
+  },
+  {
+    "id": "PL20",
+    "description": "Pneumonia and pleural effusion without fluid or advanced imaging evidence.",
+    "input": {
+      "results": [
+        {
+          "finding": "Consolidation",
+          "score": 0.83,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pleural effusion",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Sốt và ho cấp.",
+      "history": "Bác sĩ nêu pneumonia; không có pleural-fluid studies, loculation hoặc microbiology.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pneumonia_and_effusion_preserved",
+      "pleural_infection_not_established",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "parapneumonic_effusion_inferred",
+      "complicated_parapneumonic_effusion_inferred",
+      "empyema_inferred"
+    ]
+  },
+  {
+    "id": "PL21",
+    "description": "Heart failure evidence and pleural effusion coexist without forced cardiogenic attribution.",
+    "input": {
+      "results": [
+        {
+          "finding": "Cardiomegaly",
+          "score": 0.84,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pleural effusion",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Khó thở và phù.",
+      "history": "Bác sĩ nêu heart failure concern; chưa xác định nguyên nhân tràn dịch.",
+      "laboratory": "NT-proBNP tăng theo khoảng tham chiếu."
+    },
+    "semantic_expectations": [
+      "heart_failure_and_pleural_hypotheses_preserved",
+      "pleural_etiology_unresolved",
+      "shared_evidence_not_double_counted",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "effusion_proves_cardiogenic_etiology",
+      "heart_failure_confirmed_from_effusion",
+      "forced_single_etiology"
+    ]
+  },
+  {
+    "id": "PL22",
+    "description": "No Finding CXR with trusted CT-detected pleural nodularity and small effusion.",
+    "input": {
+      "results": [
+        {
+          "finding": "No finding",
+          "score": 0.95,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT sau đó ghi pleural nodularity và tràn dịch nhỏ.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "no_finding_cxr_preserved",
+      "ct_pleural_disease_preserved",
+      "pleural_malignancy_concern_indeterminate",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ct_pleural_disease_excluded_by_no_finding",
+      "no_finding_contradiction_without_positive_target",
+      "cxr_result_erased"
+    ]
+  },
+  {
+    "id": "PL23",
+    "description": "Other lesion is externally characterized as pleural thickening while canonical Pleural thickening is negative.",
+    "input": {
+      "results": [
+        {
+          "finding": "Other lesion",
+          "score": 0.82,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pleural thickening",
+          "score": 0.3,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT xác nhận bất thường tương ứng với Other lesion là pleural thickening.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "other_lesion_ai_provenance_preserved",
+      "external_pleural_characterization_preserved",
+      "pleural_disease_hypothesis_supported",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "pleural_thickening_skill_auto_selected",
+      "ai_relabelled_as_pleural_thickening",
+      "malignancy_inferred"
+    ]
+  },
+  {
+    "id": "PL24",
+    "description": "Pleural thickening and effusion scores remain image-model outputs.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.9,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pleural effusion",
+          "score": 0.95,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có cytology, pathology hoặc CT morphology.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "model_scores_preserved",
+      "pleural_etiology_unresolved",
+      "score_not_disease_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ninety_percent_mesothelioma_probability",
+      "ninety_five_percent_mpe_probability",
+      "asbestos_probability_from_score"
+    ]
+  },
+  {
+    "id": "PL25",
+    "description": "Persistent suspicious morphology after negative cytology keeps concern unresolved.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.86,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pleural effusion",
+          "score": 0.83,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT tiếp tục ghi pleural nodularity và thickening vòng quanh.",
+      "laboratory": "Cytology dịch màng phổi âm tính."
+    },
+    "semantic_expectations": [
+      "ongoing_pleural_malignancy_concern",
+      "negative_cytology_preserved",
+      "pleural_malignancy_concern_conflicted",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "benign_conclusion_from_negative_cytology",
+      "malignancy_excluded",
+      "mpe_confirmed"
+    ]
+  },
+  {
+    "id": "PL26",
+    "description": "Nondiagnostic pleural biopsy with uncertain lesion correspondence.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural thickening",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT đáng ngờ; biopsy màng phổi không chẩn đoán được và chưa xác nhận mẫu tương ứng đúng tổn thương.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "nondiagnostic_biopsy_preserved",
+      "lesion_correspondence_uncertain",
+      "pleural_malignancy_concern_conflicted",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "nondiagnostic_biopsy_called_benign",
+      "malignancy_excluded",
+      "pathology_confirmation_invented"
+    ]
+  },
+  {
+    "id": "PL27",
+    "description": "Elevated pleural-fluid ADA alone.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.81,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có microbiology, tissue pathology hoặc bối cảnh lâm sàng rộng hơn cho TB.",
+      "laboratory": "ADA dịch màng phổi tăng."
+    },
+    "semantic_expectations": [
+      "ada_result_preserved",
+      "tb_pleuritis_not_established",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "tb_pleuritis_confirmed_from_ada",
+      "future_tb_module_logic_invented",
+      "autonomous_tb_treatment"
+    ]
+  },
+  {
+    "id": "PL28",
+    "description": "Pleural-fluid ANA alone without established lupus context.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.79,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có chẩn đoán lupus hoặc bằng chứng hệ thống bổ sung.",
+      "laboratory": "ANA dịch màng phổi dương tính."
+    },
+    "semantic_expectations": [
+      "pleural_ana_preserved",
+      "lupus_pleuritis_not_established",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "lupus_pleuritis_confirmed_from_ana",
+      "lupus_diagnosis_invented",
+      "autonomous_immunosuppression"
+    ]
+  },
+  {
+    "id": "PL29",
+    "description": "External clinician explicitly labels pleural fluid exudative.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Bác sĩ bên ngoài ghi dịch tiết; dữ liệu Light đầy đủ không được cung cấp cho MedVision.",
+      "laboratory": "Báo cáo bên ngoài: exudate."
+    },
+    "semantic_expectations": [
+      "external_exudate_label_preserved",
+      "fluid_interpretation_provenance_preserved",
+      "pleural_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "lights_criteria_silently_computed",
+      "exudate_equated_with_malignancy",
+      "mpe_confirmed"
+    ]
+  },
+  {
+    "id": "PL30",
+    "description": "External transudate label without sufficient heart-failure evidence.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pleural effusion",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Báo cáo bên ngoài ghi dịch thấm; không có bằng chứng tim khách quan đầy đủ.",
+      "laboratory": "Dữ liệu cặp huyết thanh-dịch không đầy đủ."
+    },
+    "semantic_expectations": [
+      "external_transudate_label_preserved",
+      "fluid_interpretation_provenance_preserved",
+      "heart_failure_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "lights_criteria_silently_computed",
+      "transudate_equated_with_heart_failure",
+      "missing_fluid_data_filled"
+    ]
+  }
+]

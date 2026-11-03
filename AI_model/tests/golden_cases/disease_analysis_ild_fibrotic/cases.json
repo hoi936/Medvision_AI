@@ -1,0 +1,953 @@
+[
+  {
+    "id": "ILD01",
+    "description": "Canonical ILD finding only.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "ild_hypothesis_supported_bounded",
+      "hrct_pattern_not_assessable",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "named_ild_subtype_inferred",
+      "ipf_inferred",
+      "hp_or_ctd_ild_inferred"
+    ]
+  },
+  {
+    "id": "ILD02",
+    "description": "Canonical Pulmonary fibrosis finding only.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.84,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "fibrotic_scarring_evidence_preserved",
+      "fibrotic_ild_hypothesis_bounded",
+      "hrct_pattern_not_assessable",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ipf_inferred_from_fibrosis",
+      "uip_inferred_from_cxr",
+      "ppf_inferred_from_single_finding"
+    ]
+  },
+  {
+    "id": "ILD03",
+    "description": "ILD and Pulmonary fibrosis plausibly describe the same process.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.83,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.86,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Hai nhãn hình ảnh được cung cấp trên cùng khảo sát, chưa có HRCT hoặc căn nguyên.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_findings_preserved",
+      "overlap_deduplicated",
+      "fibrotic_ild_hypothesis_supported",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "two_independent_disease_confirmations",
+      "ipf_inferred",
+      "uip_inferred"
+    ]
+  },
+  {
+    "id": "ILD04",
+    "description": "CXR Pulmonary fibrosis without HRCT.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Chỉ có X-quang ngực; không có HRCT.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "fibrotic_scarring_evidence_preserved",
+      "hrct_pattern_not_assessable",
+      "missing_hrct_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "honeycombing_invented_from_cxr",
+      "traction_bronchiectasis_invented_from_cxr",
+      "uip_category_inferred_from_cxr"
+    ]
+  },
+  {
+    "id": "ILD05",
+    "description": "Trusted HRCT explicitly reports UIP pattern.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "HRCT đáng tin cậy ghi rõ kiểu hình UIP; đánh giá nguyên nhân thay thế chưa đầy đủ.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "hrct_pattern_uip",
+      "hrct_provenance_preserved",
+      "ipf_not_established",
+      "ild_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "uip_automatically_ipf",
+      "alternative_causes_assumed_excluded",
+      "final_ipf_diagnosis"
+    ]
+  },
+  {
+    "id": "ILD06",
+    "description": "Trusted HRCT explicitly reports probable UIP.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.79,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "HRCT ghi rõ probable UIP; chưa có kết luận MDD.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "hrct_pattern_probable_uip",
+      "exact_hrct_category_preserved",
+      "ipf_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "probable_uip_silently_promoted_to_uip",
+      "automatic_ipf",
+      "mdd_diagnosis_invented"
+    ]
+  },
+  {
+    "id": "ILD07",
+    "description": "Trusted HRCT is indeterminate for UIP.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.77,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "HRCT ghi rõ indeterminate for UIP.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "hrct_pattern_indeterminate_for_uip",
+      "exact_hrct_category_preserved",
+      "ild_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "uip_inferred",
+      "ipf_confirmed",
+      "hrct_category_changed"
+    ]
+  },
+  {
+    "id": "ILD08",
+    "description": "Trusted HRCT reports a pattern suggestive of an alternative diagnosis.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.76,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "HRCT ghi rõ CT findings suggestive of an alternative diagnosis và cung cấp mô tả hình thái trong báo cáo.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "hrct_pattern_alternative_diagnosis",
+      "supplied_alternative_pattern_preserved",
+      "ild_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "uip_inferred",
+      "specific_etiology_invented",
+      "ipf_confirmed"
+    ]
+  },
+  {
+    "id": "ILD09",
+    "description": "UIP HRCT in established systemic sclerosis.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.81,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Đã chẩn đoán xơ cứng bì hệ thống; HRCT ghi UIP và ILD khách quan.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "hrct_pattern_uip",
+      "ctd_ild_concern_supported",
+      "established_ctd_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "uip_forces_ipf",
+      "ctd_context_erased",
+      "idiopathic_relabeling"
+    ]
+  },
+  {
+    "id": "ILD10",
+    "description": "UIP HRCT with a meaningful bird exposure context.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "HRCT ghi UIP; có phơi nhiễm chim có ý nghĩa nhưng chưa có BAL, bệnh lý học hoặc MDD xác nhận HP.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "hrct_pattern_uip",
+      "hp_exposure_preserved",
+      "ild_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ipf_forced_despite_exposure",
+      "hp_confirmed_from_exposure_alone",
+      "causality_inferred"
+    ]
+  },
+  {
+    "id": "ILD11",
+    "description": "Positive ANA with ILD but no established CTD.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.78,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Chưa có chẩn đoán bệnh mô liên kết hoặc bằng chứng hệ thống bổ sung.",
+      "laboratory": "ANA dương tính đơn độc."
+    },
+    "semantic_expectations": [
+      "ana_preserved_as_incomplete_autoimmune_evidence",
+      "ild_etiology_unresolved",
+      "ctd_ild_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ctd_ild_confirmed_from_ana_alone",
+      "ctd_subtype_invented",
+      "ipf_confirmed"
+    ]
+  },
+  {
+    "id": "ILD12",
+    "description": "Established systemic sclerosis with objective HRCT ILD.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.85,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Xơ cứng bì hệ thống đã được xác lập; HRCT xác nhận ILD khách quan và bác sĩ ghi mối liên hệ lâm sàng.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "ctd_ild_concern_supported",
+      "objective_ild_preserved",
+      "ctd_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ipf_relabeling",
+      "new_ctd_subtype_invented",
+      "autonomous_immunosuppression"
+    ]
+  },
+  {
+    "id": "ILD13",
+    "description": "Bird and mold exposure with fibrosis but no supporting HP domains.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Có phơi nhiễm chim và nấm mốc; không có HRCT tương thích, BAL, bệnh lý học hoặc MDD.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "hp_exposure_preserved",
+      "ild_etiology_unresolved",
+      "fibrotic_hp_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "hp_confirmed_from_exposure_alone",
+      "causal_exposure_claimed",
+      "autonomous_bal_or_biopsy"
+    ]
+  },
+  {
+    "id": "ILD14",
+    "description": "Exposure, compatible HRCT, BAL/pathology, and MDD support fibrotic HP.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.85,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Phơi nhiễm có ý nghĩa, HRCT tương thích, BAL và bệnh lý học hỗ trợ; MDD ghi nhận concern for fibrotic HP.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "fibrotic_hp_concern_supported",
+      "multiple_hp_domains_preserved",
+      "mdd_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "single_domain_hp_reasoning",
+      "autonomous_steroid_or_immunosuppression",
+      "autonomous_exposure_challenge"
+    ]
+  },
+  {
+    "id": "ILD15",
+    "description": "Positive HP serum IgG alone.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.74,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có HRCT đặc hiệu, BAL, bệnh lý học hoặc MDD xác nhận HP.",
+      "laboratory": "Serum IgG với kháng nguyên liên quan HP dương tính."
+    },
+    "semantic_expectations": [
+      "serum_igg_sensitization_preserved",
+      "fibrotic_hp_not_established",
+      "ild_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "hp_confirmed_from_serum_igg",
+      "causal_exposure_proven",
+      "autonomous_bal_or_biopsy"
+    ]
+  },
+  {
+    "id": "ILD16",
+    "description": "No Finding CXR with trusted HRCT fibrotic ILD.",
+    "input": {
+      "results": [
+        {
+          "finding": "No finding",
+          "score": 0.94,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "HRCT sau đó xác nhận fibrotic ILD.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "no_finding_cxr_preserved",
+      "hrct_fibrotic_ild_preserved",
+      "fibrotic_ild_hypothesis_supported",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "hrct_ild_excluded_by_no_finding",
+      "no_finding_contradiction_without_positive_target",
+      "cxr_result_erased"
+    ]
+  },
+  {
+    "id": "ILD17",
+    "description": "Pulmonary fibrosis and generic Calcification without process correspondence.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.83,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Calcification",
+          "score": 0.75,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có CT hoặc bằng chứng hai nhãn thuộc cùng một quá trình.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "both_upstream_findings_preserved",
+      "same_process_relation_unknown",
+      "ild_etiology_unresolved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "pulmonary_ossification_inferred",
+      "pneumoconiosis_or_asbestos_disease_inferred",
+      "healed_granulomatous_disease_inferred"
+    ]
+  },
+  {
+    "id": "ILD18",
+    "description": "Single study shows severe fibrosis without longitudinal data.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.9,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Khó thở hiện tại.",
+      "history": "Một HRCT duy nhất mô tả xơ hóa nặng; không có PFT hoặc hình ảnh trước đó.",
+      "laboratory": ""
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": null,
+      "comparable": false,
+      "alternative_explanation_present": null,
+      "symptoms_worsened": null,
+      "fvc_absolute_decline_points": null,
+      "dlco_hb_absolute_decline_points": null,
+      "radiological_progression": null
+    },
+    "semantic_expectations": [
+      "ppf_not_assessable",
+      "severity_not_progression",
+      "progression_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ppf_from_single_study",
+      "ppf_from_severity",
+      "missing_prior_called_stable"
+    ]
+  },
+  {
+    "id": "ILD19",
+    "description": "Valid one-year FVC decline supplies only the physiology PPF domain.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.81,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Triệu chứng không xấu đi.",
+      "history": "Non-IPF fibrotic ILD; so sánh hợp lệ trong 1 năm; không có tiến triển hình ảnh hoặc giải thích thay thế.",
+      "laboratory": "FVC dự đoán giảm tuyệt đối 6 điểm phần trăm trong 1 năm."
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": true,
+      "comparable": true,
+      "alternative_explanation_present": false,
+      "symptoms_worsened": false,
+      "fvc_absolute_decline_points": 6,
+      "dlco_hb_absolute_decline_points": 0,
+      "radiological_progression": false
+    },
+    "semantic_expectations": [
+      "ppf_criteria_not_met",
+      "physiology_domain_present",
+      "one_ppf_domain_only",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ppf_met_from_one_domain",
+      "fvc_called_multiple_domains",
+      "relative_decline_substituted"
+    ]
+  },
+  {
+    "id": "ILD20",
+    "description": "FVC and Hb-corrected DLCO declines remain one physiology domain.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.82,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Triệu chứng không xấu đi.",
+      "history": "Non-IPF fibrotic ILD; dữ liệu so sánh hợp lệ trong 1 năm; không có tiến triển hình ảnh hoặc giải thích thay thế.",
+      "laboratory": "FVC dự đoán giảm tuyệt đối 6 điểm; Hb-corrected DLCO dự đoán giảm tuyệt đối 12 điểm trong 1 năm."
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": true,
+      "comparable": true,
+      "alternative_explanation_present": false,
+      "symptoms_worsened": false,
+      "fvc_absolute_decline_points": 6,
+      "dlco_hb_absolute_decline_points": 12,
+      "radiological_progression": false
+    },
+    "semantic_expectations": [
+      "ppf_criteria_not_met",
+      "physiology_domain_present",
+      "fvc_dlco_count_as_one_domain",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "fvc_dlco_counted_as_two_domains",
+      "ppf_met_from_physiology_alone",
+      "hidden_third_domain"
+    ]
+  },
+  {
+    "id": "ILD21",
+    "description": "Physiology plus worsening symptoms meets PPF criteria.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.84,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Khó thở tăng dần trong năm qua.",
+      "history": "Non-IPF fibrotic ILD; so sánh hợp lệ trong 1 năm; không có giải thích thay thế tốt hơn.",
+      "laboratory": "FVC dự đoán giảm tuyệt đối 5 điểm phần trăm trong 1 năm."
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": true,
+      "comparable": true,
+      "alternative_explanation_present": false,
+      "symptoms_worsened": true,
+      "fvc_absolute_decline_points": 5,
+      "dlco_hb_absolute_decline_points": 0,
+      "radiological_progression": false
+    },
+    "semantic_expectations": [
+      "ppf_criteria_met",
+      "symptom_domain_present",
+      "physiology_domain_present",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "third_domain_required",
+      "treatment_inferred_from_ppf",
+      "autonomous_antifibrotic"
+    ]
+  },
+  {
+    "id": "ILD22",
+    "description": "Physiology plus radiological progression meets PPF criteria.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.85,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Triệu chứng không thay đổi rõ.",
+      "history": "Non-IPF fibrotic ILD; HRCT so sánh trong 1 năm ghi tăng traction bronchiectasis; không có giải thích thay thế.",
+      "laboratory": "Hb-corrected DLCO dự đoán giảm tuyệt đối 10 điểm trong 1 năm."
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": true,
+      "comparable": true,
+      "alternative_explanation_present": false,
+      "symptoms_worsened": false,
+      "fvc_absolute_decline_points": 0,
+      "dlco_hb_absolute_decline_points": 10,
+      "radiological_progression": true
+    },
+    "semantic_expectations": [
+      "ppf_criteria_met",
+      "physiology_domain_present",
+      "radiology_domain_present",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "symptom_domain_required",
+      "autonomous_antifibrotic",
+      "radiology_source_erased"
+    ]
+  },
+  {
+    "id": "ILD23",
+    "description": "Worsening symptoms plus radiological progression meets PPF criteria.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.83,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Khó thở hô hấp xấu đi trong năm qua.",
+      "history": "Non-IPF fibrotic ILD; HRCT so sánh hợp lệ trong 1 năm ghi tăng reticulation; không có giải thích thay thế.",
+      "laboratory": "PFT không cho thấy ngưỡng tiến triển sinh lý."
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": true,
+      "comparable": true,
+      "alternative_explanation_present": false,
+      "symptoms_worsened": true,
+      "fvc_absolute_decline_points": 0,
+      "dlco_hb_absolute_decline_points": 0,
+      "radiological_progression": true
+    },
+    "semantic_expectations": [
+      "ppf_criteria_met",
+      "symptom_domain_present",
+      "radiology_domain_present",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "physiology_domain_required",
+      "autonomous_treatment",
+      "additional_progression_invented"
+    ]
+  },
+  {
+    "id": "ILD24",
+    "description": "Two apparent domains occur outside one year with noncomparable timing.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Khó thở được ghi tăng so với 15 tháng trước.",
+      "history": "HRCT hiện tại và khảo sát 15 tháng trước không được xác nhận là so sánh phù hợp.",
+      "laboratory": ""
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": false,
+      "comparable": false,
+      "alternative_explanation_present": false,
+      "symptoms_worsened": true,
+      "fvc_absolute_decline_points": null,
+      "dlco_hb_absolute_decline_points": null,
+      "radiological_progression": true
+    },
+    "semantic_expectations": [
+      "ppf_not_assessable",
+      "time_window_invalid",
+      "comparability_insufficient",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "outside_window_silently_accepted",
+      "ppf_criteria_met",
+      "radiological_progression_assumed_valid"
+    ]
+  },
+  {
+    "id": "ILD25",
+    "description": "Established IPF worsens but PPF definition is not applied.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.88,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Khó thở tăng trong năm qua.",
+      "history": "MDD trước đó xác lập IPF; dữ liệu hiện tại mô tả diễn tiến xấu.",
+      "laboratory": "FVC giảm theo theo dõi."
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": false,
+      "radiological_fibrosis": true,
+      "within_one_year": true,
+      "comparable": true,
+      "alternative_explanation_present": false,
+      "symptoms_worsened": true,
+      "fvc_absolute_decline_points": 6,
+      "dlco_hb_absolute_decline_points": 0,
+      "radiological_progression": true
+    },
+    "semantic_expectations": [
+      "ipf_trajectory_preserved",
+      "ppf_not_applicable_to_ipf",
+      "mdd_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ppf_criteria_applied_to_ipf",
+      "ipf_diagnosis_erased",
+      "autonomous_antifibrotic"
+    ]
+  },
+  {
+    "id": "ILD26",
+    "description": "Acute pneumonia explains worse symptoms and new opacity.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.8,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Consolidation",
+          "score": 0.84,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Sốt, ho cấp và khó thở tăng mới xuất hiện.",
+      "history": "Non-IPF fibrotic ILD; bác sĩ nêu pneumonia cấp là giải thích thay thế cho triệu chứng và opacity mới.",
+      "laboratory": ""
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": true,
+      "comparable": true,
+      "alternative_explanation_present": true,
+      "symptoms_worsened": true,
+      "fvc_absolute_decline_points": null,
+      "dlco_hb_absolute_decline_points": null,
+      "radiological_progression": true
+    },
+    "semantic_expectations": [
+      "pneumonia_hypothesis_preserved",
+      "ppf_not_assessable",
+      "acute_opacity_not_fibrotic_progression",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "acute_infection_counted_as_ppf",
+      "forced_ild_pneumonia_winner",
+      "shared_evidence_double_counted"
+    ]
+  },
+  {
+    "id": "ILD27",
+    "description": "Acute HF congestion explains dyspnea and new interstitial opacity.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.77,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Cardiomegaly",
+          "score": 0.82,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Lung Opacity",
+          "score": 0.79,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Khó thở cấp và phù ngoại vi.",
+      "history": "Đã có ILD; báo cáo hiện tại mô tả sung huyết/phù phổi và bác sĩ nêu HF là giải thích thay thế.",
+      "laboratory": "NT-proBNP tăng theo khoảng tham chiếu."
+    },
+    "ppf_evidence": {
+      "ild_other_than_ipf": true,
+      "radiological_fibrosis": true,
+      "within_one_year": true,
+      "comparable": true,
+      "alternative_explanation_present": true,
+      "symptoms_worsened": true,
+      "fvc_absolute_decline_points": null,
+      "dlco_hb_absolute_decline_points": null,
+      "radiological_progression": true
+    },
+    "semantic_expectations": [
+      "heart_failure_hypothesis_preserved",
+      "ild_hypothesis_preserved",
+      "ppf_not_assessable",
+      "acute_edema_not_fibrotic_progression",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "edema_counted_as_ppf",
+      "forced_hf_ild_winner",
+      "shared_dyspnea_opacity_double_counted"
+    ]
+  },
+  {
+    "id": "ILD28",
+    "description": "Histopathology reports UIP while etiology remains unresolved.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.84,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Bệnh lý học phổi ghi kiểu hình UIP; đánh giá CTD, phơi nhiễm và độc tính thuốc chưa đầy đủ.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "histologic_uip_preserved",
+      "ild_etiology_unresolved",
+      "ipf_not_established",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "histologic_uip_automatically_ipf",
+      "alternative_causes_assumed_excluded",
+      "hrct_pattern_invented_from_histology"
+    ]
+  },
+  {
+    "id": "ILD29",
+    "description": "Trusted MDD explicitly diagnoses IPF after alternative-cause assessment.",
+    "input": {
+      "results": [
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.86,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "MDD chuyên khoa ghi chẩn đoán IPF sau khi đánh giá nguyên nhân phơi nhiễm, CTD và thuốc; nguồn và ngày được cung cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "trusted_mdd_ipf_diagnosis_preserved",
+      "mdd_provenance_preserved",
+      "ipf_concern_supported_as_supplied",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "additional_certainty_fabricated",
+      "mdd_source_erased",
+      "autonomous_antifibrotic"
+    ]
+  },
+  {
+    "id": "ILD30",
+    "description": "ILD and Pulmonary fibrosis model scores remain image-model outputs.",
+    "input": {
+      "results": [
+        {
+          "finding": "ILD",
+          "score": 0.91,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Pulmonary fibrosis",
+          "score": 0.88,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có HRCT, dữ liệu tiến triển hoặc đánh giá căn nguyên.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "model_scores_preserved",
+      "score_not_disease_probability",
+      "score_not_progression_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ninety_one_percent_ild_probability",
+      "eighty_eight_percent_ipf_probability",
+      "progression_probability_from_scores"
+    ]
+  }
+]

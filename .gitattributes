@@ -1,0 +1,6 @@
+# Preserve intentional Markdown hard-breaks in verbatim evidence reference files.
+AI_model/clinical_evaluation/references/references.md -whitespace
+AI_model/evaluation/references/references.md -whitespace
+AI_model/reader_study/references/references.md -whitespace
+AI_model/release_review/references/references.md -whitespace
+AI_model/tests/real_validation/references/references.md -whitespace

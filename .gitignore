@@ -30,3 +30,7 @@ Thumbs.db
 /Model_AI_V1/
 /Model_AI_V2/
 /Model_AI_V3/
+
+# Provider/runtime directories managed outside source control
+.vendor/
+.runtime/

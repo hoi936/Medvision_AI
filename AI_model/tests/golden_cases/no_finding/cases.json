@@ -1,0 +1,207 @@
+[
+  {
+    "id": "no_finding_only",
+    "description": "Positive No finding with all 14 target findings negative.",
+    "input": {
+      "results": [
+        {"finding": "No finding", "score": 0.95, "threshold": 0.5},
+        {"finding": "Aortic enlargement", "score": 0.1, "threshold": 0.5},
+        {"finding": "Atelectasis", "score": 0.1, "threshold": 0.5},
+        {"finding": "Calcification", "score": 0.1, "threshold": 0.5},
+        {"finding": "Cardiomegaly", "score": 0.1, "threshold": 0.5},
+        {"finding": "Consolidation", "score": 0.1, "threshold": 0.5},
+        {"finding": "ILD", "score": 0.1, "threshold": 0.5},
+        {"finding": "Infiltration", "score": 0.1, "threshold": 0.5},
+        {"finding": "Lung Opacity", "score": 0.1, "threshold": 0.5},
+        {"finding": "Nodule/Mass", "score": 0.1, "threshold": 0.5},
+        {"finding": "Other lesion", "score": 0.1, "threshold": 0.5},
+        {"finding": "Pleural effusion", "score": 0.1, "threshold": 0.5},
+        {"finding": "Pleural thickening", "score": 0.1, "threshold": 0.5},
+        {"finding": "Pneumothorax", "score": 0.1, "threshold": 0.5},
+        {"finding": "Pulmonary fibrosis", "score": 0.1, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "no_finding_within_14_class_taxonomy",
+      "core_chain_only",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "healthy_or_no_disease",
+      "universal_normality",
+      "new_no_finding_skill"
+    ]
+  },
+  {
+    "id": "no_finding_with_pneumothorax",
+    "description": "Positive No finding conflicts with positive Pneumothorax.",
+    "input": {
+      "results": [
+        {"finding": "No finding", "score": 0.88, "threshold": 0.5},
+        {"finding": "Pneumothorax", "score": 0.84, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "no_finding_contradiction",
+      "positive_findings_preserved",
+      "pneumothorax_skill_once",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "positive_finding_suppressed",
+      "automatic_ai_winner"
+    ]
+  },
+  {
+    "id": "no_finding_with_multiple_findings",
+    "description": "Positive No finding conflicts with Cardiomegaly and Pleural effusion.",
+    "input": {
+      "results": [
+        {"finding": "No finding", "score": 0.9, "threshold": 0.5},
+        {"finding": "Cardiomegaly", "score": 0.82, "threshold": 0.5},
+        {"finding": "Pleural effusion", "score": 0.81, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "single_structured_contradiction",
+      "all_positive_findings_listed",
+      "positive_findings_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "duplicate_conflict_objects",
+      "positive_finding_suppressed"
+    ]
+  },
+  {
+    "id": "no_finding_negative_all_targets_negative",
+    "description": "Negative No finding and no positive target finding establish neither normality nor abnormality.",
+    "input": {
+      "results": [
+        {"finding": "No finding", "score": 0.1, "threshold": 0.5},
+        {"finding": "Aortic enlargement", "score": 0.1, "threshold": 0.5},
+        {"finding": "Atelectasis", "score": 0.1, "threshold": 0.5},
+        {"finding": "Calcification", "score": 0.1, "threshold": 0.5},
+        {"finding": "Cardiomegaly", "score": 0.1, "threshold": 0.5},
+        {"finding": "Consolidation", "score": 0.1, "threshold": 0.5},
+        {"finding": "ILD", "score": 0.1, "threshold": 0.5},
+        {"finding": "Infiltration", "score": 0.1, "threshold": 0.5},
+        {"finding": "Lung Opacity", "score": 0.1, "threshold": 0.5},
+        {"finding": "Nodule/Mass", "score": 0.1, "threshold": 0.5},
+        {"finding": "Other lesion", "score": 0.1, "threshold": 0.5},
+        {"finding": "Pleural effusion", "score": 0.1, "threshold": 0.5},
+        {"finding": "Pleural thickening", "score": 0.1, "threshold": 0.5},
+        {"finding": "Pneumothorax", "score": 0.1, "threshold": 0.5},
+        {"finding": "Pulmonary fibrosis", "score": 0.1, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "no_finding_not_established",
+      "core_chain_only",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "synthetic_normality",
+      "synthetic_abnormality"
+    ]
+  },
+  {
+    "id": "no_finding_negative_with_nodule_mass",
+    "description": "Negative No finding remains compatible with positive Nodule/Mass.",
+    "input": {
+      "results": [
+        {"finding": "No finding", "score": 0.12, "threshold": 0.5},
+        {"finding": "Nodule/Mass", "score": 0.86, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "positive_finding_routed",
+      "no_no_finding_contradiction",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "synthetic_abnormality_from_no_finding_negative",
+      "positive_finding_suppressed"
+    ]
+  },
+  {
+    "id": "no_finding_with_severe_clinical_state",
+    "description": "Positive No finding remains image evidence while severe symptoms reach safety review.",
+    "input": {
+      "results": [
+        {"finding": "No finding", "score": 0.91, "threshold": 0.5}
+      ],
+      "symptoms": "Khó thở dữ dội, SpO2 giảm nhanh và huyết áp tụt.",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "no_finding_within_14_class_taxonomy",
+      "clinical_safety_evidence_active",
+      "high_priority_clinical_review",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "patient_safe_from_no_finding",
+      "symptoms_as_direct_image_contradiction",
+      "autonomous_treatment_order"
+    ]
+  },
+  {
+    "id": "no_finding_score_semantics",
+    "description": "No finding score stays a model score rather than probability of health or absence of disease.",
+    "input": {
+      "results": [
+        {"finding": "No finding", "score": 0.96, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "score_0_96_preserved",
+      "score_not_health_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ninety_six_percent_healthy_or_no_disease"
+    ]
+  },
+  {
+    "id": "no_finding_ai_vs_human_ct_abnormality",
+    "description": "Positive AI No finding conflicts with a trusted human CT abnormality.",
+    "input": {
+      "results": [
+        {"finding": "No finding", "score": 0.89, "threshold": 0.5}
+      ],
+      "symptoms": "",
+      "history": "CT gần đây do bác sĩ chẩn đoán hình ảnh đọc: có bất thường ngực tương ứng cần đánh giá.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "evidence_conflict",
+      "both_sources_preserved",
+      "ai_not_silently_preferred",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "silent_ai_preference",
+      "human_ct_evidence_erased"
+    ]
+  }
+]

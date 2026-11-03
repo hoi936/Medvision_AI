@@ -36,8 +36,10 @@ Streamlit free text + 14 model results
 - `app.py`: structured form for demographics, symptoms/duration/severity,
   history, risk factors, vitals, laboratory results, missing tests, and clinician
   requests. The clinician request is never used as patient evidence.
-- `hermes_report.py`: normalizes once, sends canonical JSON only, and preloads
-  the three scoped skills with the `clarify` toolset.
+- `hermes_report.py`: normalizes once, sends canonical JSON only, selects the
+  finding skill, and preloads the scoped skills with the `clarify,skills`
+  toolsets (`clarify,vision,skills` when images are present). It always uses the
+  project-isolated executable and project-local `HERMES_HOME`.
 - `.hermes/skills/medvision-evidence-fusion/SKILL.md`: evidence matrix,
   overlap, negative-evidence, localization, timing, and provenance rules.
 - `.hermes/skills/medvision-safety-check/SKILL.md`: clinical-first safety check
@@ -121,8 +123,14 @@ Fifteen deterministic unit tests pass. They verify:
 - thresholds are unchanged;
 - clinical and image provenance is retained;
 - the prompt contains canonical JSON and mandatory review status;
-- Hermes receives only the `clarify,vision` toolsets and all three clinical
-  skills when visual evidence is present. It receives the original preprocessed
+- Hermes receives only the `clarify,vision,skills` toolsets and the selected
+  clinical skills when visual evidence is present. At pinned Hermes v0.21.4,
+  `skills` resolves to `skills_list`, `skill_view`, and `skill_manage`; no shell,
+  browser, messaging, or arbitrary file tools are enabled. Hermes 0.21.4 cannot
+  exclude one native tool from a built-in toolset, so `skills.write_approval:
+  true` is mandatory. The bridge fails closed when that gate is off, and runtime
+  tests prove a `skill_manage` create is staged for approval without writing a
+  skill. It receives the original preprocessed
   radiograph plus finding-specific Grad-CAM, overlay, and pseudo-bbox PNGs via a
   temporary manifest. Temporary files are removed after the Hermes subprocess.
 - Report exports are self-contained Markdown, PDF, or Word documents with the
@@ -221,3 +229,57 @@ requires_doctor_review: true
   numeric/unit/range validation and terminology coding.
 - The LLM can still make errors; deterministic post-generation validation of
   every clinical claim is not yet implemented.
+
+## K. Runtime and real-provider validation
+
+The test layers are separate:
+
+- `tests/test_selector.py`: finding-to-skill selection, ordering, and
+  deduplication.
+- `tests/test_runtime_integration.py`: isolated executable, deterministic
+  `HERMES_HOME`, CLI skill discovery, native Skills tools, and direct
+  `skill_view` access to `SKILL.md` and `references/references.md`. It also
+  verifies the effective tool surface and proves `skill_manage` cannot commit a
+  write while the approval gate is enabled.
+- `tests/test_behavior_real.py`: exactly six real-provider Pneumothorax golden
+  cases. Case 1 exports the Hermes session as JSONL and asserts the recorded
+  `skill_view` tool call and its exact reference path.
+
+Real tests are opt-in and never silently pass without infrastructure. Pytest
+runs in the established project environment while Hermes execution remains in
+the pinned runtime:
+
+```bash
+PROJECT_TEST_PYTHON="$PWD/AI_model/.venv/bin/python" \
+  bash AI_model/scripts/run_real_validation.sh
+```
+
+The launcher exports the project-relative `HERMES_HOME`, runs provider preflight
+first, and stops before all clinical suites on failure. It never installs or
+loads pytest from `.runtime/hermes-venv`. With `RUN_HERMES_REAL` unset, real
+tests are skipped with an explicit reason. With it set, a missing
+runtime/provider/model is an infrastructure failure. See
+`PROVIDER_ACTIVATION_RUNBOOK.md` for the manual commands and activation flow.
+
+Current readiness while provider credentials are absent:
+
+```text
+RUNTIME_INTEGRATION_READY
+REAL_CLINICAL_VALIDATION_BLOCKED
+```
+
+The isolated runtime configuration must contain:
+
+```yaml
+skills:
+  external_dirs:
+    - /absolute/path/to/Medvision_AI/.hermes/skills
+  write_approval: true
+```
+
+`skill_manage` remains visible because Hermes 0.21.4 exposes Skills as one
+indivisible toolset. Every attempted skill write is placed under
+`$HERMES_HOME/pending/skills/` and requires explicit approval before replay.
+Before a provider is configured, Hermes' availability check may omit
+`vision_analyze` from effective schemas even when the `vision` toolset is
+selected; it is the only additional tool permitted for image-bearing calls.

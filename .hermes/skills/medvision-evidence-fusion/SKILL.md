@@ -33,6 +33,13 @@ band, localization fields, and provenance. A score is not disease probability.
 `NEAR_THRESHOLD_*` is uncertainty around the configured decision threshold and
 must not change the official binary decision.
 
+When the exact canonical `No finding` result is present, or its absence is
+relevant to the requested fusion, use `skill_view` to read
+`references/NO_FINDING_POLICY.md`,
+`references/NO_FINDING_EVIDENCE.md`, and
+`references/NO_FINDING_REFERENCES.md` before applying its semantics. These
+files define the bounded taxonomy interpretation and its provenance [S1-S3].
+
 When a visual evidence manifest is present, inspect every listed image with
 `vision_analyze` before fusion. The original preprocessed radiograph is the
 primary visual input. Heatmap, overlay, and pseudo bounding box are dependent
@@ -57,6 +64,29 @@ count them as independent corroborating observations.
 6. Compare the original radiograph with each finding-specific attention view.
    Record only broad concordance, conflict, or inability to assess. Do not infer
    laterality, anatomy, lesion count, size, or severity from an attention map.
+
+## No Finding State Machine
+
+Treat `No finding` as canonical AI evidence inside this fusion skill. It is not
+a finding-specific skill and must not suppress selection of any of the 14
+positive finding skills.
+
+- `No finding == POSITIVE` with zero positive target findings:
+  `NO_FINDING_WITHIN_14_CLASS_TAXONOMY`. Preserve the raw score and decision.
+  Do not infer healthy, no disease, universal normality, or safety.
+- `No finding == POSITIVE` with one or more positive target findings: preserve
+  every raw result and emit one `EVIDENCE_CONFLICT` whose subtype is
+  `NO_FINDING_CONTRADICTION` and whose list contains every conflicting positive
+  finding in payload order. Do not choose a winner.
+- `No finding == NEGATIVE`: do not infer abnormality. Route any positive target
+  finding normally; with none positive, use `NO_FINDING_NOT_ESTABLISHED`.
+- Missing `No finding`: keep it missing. Never synthesize a positive or negative
+  decision from the other 14 results.
+
+Symptoms, laboratory abnormalities, or severe physiology do not by themselves
+contradict this image-taxonomy label. Preserve them as independent evidence and
+always continue safety review; a severe state can require
+`HIGH_PRIORITY_CLINICAL_REVIEW`. Doctor review remains required in every state.
 
 ## Overlap Rules
 

@@ -9,10 +9,12 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from hermes_report import (
+    HERMES_HOME,
     HermesReportError,
     HermesStatus,
     build_report_prompt,
     generate_hermes_report,
+    get_hermes_status,
     validate_generated_report,
 )
 from acceptance_case import build_acceptance_case
@@ -35,6 +37,24 @@ SAMPLE_RESULTS = [
 
 
 class HermesReportTests(TestCase):
+    @patch("hermes_report.hermes_skill_write_approval_enabled", return_value=False)
+    @patch("hermes_report.discover_hermes_skills")
+    @patch("hermes_report.locate_hermes", return_value=Path("/runtime/hermes"))
+    def test_status_fails_closed_when_skill_write_gate_is_off(
+        self, _locate_mock, discover_mock, _gate_mock
+    ):
+        discover_mock.return_value = {
+            "medvision-evidence-fusion",
+            "medvision-safety-check",
+            "medvision-disease-analysis",
+            "medvision-pneumothorax",
+        }
+
+        status = get_hermes_status()
+
+        self.assertFalse(status.core_ready)
+        self.assertIn("write_approval", status.message)
+
     def test_prompt_preserves_safety_and_numeric_evidence(self):
         prompt = build_report_prompt(
             SAMPLE_RESULTS,
@@ -82,7 +102,7 @@ class HermesReportTests(TestCase):
     def test_cli_is_called_without_shell_and_with_limited_tools(
         self, status_mock, run_mock
     ):
-        status_mock.return_value = HermesStatus(True, Path("hermes"), "ready")
+        status_mock.return_value = HermesStatus(True, [], [], Path("hermes"), "ready")
         valid_report = """# Bản nháp
 ## 2. Findings từ mô hình ảnh
 ## 4. Tích hợp bằng chứng
@@ -98,17 +118,18 @@ requires_doctor_review: true"""
         self.assertEqual(report, valid_report)
         command = run_mock.call_args.args[0]
         self.assertIn("--ignore-rules", command)
-        self.assertEqual(command[command.index("-t") + 1], "clarify")
+        self.assertEqual(command[command.index("-t") + 1], "clarify,skills")
         self.assertEqual(
             command[command.index("--skills") + 1],
-            "medvision-evidence-fusion,medvision-safety-check,medvision-disease-analysis",
+            "medvision-evidence-fusion,medvision-cardiomegaly,medvision-safety-check,medvision-disease-analysis",
         )
         self.assertFalse(run_mock.call_args.kwargs["shell"])
+        self.assertEqual(run_mock.call_args.kwargs["env"]["HERMES_HOME"], str(HERMES_HOME))
 
     @patch("hermes_report.subprocess.run")
     @patch("hermes_report.get_hermes_status")
     def test_provider_failure_has_setup_guidance(self, status_mock, run_mock):
-        status_mock.return_value = HermesStatus(True, Path("hermes"), "ready")
+        status_mock.return_value = HermesStatus(True, [], [], Path("hermes"), "ready")
         run_mock.return_value = CompletedProcess([], 1, "", "missing api key")
 
         with self.assertRaisesRegex(HermesReportError, "hermes setup"):
@@ -119,7 +140,7 @@ requires_doctor_review: true"""
     def test_visual_evidence_enables_vision_and_materializes_all_views(
         self, status_mock, run_mock
     ):
-        status_mock.return_value = HermesStatus(True, Path("hermes"), "ready")
+        status_mock.return_value = HermesStatus(True, [], [], Path("hermes"), "ready")
         valid_report = """# Bản nháp
 ## 2. Findings từ mô hình ảnh
 ## 4. Tích hợp bằng chứng
@@ -148,7 +169,7 @@ requires_doctor_review: true"""
         generate_hermes_report(SAMPLE_RESULTS, visual_evidence=visual_evidence)
 
         command = run_mock.call_args.args[0]
-        self.assertEqual(command[command.index("-t") + 1], "clarify,vision")
+        self.assertEqual(command[command.index("-t") + 1], "clarify,vision,skills")
         prompt = command[command.index("-z") + 1]
         self.assertIn("Bắt buộc dùng vision_analyze", prompt)
         for image_kind in ("original", "heatmap", "overlay", "pseudo_bbox"):

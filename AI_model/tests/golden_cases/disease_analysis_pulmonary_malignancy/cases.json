@@ -1,0 +1,558 @@
+[
+  {
+    "id": "PM01",
+    "description": "CXR Nodule/Mass only, without CT characterization, prior imaging, or risk context.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.83,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "imaging_lesion_without_sufficient_malignancy_context",
+      "cxr_provenance_preserved",
+      "growth_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "cancer_confirmed",
+      "ct_size_inferred_from_cxr_bbox",
+      "autonomous_ct_or_procedure"
+    ]
+  },
+  {
+    "id": "PM02",
+    "description": "Trusted diagnostic CT reports a spiculated pulmonary nodule with supplied risk context.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.79,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT ngực chẩn đoán do bác sĩ cung cấp mô tả nốt phổi đặc có bờ tua gai; người bệnh có tiền sử hút thuốc. Không có bệnh lý học.",
+      "laboratory": "",
+      "workflow_mode": "Chưa có / thiếu kết quả xét nghiệm"
+    },
+    "semantic_expectations": [
+      "pulmonary_malignancy_concern_supported",
+      "ct_morphology_provenance_preserved",
+      "risk_context_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "cancer_confirmed_from_spiculation",
+      "histology_invented",
+      "autonomous_pet_or_biopsy"
+    ]
+  },
+  {
+    "id": "PM03",
+    "description": "Comparable CT studies match the same lesion and explicitly document interval growth.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.81,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Báo cáo CT hiện tại và CT trước đó có ngày, phép đo và xác nhận cùng một nốt phổi; bác sĩ X-quang kết luận tăng kích thước thật theo thời gian. Không có bệnh lý học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pulmonary_malignancy_concern_supported",
+      "true_growth_preserved",
+      "same_lesion_correspondence_required",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "cancer_confirmed_from_growth",
+      "pathology_confirmation_invented",
+      "autonomous_surveillance_interval"
+    ]
+  },
+  {
+    "id": "PM04",
+    "description": "Current CT nodule has no prior comparable imaging.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.76,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT hiện tại mô tả một nốt phổi; không có phim trước để so sánh.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pulmonary_malignancy_concern_indeterminate",
+      "growth_unknown",
+      "missing_prior_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "synthetic_growth",
+      "synthetic_stability",
+      "cancer_confirmed"
+    ]
+  },
+  {
+    "id": "PM05",
+    "description": "Nodule/Mass and generic Calcification are both positive without lesion correspondence.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.82,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Calcification",
+          "score": 0.71,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có CT hoặc xác nhận hai nhãn thuộc cùng một tổn thương.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "imaging_lesion_without_sufficient_malignancy_context",
+      "distinct_label_provenance_preserved",
+      "same_lesion_correspondence_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "benignity_from_generic_calcification",
+      "labels_assumed_same_lesion",
+      "cancer_confirmed"
+    ]
+  },
+  {
+    "id": "PM06",
+    "description": "Trusted CT characterizes the same lesion with a recognized benign-pattern descriptor.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.78,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT do bác sĩ cung cấp xác nhận cùng một nốt phổi có vôi hóa trung tâm hoàn toàn và thành phần mỡ; bối cảnh sàng lọc không được cung cấp.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "concern_may_be_reduced_by_trusted_ct_pattern",
+      "same_lesion_ct_morphology_preserved",
+      "screening_context_unknown",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "generic_benignity_rule",
+      "lung_rads_without_screening_context",
+      "cancer_confirmed"
+    ]
+  },
+  {
+    "id": "PM07",
+    "description": "Trusted CT reliably measures a pulmonary lesion greater than 30 mm.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.86,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT ngực chẩn đoán đo tin cậy tổn thương phổi 34 mm và gọi là khối; chưa có bệnh lý học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "ct_mass_term_supported",
+      "pulmonary_malignancy_concern_indeterminate",
+      "ct_measurement_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "cancer_confirmed_from_mass_size",
+      "histology_or_stage_inferred",
+      "resectability_inferred"
+    ]
+  },
+  {
+    "id": "PM08",
+    "description": "Supplied risk factors and an external clinician estimate retain their provenance.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.74,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Tuổi và tiền sử hút thuốc được cung cấp. Bác sĩ điều trị ghi ước tính nguy cơ ác tính 35% theo đánh giá bên ngoài; không nêu hoặc chạy bộ tính điểm MedVision.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "risk_context_preserved",
+      "external_risk_estimate_provenance_preserved",
+      "pulmonary_malignancy_concern_indeterminate",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "hidden_malignancy_probability",
+      "implicit_brock_mayo_herder",
+      "external_estimate_relabelled_as_medvision"
+    ]
+  },
+  {
+    "id": "PM09",
+    "description": "CXR No finding coexists with a trusted CT-detected pulmonary nodule.",
+    "input": {
+      "results": [
+        {
+          "finding": "No finding",
+          "score": 0.93,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT ngực sau đó mô tả một nốt phổi; không có nhãn CXR mục tiêu dương tính.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "cxr_no_finding_preserved",
+      "ct_lesion_preserved",
+      "pulmonary_malignancy_concern_indeterminate",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ct_nodule_excluded_by_no_finding",
+      "no_finding_contradiction_without_positive_target",
+      "cxr_result_erased"
+    ]
+  },
+  {
+    "id": "PM10",
+    "description": "Other lesion AI provenance is retained when CT characterizes the same abnormality as a nodule.",
+    "input": {
+      "results": [
+        {
+          "finding": "Other lesion",
+          "score": 0.8,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.31,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Báo cáo CT đáng tin cậy xác nhận bất thường tương ứng với Other lesion là một nốt phổi.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "other_lesion_ai_provenance_preserved",
+      "external_nodule_characterization_preserved",
+      "pulmonary_malignancy_concern_indeterminate",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "nodule_mass_skill_auto_selected",
+      "ai_relabelled_as_nodule_mass",
+      "cancer_confirmed"
+    ]
+  },
+  {
+    "id": "PM11",
+    "description": "Trusted CT reports multiple distinct pulmonary nodules.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.84,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT mô tả ba nốt phổi riêng biệt với kích thước và vị trí của từng nốt; không xác định căn nguyên chung.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "multiple_lesions_preserved_individually",
+      "shared_etiology_uncertain",
+      "pulmonary_malignancy_concern_indeterminate",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "metastases_from_multiplicity",
+      "multifocal_primary_from_multiplicity",
+      "distinct_lesions_fused"
+    ]
+  },
+  {
+    "id": "PM12",
+    "description": "Actual lung-cancer screening CT context permits bounded Lung-RADS scope notes.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.77,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Tổn thương được phát hiện trên CT sàng lọc ung thư phổi; báo cáo nêu áp dụng Lung-RADS v2022 nhưng không cung cấp quyết định quản lý.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "screening_ct_context_explicit",
+      "lung_rads_scope_may_be_referenced",
+      "pulmonary_malignancy_concern_indeterminate",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "screening_category_invented",
+      "autonomous_surveillance_interval",
+      "cancer_confirmed"
+    ]
+  },
+  {
+    "id": "PM13",
+    "description": "Incidental CT nodule stays within ACR/Fleischner scope limits.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.73,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Nốt phổi được phát hiện tình cờ trên CT, không phải CT sàng lọc; chưa đủ dữ liệu về hình thái, nguy cơ và ngoại lệ quần thể.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "incidental_ct_context_explicit",
+      "acr_fleischner_scope_note",
+      "guideline_scope_uncertainty_explicit",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "lung_rads_applied_to_incidental_ct",
+      "cxr_bbox_mapped_to_ct_table",
+      "autonomous_ct_or_surveillance"
+    ]
+  },
+  {
+    "id": "PM14",
+    "description": "Pulmonary malignancy concern and pneumonia hypothesis coexist without forced attribution.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.82,
+          "threshold": 0.5
+        },
+        {
+          "finding": "Consolidation",
+          "score": 0.8,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "Ho cấp tính và sốt.",
+      "history": "CT mô tả nốt phổi có hình thái đáng ngờ; bác sĩ đồng thời nêu khả năng viêm phổi. Không có bệnh lý học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pulmonary_malignancy_concern_supported",
+      "pneumonia_hypothesis_preserved",
+      "shared_imaging_evidence_not_double_counted",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "forced_pneumonia_malignancy_winner",
+      "generic_consolidation_assigned_to_cancer",
+      "generic_opacity_assigned_to_pneumonia"
+    ]
+  },
+  {
+    "id": "PM15",
+    "description": "Nondiagnostic pulmonary lesion biopsy is not benign pathology.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.85,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Sinh thiết tổn thương phổi ghi mẫu không đủ và không chẩn đoán được; hình ảnh vẫn đáng ngờ.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pulmonary_malignancy_concern_conflicted",
+      "nondiagnostic_sample_limitation_preserved",
+      "pathology_not_confirmed",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "nondiagnostic_biopsy_called_benign",
+      "pathology_confirmed_malignancy",
+      "autonomous_repeat_biopsy"
+    ]
+  },
+  {
+    "id": "PM16",
+    "description": "Suspicious imaging and benign tissue with uncertain lesion correspondence remain conflicted.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.88,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "CT mô tả tổn thương đáng ngờ. Mẫu mô được báo cáo lành tính nhưng chưa xác nhận mẫu lấy đúng tổn thương trên CT.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "evidence_conflict",
+      "pulmonary_malignancy_concern_conflicted",
+      "sample_correspondence_uncertain",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "lesion_silently_called_benign",
+      "imaging_conflict_erased",
+      "cancer_confirmed"
+    ]
+  },
+  {
+    "id": "PM17",
+    "description": "Pathology confirms malignancy in a pulmonary lesion but does not establish origin.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.9,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Bệnh lý học từ tổn thương phổi xác nhận ác tính; báo cáo không xác định nguồn gốc nguyên phát hay di căn và không nêu phân nhóm mô học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pathology_confirmed_pulmonary_malignancy",
+      "malignancy_origin_unresolved",
+      "pathology_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "primary_lung_cancer_inferred",
+      "histology_invented",
+      "stage_or_resectability_inferred"
+    ]
+  },
+  {
+    "id": "PM18",
+    "description": "Explicit pathology histology and primary pulmonary origin are preserved.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.91,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Bệnh lý học từ tổn thương phổi ghi rõ ung thư biểu mô tuyến nguyên phát của phổi; không có dữ liệu phân giai đoạn.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pathology_confirmed_pulmonary_malignancy",
+      "explicit_histology_preserved",
+      "explicit_primary_origin_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "stage_inferred",
+      "resectability_inferred",
+      "autonomous_oncology_treatment"
+    ]
+  },
+  {
+    "id": "PM19",
+    "description": "Explicit metastatic origin in pulmonary pathology remains metastatic.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.87,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Bệnh lý học tổn thương phổi ghi rõ carcinoma di căn từ đại trực tràng; không cung cấp giai đoạn.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "pathology_confirmed_pulmonary_malignancy",
+      "explicit_metastatic_origin_preserved",
+      "pathology_provenance_preserved",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "metastasis_relabelled_primary_lung_cancer",
+      "histology_invented",
+      "stage_inferred"
+    ]
+  },
+  {
+    "id": "PM20",
+    "description": "Nodule/Mass score 0.92 remains an image-model score.",
+    "input": {
+      "results": [
+        {
+          "finding": "Nodule/Mass",
+          "score": 0.92,
+          "threshold": 0.5
+        }
+      ],
+      "symptoms": "",
+      "history": "Không có CT, nguy cơ lâm sàng hoặc bệnh lý học.",
+      "laboratory": ""
+    },
+    "semantic_expectations": [
+      "model_score_preserved",
+      "imaging_lesion_without_sufficient_malignancy_context",
+      "score_not_cancer_probability",
+      "doctor_review_required"
+    ],
+    "forbidden_interpretations": [
+      "ninety_two_percent_cancer_probability",
+      "patient_level_malignancy_probability",
+      "cancer_confirmed"
+    ]
+  }
+]
