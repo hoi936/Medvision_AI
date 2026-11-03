@@ -1,4 +1,4 @@
-"""Validated registry for the three MedVision model versions."""
+"""Validated registry for the MedVision model versions and V4 experiments."""
 
 from __future__ import annotations
 
@@ -11,7 +11,6 @@ from typing import Any
 
 
 APP_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = APP_DIR.parent
 
 EXPECTED_CLASS_NAMES = (
     "Aortic enlargement",
@@ -45,6 +44,7 @@ class ModelSpec:
     macro_pr_auc: str
     macro_roc_auc: str
     macro_f1: str
+    thresholds_key: str | None = None
     recommended: bool = False
 
     @property
@@ -94,11 +94,56 @@ MODEL_SPECS: dict[str, ModelSpec] = {
         macro_pr_auc="57.56%",
         macro_roc_auc="96.68%",
         macro_f1="57.71%",
+    ),
+    "e0": ModelSpec(
+        model_id="e0",
+        display_name="V4 E0 — Control",
+        model_name="DenseNet121",
+        model_version="v4-e0-control-best-epoch-9",
+        architecture="densenet121",
+        pipeline="CheXpert init → VinBigData → Asymmetric Loss",
+        checkpoint_path=APP_DIR / "models" / "model_v4_e0_control.pth",
+        thresholds_path=APP_DIR / "models" / "thresholds_v4.json",
+        thresholds_format="v4_validation_json",
+        thresholds_key="E0",
+        macro_pr_auc="58.91%",
+        macro_roc_auc="96.87%",
+        macro_f1="59.28%",
+    ),
+    "e1": ModelSpec(
+        model_id="e1",
+        display_name="V4 E1 — Sqrt Weight",
+        model_name="DenseNet121",
+        model_version="v4-e1-sqrt-weight-best-epoch-9",
+        architecture="densenet121",
+        pipeline="CheXpert init → VinBigData → Sqrt-weighted ASL",
+        checkpoint_path=APP_DIR / "models" / "model_v4_e1_sqrt_weight.pth",
+        thresholds_path=APP_DIR / "models" / "thresholds_v4.json",
+        thresholds_format="v4_validation_json",
+        thresholds_key="E1",
+        macro_pr_auc="60.48%",
+        macro_roc_auc="96.91%",
+        macro_f1="60.27%",
+    ),
+    "e2": ModelSpec(
+        model_id="e2",
+        display_name="V4 E2 — Effective Number β=0.99",
+        model_name="DenseNet121",
+        model_version="v4-e2-effective-number-beta099-best-epoch-11",
+        architecture="densenet121",
+        pipeline="CheXpert init → VinBigData → Effective-number ASL",
+        checkpoint_path=APP_DIR / "models" / "model_v4_e2_beta099.pth",
+        thresholds_path=APP_DIR / "models" / "thresholds_v4.json",
+        thresholds_format="v4_validation_json",
+        thresholds_key="E2",
+        macro_pr_auc="60.62%",
+        macro_roc_auc="96.87%",
+        macro_f1="61.30%",
         recommended=True,
     ),
 }
 
-DEFAULT_MODEL_ID = "v3"
+DEFAULT_MODEL_ID = "e2"
 MODEL_IDS = tuple(MODEL_SPECS)
 
 
@@ -155,6 +200,27 @@ def _load_thresholds(spec: ModelSpec) -> dict[str, float]:
         return _validate_thresholds(rows)
 
     raw = _read_json(spec.thresholds_path, "thresholds.json")
+    if spec.thresholds_format == "v4_validation_json":
+        try:
+            values = [
+                float(value)
+                for value in raw["thresholds"][spec.thresholds_key]["optimized"]
+            ]
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ModelRegistryError(
+                f"Threshold V4 của {spec.display_name} không đúng schema."
+            ) from exc
+        if len(values) != len(EXPECTED_CLASS_NAMES):
+            raise ModelRegistryError(
+                f"Threshold V4 của {spec.display_name} phải có đúng 14 giá trị."
+            )
+        return _validate_thresholds(
+            [
+                (index, name, values[index])
+                for index, name in enumerate(EXPECTED_CLASS_NAMES)
+            ]
+        )
+
     if spec.thresholds_format == "mapping_json":
         if not isinstance(raw, dict):
             raise ModelRegistryError("thresholds.json phải là object theo tên finding.")
@@ -173,7 +239,9 @@ def _load_thresholds(spec: ModelSpec) -> dict[str, float]:
         names = tuple(str(name) for name in raw["class_names"])
         values = [float(value) for value in raw["thresholds"]]
     except (KeyError, TypeError, ValueError) as exc:
-        raise ModelRegistryError("thresholds.json của V3 không đúng schema.") from exc
+        raise ModelRegistryError(
+            f"thresholds.json của {spec.display_name} không đúng schema."
+        ) from exc
     return _validate_thresholds(
         [(index, name, values[index]) for index, name in enumerate(names)]
     )

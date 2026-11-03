@@ -116,7 +116,7 @@ st.markdown(
     max_entries=1,
 )
 def get_cached_model(model_id):
-    """Keep only the selected model cached to avoid retaining three GPU copies."""
+    """Keep only the selected model cached to avoid retaining multiple GPU copies."""
     device = get_device()
     return load_model(device, model_id=model_id), device
 
@@ -234,7 +234,7 @@ def render_positive_finding_card(
 
 
 st.title("🩻 MedVision AI - Chest X-ray Demo")
-st.write("Chọn một trong ba model để nhận diện 14 chest X-ray findings.")
+st.write("Chọn một trong sáu model để nhận diện 14 chest X-ray findings.")
 
 model_options = get_model_options()
 with st.sidebar:
@@ -304,26 +304,34 @@ with st.container(border=True):
             "Ảnh đã export từ VinBigData cache: chỉ đọc grayscale và resize nếu cần; "
             "không percentile-normalize lần nữa."
         )
-        accepted_types = ["png", "jpg", "jpeg"]
     elif input_mode == RAW_DICOM_MODE:
         st.info(
             "DICOM gốc: xử lý MONOCHROME1 và percentile normalization p0,5/p99,5 "
             "đúng một lần."
         )
-        accepted_types = ["dcm", "dicom"]
     else:
         st.warning(
             "Ảnh PNG/JPG bên ngoài sẽ được percentile-normalize một lần. "
             "Ảnh ngoài pipeline gốc có thể khác domain và cho kết quả kém tin cậy hơn."
         )
-        accepted_types = ["png", "jpg", "jpeg"]
     uploaded_file = st.file_uploader(
         "Kéo thả file vào đây hoặc nhấn Browse files",
-        type=accepted_types,
-        help="Định dạng file được giới hạn theo Input type đã chọn.",
+        type=["png", "jpg", "jpeg", "dcm", "dicom"],
+        help=(
+            "Hỗ trợ PNG, JPG, JPEG, DCM và DICOM. File DICOM được tự động "
+            "nhận diện và xử lý ở chế độ Raw DICOM."
+        ),
         label_visibility="visible",
-        key=f"upload_{input_mode}",
+        key="xray_upload",
     )
+    effective_input_mode = input_mode
+    if uploaded_file is not None and Path(uploaded_file.name).suffix.lower() in {
+        ".dcm",
+        ".dicom",
+    }:
+        effective_input_mode = RAW_DICOM_MODE
+        if input_mode != RAW_DICOM_MODE:
+            st.info("Đã tự động nhận diện file DICOM và chuyển sang xử lý Raw DICOM.")
     analyze_clicked = st.button(
         "🔍 Phân tích ảnh",
         type="primary",
@@ -347,7 +355,7 @@ current_hash = None
 if uploaded_file is not None:
     current_hash = hashlib.sha256(
         selected_model_id.encode("utf-8")
-        + input_mode.encode("utf-8")
+        + effective_input_mode.encode("utf-8")
         + uploaded_file.getvalue()
     ).hexdigest()
 
@@ -357,7 +365,7 @@ if analyze_clicked and uploaded_file is not None:
             gray, results, debug_info, input_tensor = predict_findings(
                 uploaded_file.getvalue(),
                 uploaded_file.name,
-                input_mode=input_mode,
+                input_mode=effective_input_mode,
                 model=model,
                 device=device,
                 model_id=selected_model_id,
@@ -371,7 +379,7 @@ if analyze_clicked and uploaded_file is not None:
         st.session_state.analysis = {
             "file_hash": current_hash,
             "filename": uploaded_file.name,
-            "input_mode": input_mode,
+            "input_mode": effective_input_mode,
             "model_id": selected_model_id,
             "model_name": selected_spec.model_name,
             "model_version": selected_spec.model_version,

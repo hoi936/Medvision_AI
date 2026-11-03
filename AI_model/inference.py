@@ -22,6 +22,7 @@ from torchvision.models import densenet121
 from model_registry import (
     DEFAULT_MODEL_ID,
     EXPECTED_CLASS_NAMES,
+    MODEL_IDS,
     ModelRegistryError,
     get_model_spec,
     load_model_package,
@@ -56,7 +57,7 @@ def _read_json(path: Path, label: str) -> Any:
         raise MedVisionError(f"Không thể đọc {path.name}: {exc}") from exc
 
 
-@lru_cache(maxsize=3)
+@lru_cache(maxsize=len(MODEL_IDS))
 def load_configuration(
     model_id: str = DEFAULT_MODEL_ID,
 ) -> tuple[list[str], dict[str, float], dict[str, Any]]:
@@ -162,7 +163,14 @@ class DenseNet121CBAM(nn.Module):
 def _safe_load_checkpoint(path: Path) -> Any:
     """Load tensor weights while allowlisting only NumPy scalar metadata."""
     try:
-        safe_types = [np._core.multiarray.scalar, np.dtype, type(np.dtype("float64"))]
+        safe_types = [
+            np._core.multiarray.scalar,
+            np._core.multiarray._reconstruct,
+            np.ndarray,
+            np.dtype,
+            type(np.dtype("float64")),
+            type(np.dtype("uint32")),
+        ]
         with torch.serialization.safe_globals(safe_types):
             return torch.load(path, map_location="cpu", weights_only=True)
     except AttributeError:  # Older NumPy/PyTorch without the safe-global API.

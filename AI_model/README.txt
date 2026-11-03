@@ -2,18 +2,23 @@
 MEDVISION AI - CHEST X-RAY DEMO
 ================================
 
-Ứng dụng Streamlit cho phép chọn một trong ba model để đánh giá 14 chest X-ray
+Ứng dụng Streamlit cho phép chọn một trong sáu model để đánh giá 14 chest X-ray
 findings. Mỗi lần phân tích chỉ chạy đúng một model đã chọn:
 
 - V1 — DenseNet121 Baseline: ImageNet → VinBigData, BEST epoch 8.
 - V2 — DenseNet121 + CBAM: ImageNet → CBAM → VinBigData, BEST epoch 7.
 - V3 — DenseNet121 + CheXpert Transfer: ImageNet → CheXpert → VinBigData,
-  BEST epoch 7; đây là lựa chọn mặc định/khuyến nghị theo metrics hiện có.
+  BEST epoch 7.
+- V4 E0 — Control: CheXpert init → VinBigData → Asymmetric Loss, BEST epoch 9.
+- V4 E1 — Sqrt Weight: thêm sqrt class weighting, BEST epoch 9.
+- V4 E2 — Effective Number β=0.99: BEST epoch 11; đây là lựa chọn mặc định và
+  ứng viên nghiên cứu chính theo báo cáo V4.
 
 Ứng dụng không train lại hoặc thay đổi trọng số và threshold của các model.
-Ba thư mục `Model_AI_V1`, `Model_AI_V2`, `Model_AI_V3` là archive huấn luyện
-cục bộ và được Git bỏ qua. Các checkpoint inference gọn cần để triển khai được
-lưu trong `AI_model/model.pth` và `AI_model/models/`.
+Sáu archive huấn luyện V1/V2/V3 và V4 E0/E1/E2 được gom trong thư mục
+`model_artifacts/` và được Git bỏ qua. Ứng dụng không phụ thuộc vào archive này;
+các checkpoint inference gọn cần để triển khai nằm trong `AI_model/model.pth`
+và `AI_model/models/`.
 
 Input
 -----
@@ -44,7 +49,7 @@ Output
 
 Thao tác
 --------
-1. Chọn V1, V2 hoặc V3 ở sidebar.
+1. Chọn V1, V2, V3, V4 E0, V4 E1 hoặc V4 E2 ở sidebar.
 2. Upload ảnh X-quang tại trang chính.
 3. Nhấn "Phân tích ảnh".
 4. Xem ảnh đã preprocess, findings POSITIVE và bảng đủ 14 findings.
@@ -160,6 +165,10 @@ Các file model deployment bắt buộc
 - model.pth (V1)
 - models/model_v2_cbam.pth
 - models/model_v3_transfer.pth
+- models/model_v4_e0_control.pth
+- models/model_v4_e1_sqrt_weight.pth
+- models/model_v4_e2_beta099.pth
+- models/thresholds_v4.json
 - models/thresholds_v2.json
 - models/thresholds_v3.json
 - class_names.json

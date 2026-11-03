@@ -1,0 +1,15 @@
+class_id,finding,E1_W1_sqrt,E2_W2_beta_0_99
+0,Aortic enlargement,1.0,1.0
+1,Atelectasis,2.5021303,2.4141061
+2,Calcification,1.4789984,1.2546682
+3,Cardiomegaly,1.0,1.0
+4,Consolidation,1.7928785,1.5311712
+5,ILD,1.5969781,1.3495443
+6,Infiltration,1.2560006,1.1081119
+7,Lung Opacity,1.0,1.0
+8,Nodule/Mass,1.0,1.0
+9,Other lesion,1.028437,1.0082294
+10,Pleural effusion,1.0,1.0
+11,Pleural thickening,1.0,1.0
+12,Pneumothorax,2.609089,2.575954
+13,Pulmonary fibrosis,1.0,1.0

@@ -1,0 +1,69 @@
+{
+  "project": "MedVision AI V4",
+  "research_status": "V4_E2_FROZEN_FOR_RESEARCH",
+  "primary_model": "E2_BEST_EPOCH11",
+  "architecture": "DenseNet121",
+  "validation_images": 2992,
+  "positive_image_class_pairs": 1762,
+  "classes": 14,
+  "model_sha256": "87ae815b758b1b7425157d419da5a5e1d116d9d5f1225347274e3c84e7a97c19",
+  "macro_ap": 0.6061525023898591,
+  "micro_ap": 0.7910747162898103,
+  "macro_roc_auc": 0.9686665273422116,
+  "micro_roc_auc": 0.9788806434532584,
+  "macro_f1_val_tuned": 0.6129651547935637,
+  "micro_f1_val_tuned": 0.7229671897289587,
+  "mean_brier": 0.0528641588466465,
+  "macro_ece": 0.1679097563402305,
+  "macro_pointing": 0.5849336785094703,
+  "micro_pointing": 0.5607264472190693,
+  "macro_iou": {
+    "top05": 0.23933944910791238,
+    "top10": 0.2422516254436941,
+    "top20": 0.20605171878964337
+  },
+  "micro_iou": {
+    "top05": 0.2532245583276875,
+    "top10": 0.22890664371655098,
+    "top20": 0.17240186026371662
+  },
+  "e2_better_than_e0_classes": 10,
+  "e2_better_than_e1_classes": 7,
+  "atelectasis_share_of_macro_ap_gain": 0.8885008656580602,
+  "exact_match_stratified": {
+    "all_images": 0.8094919786096256,
+    "positive_label_images": {
+      "images": 888,
+      "exactly_correct": 351,
+      "exact_match": 0.3952702702702703
+    },
+    "zero_label_images": {
+      "images": 2104,
+      "exactly_correct": 2071,
+      "exact_match": 0.9843155893536122
+    },
+    "all_negative_baseline": 0.7032085561497327
+  },
+  "model_export_parity": {
+    "status": "PASS",
+    "tested_images": 94,
+    "max_abs_diff": 0.00024276971817016602,
+    "threshold_flips": 0
+  },
+  "notes": [
+    "E2 is the main research candidate by observed macro AP",
+    "E1 remains a competitive alternative",
+    "Average Precision is computed separately per class",
+    "Validation thresholds were optimized on validation",
+    "Output probabilities show overprediction",
+    "Calibration has not been fitted on a separate set",
+    "Model was selected using validation performance",
+    "Historical V1/V2/V3 are not controlled V4 ablations",
+    "Grad-CAM localization is not clinical validation",
+    "Patient-level independence has not been verified",
+    "No independent held-out test set",
+    "Not validated for clinical diagnosis"
+  ],
+  "training_performed": false,
+  "checkpoints_modified": false
+}

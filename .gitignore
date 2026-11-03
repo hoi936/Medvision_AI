@@ -11,6 +11,32 @@ env/
 .agents/
 .codex/
 
+# Environment files, private keys and credential stores
+.env
+.env.*
+*.pem
+*.key
+*.credentials.json
+*-credentials.json
+/.credentials/
+/credentials/
+/credential-store/
+/credential_stores/
+
+# Cloudflare Tunnel credentials and tokens (never commit)
+/.cloudflared/
+/cloudflared/credentials*.json
+/cloudflared/*-credentials.json
+*tunnel-token*
+
+# Hermes local state; keep project-local skills tracked
+/.hermes/config.yaml
+/.hermes/.env
+/.hermes/state.db*
+/.hermes/sessions/
+/.hermes/logs/
+/.hermes/vault/
+
 # Third-party Hermes checkout and its isolated runtime
 hermes-agent/
 .hermes-runtime/
@@ -26,10 +52,18 @@ Thumbs.db
 *.tmp
 ~$*
 
+# Generated case data and reports
+/uploads/
+/generated_uploads/
+/reports/
+/generated_reports/
+/AI_model/uploads/
+/AI_model/generated_uploads/
+/AI_model/reports/
+/AI_model/generated_reports/
+
 # Local training archives; compact inference weights are tracked in AI_model/models/
-/Model_AI_V1/
-/Model_AI_V2/
-/Model_AI_V3/
+/model_artifacts/
 
 # Provider/runtime directories managed outside source control
 .vendor/

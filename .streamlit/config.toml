@@ -1,0 +1,16 @@
+[server]
+address = "127.0.0.1"
+port = 8501
+headless = true
+enableCORS = true
+corsAllowedOrigins = ["https://hoidev.dpdns.org"]
+allowedHosts = ["127.0.0.1", "localhost", "hoidev.dpdns.org"]
+enableXsrfProtection = true
+fileWatcherType = "none"
+runOnSave = false
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"

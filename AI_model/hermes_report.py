@@ -20,9 +20,16 @@ from clinical_schema import (
 
 MAX_CLINICAL_FIELD_LENGTH = 4_000
 DEFAULT_TIMEOUT_SECONDS = 180
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+APP_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = APP_DIR.parent
 HERMES_HOME = PROJECT_ROOT / ".runtime" / "hermes-home"
 HERMES_RUNTIME = PROJECT_ROOT / ".runtime" / "hermes-venv"
+HERMES_RUNTIME_CANDIDATES = (
+    HERMES_RUNTIME / "bin" / "hermes",
+    HERMES_RUNTIME / "Scripts" / "hermes.exe",
+    PROJECT_ROOT / ".hermes-runtime" / "Scripts" / "hermes.exe",
+    PROJECT_ROOT / ".hermes-runtime" / "bin" / "hermes",
+)
 HERMES_TEXT_TOOLSETS = ("clarify", "skills")
 HERMES_VISION_TOOLSETS = ("clarify", "vision", "skills")
 HERMES_SKILLS_TOOLS = ("skills_list", "skill_view", "skill_manage")
@@ -197,13 +204,7 @@ def hermes_environment() -> dict[str, str]:
 
 
 def locate_hermes() -> Path | None:
-    candidates = (
-        HERMES_RUNTIME / "bin" / "hermes",
-        HERMES_RUNTIME / "Scripts" / "hermes.exe",
-        PROJECT_ROOT / ".hermes-runtime" / "Scripts" / "hermes.exe",
-        PROJECT_ROOT / ".hermes-runtime" / "bin" / "hermes",
-    )
-    for candidate in candidates:
+    for candidate in HERMES_RUNTIME_CANDIDATES:
         if candidate.is_file():
             return candidate.resolve()
     return None
@@ -329,7 +330,6 @@ def get_hermes_status() -> HermesStatus:
 
     if not core_ready:
         return HermesStatus(False, available_finding_skills, missing_finding_skills, executable, f"Thiếu Hermes core skill: {', '.join(missing_core)}.")
-
     return HermesStatus(
         True,
         available_finding_skills,
@@ -583,7 +583,7 @@ def generate_hermes_report(
         try:
             completed = subprocess.run(
                 command,
-                cwd=Path(__file__).resolve().parent,
+                cwd=APP_DIR,
                 env=hermes_environment(),
                 capture_output=True,
                 text=True,
